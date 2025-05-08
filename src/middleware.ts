@@ -4,9 +4,9 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function middleware(request: NextRequest) {
   const { response, user } = await updateSession(request, NextResponse.next());
 
-  if (!request.nextUrl.pathname.endsWith("/login") && !user) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+  //   if (!request.nextUrl.pathname.endsWith("/login") && !user) {
+  //     return NextResponse.redirect(new URL("/login", request.url));
+  //   }
 
   return response;
 }
