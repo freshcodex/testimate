@@ -1,19 +1,24 @@
-# Next-Supabase-TRPC - Full Stack TypeScript Starter
+# Testimate - Open Source Testimonial Collection Platform
 
-A modern, full-stack TypeScript starter template built with Next.js, Supabase, and tRPC. This template provides a solid foundation for building scalable web applications with type safety, authentication, and database management.
+Testimate is a modern, open-source alternative to testimonial collection platforms like testimonials.to, Senja, and Trustmary. Built with a focus on privacy, customization, and ease of use, Testimate allows businesses to collect, manage, and display customer testimonials with full control over their data.
 
 ## 🚀 Features
 
-- ⚡️ **Next.js 15** with App Router
-- 🔐 **Supabase** Authentication & Database
-- 🎨 **Tailwind CSS** for styling
+- ⚡️ **Next.js 15** with App Router for blazing fast performance
+- 🔐 **Supabase** Authentication & Database for secure data management
+- 🎨 **Tailwind CSS** for beautiful, customizable designs
 - 🔄 **tRPC** for type-safe API calls
-- 📦 **Drizzle ORM** for database management
-- 🎯 **TypeScript** for type safety
-- 📱 **Responsive** design
-- 🔍 **Biome** for linting and formatting
-- 🧪 **React Query** for data fetching
+- 📦 **Drizzle ORM** for efficient database management
+- 🎯 **TypeScript** for robust type safety
+- 📱 **Responsive** design for all devices
+- 🔍 **Biome** for code quality
+- 🧪 **React Query** for efficient data fetching
 - 🔒 **Middleware** for route protection
+- 📝 **Rich Text Editor** for testimonial content
+- 🎨 **Customizable Templates** for testimonial display
+- 🔄 **Import/Export** functionality
+- 📊 **Analytics Dashboard**
+- 🔗 **Embed Widgets** for easy integration
 
 ## 📋 Prerequisites
 
@@ -131,11 +136,15 @@ The project uses Tailwind CSS for styling. You can find global styles in `src/st
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+We welcome contributions from the community! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the [AGPL-3.0 License](LICENSE) - see the LICENSE file for details. This license structure follows the same approach as [Cal.com](https://cal.com), ensuring that any modifications to the codebase remain open source.
+
+## 🔐 Commercial License
+
+For commercial use cases where you need to modify the codebase without open-sourcing your changes, we offer a commercial license. Please contact us for more information.
 
 ## 🙏 Acknowledgments
 
@@ -143,3 +152,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Supabase](https://supabase.com/) for authentication and database
 - [Next.js](https://nextjs.org/) for the framework
 - [Drizzle ORM](https://orm.drizzle.team/) for database management
+- [Cal.com](https://cal.com) for inspiration on open-source licensing model
