@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 import {
   Brush,
   MessageSquare,
@@ -53,14 +53,12 @@ export function FormSidebar({
         collapsible
         value={activeSection}
         onValueChange={handleAccordionChange}
-        className="w-full"
+        className="w-full space-y-6"
       >
         <AccordionItem value="design" className="border-b">
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-center">
-              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-purple-100 text-purple-600">
-                <Brush className="h-3.5 w-3.5" />
-              </div>
+              <Brush className="h-4 w-4 text-blue-500" />
               <span className="ml-2 text-sm font-medium">Design</span>
             </div>
           </AccordionTrigger>
@@ -72,15 +70,7 @@ export function FormSidebar({
         <AccordionItem value="welcome" className="border-b">
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-center">
-              <div
-                className={`flex h-6 w-6 items-center justify-center rounded-md ${
-                  activeSection === "welcome"
-                    ? "bg-purple-100 text-purple-600"
-                    : "bg-gray-100 text-gray-500"
-                }`}
-              >
-                <MessageSquare className="h-3.5 w-3.5" />
-              </div>
+              <MessageSquare className="h-4 w-4 text-green-500" />
               <span className="ml-2 text-sm font-medium">Welcome page</span>
             </div>
           </AccordionTrigger>
@@ -92,15 +82,7 @@ export function FormSidebar({
         <AccordionItem value="response" className="border-b">
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-center">
-              <div
-                className={`flex h-6 w-6 items-center justify-center rounded-md ${
-                  activeSection === "response"
-                    ? "bg-purple-100 text-purple-600"
-                    : "bg-gray-100 text-gray-500"
-                }`}
-              >
-                <MessageCircle className="h-3.5 w-3.5" />
-              </div>
+              <MessageCircle className="h-4 w-4 text-orange-500" />
               <span className="ml-2 text-sm font-medium">Response page</span>
             </div>
           </AccordionTrigger>
@@ -112,15 +94,7 @@ export function FormSidebar({
         <AccordionItem value="customer" className="border-b">
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-center">
-              <div
-                className={`flex h-6 w-6 items-center justify-center rounded-md ${
-                  activeSection === "customer"
-                    ? "bg-purple-100 text-purple-600"
-                    : "bg-gray-100 text-gray-500"
-                }`}
-              >
-                <User className="h-3.5 w-3.5" />
-              </div>
+              <User className="h-4 w-4 text-purple-500" />
               <span className="ml-2 text-sm font-medium">
                 Customer details page
               </span>
@@ -134,15 +108,7 @@ export function FormSidebar({
         <AccordionItem value="thank-you" className="border-b">
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
             <div className="flex items-center">
-              <div
-                className={`flex h-6 w-6 items-center justify-center rounded-md ${
-                  activeSection === "thank-you"
-                    ? "bg-purple-100 text-purple-600"
-                    : "bg-gray-100 text-gray-500"
-                }`}
-              >
-                <ThumbsUp className="h-3.5 w-3.5" />
-              </div>
+              <ThumbsUp className="h-4 w-4 text-pink-500" />
               <span className="ml-2 text-sm font-medium">Thank you page</span>
             </div>
           </AccordionTrigger>
@@ -153,56 +119,56 @@ export function FormSidebar({
 
         <SidebarAccordionItem
           value="word-of-mouth"
-          icon={<Share2 className="h-3.5 w-3.5" />}
+          icon={<Share2 className="h-4 w-4 text-indigo-500" />}
           label="Word of Mouth"
           isActive={activeSection === "word-of-mouth"}
         />
 
         <SidebarAccordionItem
           value="collect-more"
-          icon={<Gift className="h-3.5 w-3.5" />}
+          icon={<Gift className="h-4 w-4 text-indigo-500" />}
           label="Collect 2x more testimonials"
           isActive={activeSection === "collect-more"}
         />
 
         <SidebarAccordionItem
           value="language"
-          icon={<Globe className="h-3.5 w-3.5" />}
+          icon={<Globe className="h-4 w-4 text-indigo-500" />}
           label="Language"
           isActive={activeSection === "language"}
         />
 
         <SidebarAccordionItem
           value="auto-translate"
-          icon={<Languages className="h-3.5 w-3.5" />}
+          icon={<Languages className="h-4 w-4 text-indigo-500" />}
           label="Auto-translate"
           isActive={activeSection === "auto-translate"}
         />
 
         <SidebarAccordionItem
           value="customize-labels"
-          icon={<Tag className="h-3.5 w-3.5" />}
+          icon={<Tag className="h-4 w-4 text-indigo-500" />}
           label="Customize labels"
           isActive={activeSection === "customize-labels"}
         />
 
         <SidebarAccordionItem
           value="custom-domain"
-          icon={<Globe2 className="h-3.5 w-3.5" />}
+          icon={<Globe2 className="h-4 w-4 text-indigo-500" />}
           label="Custom domain"
           isActive={activeSection === "custom-domain"}
         />
 
         <SidebarAccordionItem
           value="remove-branding"
-          icon={<Heart className="h-3.5 w-3.5" />}
+          icon={<Heart className="h-4 w-4 text-indigo-500" />}
           label="Remove Senja branding"
           isActive={activeSection === "remove-branding"}
         />
 
         <SidebarAccordionItem
           value="advanced"
-          icon={<Settings className="h-3.5 w-3.5" />}
+          icon={<Settings className="h-4 w-4 text-indigo-500" />}
           label="Advanced"
           isActive={activeSection === "advanced"}
         />
@@ -228,15 +194,7 @@ function SidebarAccordionItem({
     <AccordionItem value={value} className="border-b">
       <AccordionTrigger className="px-4 py-3 hover:no-underline">
         <div className="flex items-center">
-          <div
-            className={`flex h-6 w-6 items-center justify-center rounded-md ${
-              isActive
-                ? "bg-purple-100 text-purple-600"
-                : "bg-gray-100 text-gray-500"
-            }`}
-          >
-            {icon}
-          </div>
+          <div className="flex h-6 w-6 items-center justify-center">{icon}</div>
           <span className="ml-2 text-sm font-medium">{label}</span>
         </div>
       </AccordionTrigger>
