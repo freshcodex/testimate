@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { FormsList } from "@/components/forms/form-list";
@@ -47,9 +48,11 @@ export function FormsDashboard() {
           >
             {isEmpty ? "Show Forms" : "Show Empty State"}
           </Button>
-          <Button>
-            <Plus className="h-4 w-4 mr-2" /> Create new
-          </Button>
+          <Link href="/dashboard/forms/new">
+            <Button>
+              <Plus className="h-4 w-4 mr-2" /> Create new
+            </Button>
+          </Link>
         </div>
       </div>
 
