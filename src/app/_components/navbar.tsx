@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createClient } from "@/supabase/clients/server";
+import { SignoutButton } from "@/components/signout-button";
 
 export async function Navbar() {
   const supabase = await createClient();
@@ -43,12 +44,7 @@ export async function Navbar() {
                 >
                   Dashboard
                 </Link>
-                <Link
-                  href="/api/auth/signout"
-                  className="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                >
-                  Sign out
-                </Link>
+                <SignoutButton />
               </>
             ) : (
               <>

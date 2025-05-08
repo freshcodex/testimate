@@ -1,12 +1,24 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/supabase/clients/client";
 
 interface GoogleAuthButtonProps {
   action: "login" | "signup";
 }
 
 export function GoogleAuthButton({ action }: GoogleAuthButtonProps) {
+  const handleGoogleAuth = async () => {
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/api/auth/callback`,
+      },
+    });
+  };
   return (
-    <Button variant="outline" className="w-full">
+    <Button variant="outline" className="w-full" onClick={handleGoogleAuth}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
