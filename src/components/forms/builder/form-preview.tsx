@@ -4,11 +4,12 @@ import { Monitor, Smartphone } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import type { FormValues } from "@/lib/schema/form-schema";
 
 interface FormPreviewProps {
   viewMode: "desktop" | "mobile";
   setViewMode: (mode: "desktop" | "mobile") => void;
-  formData: any;
+  formData: FormValues;
 }
 
 export function FormPreview({
@@ -22,7 +23,7 @@ export function FormPreview({
         <ToggleGroup
           type="single"
           value={viewMode}
-          onValueChange={(value: string) =>
+          onValueChange={(value) =>
             value && setViewMode(value as "desktop" | "mobile")
           }
         >
@@ -41,12 +42,14 @@ export function FormPreview({
             <div className="absolute inset-x-0 top-0 h-6 bg-black"></div>
             <div className="absolute inset-x-0 bottom-0 h-6 bg-black"></div>
             <div className="h-full overflow-hidden">
-              <MobileFormPreview formData={formData} />
+              {formData.welcomePage && (
+                <MobileFormPreview formData={formData} />
+              )}
             </div>
           </div>
         ) : (
           <div className="h-[600px] w-[800px] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
-            <DesktopFormPreview formData={formData} />
+            {formData.welcomePage && <DesktopFormPreview formData={formData} />}
           </div>
         )}
       </div>
@@ -54,7 +57,7 @@ export function FormPreview({
   );
 }
 
-function MobileFormPreview({ formData }: { formData: any }) {
+function MobileFormPreview({ formData }: { formData: FormValues }) {
   const gradientStyle = formData.design.showGradient
     ? {
         background: `linear-gradient(135deg, ${formData.design.primaryColor} 0%, ${formData.design.primaryColor}99 100%)`,
@@ -120,56 +123,51 @@ function MobileFormPreview({ formData }: { formData: any }) {
           </div>
 
           <h2 className="mb-2 text-center text-lg font-semibold">
-            {formData.content.title}
+            {formData.welcomePage.title}
           </h2>
-          <p className="mb-4 text-center text-sm text-gray-700">
-            {formData.content.description}
+          <p className="mb-4 text-center text-sm text-gray-700 whitespace-pre-line">
+            {formData.welcomePage.introductoryMessage}
           </p>
 
-          <ul className="mb-6 space-y-2 pl-5 text-sm">
-            {formData.content.bullets.map((bullet: string, index: number) => (
-              <li key={index} className="flex items-start">
-                <span className="mr-2 text-sm">•</span>
-                <span>{bullet}</span>
-              </li>
-            ))}
-          </ul>
-
-          <Button
-            className="mb-2 w-full justify-center"
-            style={{ backgroundColor: formData.design.primaryColor }}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              className="mr-2 h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+          {formData.welcomePage.collectVideo && (
+            <Button
+              className="mb-2 w-full justify-center"
+              style={{ backgroundColor: formData.design.primaryColor }}
             >
-              <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-            Record a video
-          </Button>
+              <svg
+                viewBox="0 0 24 24"
+                className="mr-2 h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Record a video
+            </Button>
+          )}
 
-          <Button variant="outline" className="w-full justify-center">
-            <svg
-              viewBox="0 0 24 24"
-              className="mr-2 h-4 w-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-            Write a testimonial
-          </Button>
+          {formData.welcomePage.collectText && (
+            <Button variant="outline" className="w-full justify-center">
+              <svg
+                viewBox="0 0 24 24"
+                className="mr-2 h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Write a testimonial
+            </Button>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function DesktopFormPreview({ formData }: { formData: any }) {
+function DesktopFormPreview({ formData }: { formData: FormValues }) {
   return (
     <div className="flex h-full flex-col">
       <div
@@ -239,50 +237,45 @@ function DesktopFormPreview({ formData }: { formData: any }) {
             </div>
 
             <h2 className="mb-2 text-center text-xl font-semibold">
-              {formData.content.title}
+              {formData.welcomePage.title}
             </h2>
-            <p className="mb-4 text-center text-gray-700">
-              {formData.content.description}
+            <p className="mb-4 text-center text-gray-700 whitespace-pre-line">
+              {formData.welcomePage.introductoryMessage}
             </p>
 
-            <ul className="mb-6 space-y-2 pl-5">
-              {formData.content.bullets.map((bullet: string, index: number) => (
-                <li key={index} className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>{bullet}</span>
-                </li>
-              ))}
-            </ul>
-
             <div className="flex gap-4">
-              <Button
-                className="flex-1 justify-center"
-                style={{ backgroundColor: formData.design.primaryColor }}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  className="mr-2 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
+              {formData.welcomePage.collectVideo && (
+                <Button
+                  className="flex-1 justify-center"
+                  style={{ backgroundColor: formData.design.primaryColor }}
                 >
-                  <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-                Record a video
-              </Button>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="mr-2 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  Record a video
+                </Button>
+              )}
 
-              <Button variant="outline" className="flex-1 justify-center">
-                <svg
-                  viewBox="0 0 24 24"
-                  className="mr-2 h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Write a testimonial
-              </Button>
+              {formData.welcomePage.collectText && (
+                <Button variant="outline" className="flex-1 justify-center">
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="mr-2 h-4 w-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  Write a testimonial
+                </Button>
+              )}
             </div>
           </div>
         </div>

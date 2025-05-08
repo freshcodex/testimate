@@ -23,23 +23,21 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import type { FormSection } from "@/components/forms/builder/form-builder";
+import type { FormSection } from "./form-builder";
+import { DesignSection } from "./sections/design-section";
+import { WelcomeSection } from "./sections/welcome-section";
+import { ResponseSection } from "./sections/response-section";
+import { CustomerDetailsSection } from "./sections/customer-detail-sections";
+import { ThankYouSection } from "./sections/thankyou-section";
 
 interface FormSidebarProps {
   activeSection: FormSection;
   setActiveSection: (section: FormSection) => void;
-  formData: any;
-  updateFormData: (section: string, field: string, value: any) => void;
 }
 
 export function FormSidebar({
   activeSection,
   setActiveSection,
-  formData,
-  updateFormData,
 }: FormSidebarProps) {
   // This function handles the accordion state changes
   const handleAccordionChange = (value: string) => {
@@ -67,134 +65,91 @@ export function FormSidebar({
             </div>
           </AccordionTrigger>
           <AccordionContent className="px-4 pb-4">
-            <div className="space-y-4">
-              <div>
-                <Label
-                  htmlFor="logo"
-                  className="text-xs font-medium text-gray-500"
-                >
-                  Logo
-                </Label>
-                <div className="mt-1 border border-gray-200 p-4 rounded-md inline-block">
-                  <div className="h-12 w-12 flex items-center justify-center bg-white rounded-md">
-                    <Heart className="h-8 w-8 text-purple-600" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label
-                    htmlFor="primaryColor"
-                    className="text-xs font-medium text-gray-500"
-                  >
-                    Primary Color
-                  </Label>
-                  <div className="mt-1 flex items-center">
-                    <div className="h-6 w-6 rounded-md bg-purple-600 mr-2"></div>
-                    <Input
-                      id="primaryColor"
-                      value={formData.design.primaryColor}
-                      onChange={(e) =>
-                        updateFormData("design", "primaryColor", e.target.value)
-                      }
-                      className="h-9"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label
-                    htmlFor="backgroundColor"
-                    className="text-xs font-medium text-gray-500"
-                  >
-                    Background Color
-                  </Label>
-                  <div className="mt-1 flex items-center">
-                    <div className="h-6 w-6 rounded-md bg-white border border-gray-200 mr-2"></div>
-                    <Input
-                      id="backgroundColor"
-                      value={formData.design.backgroundColor}
-                      onChange={(e) =>
-                        updateFormData(
-                          "design",
-                          "backgroundColor",
-                          e.target.value
-                        )
-                      }
-                      className="h-9"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <Label
-                  htmlFor="font"
-                  className="text-xs font-medium text-gray-500"
-                >
-                  Font
-                </Label>
-                <div className="relative mt-1">
-                  <select
-                    id="font"
-                    className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-sm"
-                    value={formData.design.font}
-                    onChange={(e) =>
-                      updateFormData("design", "font", e.target.value)
-                    }
-                  >
-                    <option>Default</option>
-                    <option>Sans Serif</option>
-                    <option>Serif</option>
-                    <option>Monospace</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Label htmlFor="showGradient" className="text-sm">
-                  Show Gradient Background
-                </Label>
-                <Switch
-                  id="showGradient"
-                  checked={formData.design.showGradient}
-                  onCheckedChange={(checked) =>
-                    updateFormData("design", "showGradient", checked)
-                  }
-                />
-              </div>
-            </div>
+            <DesignSection />
           </AccordionContent>
         </AccordionItem>
 
-        <SidebarAccordionItem
-          value="welcome"
-          icon={<MessageSquare className="h-3.5 w-3.5" />}
-          label="Welcome page"
-          isActive={activeSection === "welcome"}
-        />
+        <AccordionItem value="welcome" className="border-b">
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center">
+              <div
+                className={`flex h-6 w-6 items-center justify-center rounded-md ${
+                  activeSection === "welcome"
+                    ? "bg-purple-100 text-purple-600"
+                    : "bg-gray-100 text-gray-500"
+                }`}
+              >
+                <MessageSquare className="h-3.5 w-3.5" />
+              </div>
+              <span className="ml-2 text-sm font-medium">Welcome page</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <WelcomeSection />
+          </AccordionContent>
+        </AccordionItem>
 
-        <SidebarAccordionItem
-          value="response"
-          icon={<MessageCircle className="h-3.5 w-3.5" />}
-          label="Response page"
-          isActive={activeSection === "response"}
-        />
+        <AccordionItem value="response" className="border-b">
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center">
+              <div
+                className={`flex h-6 w-6 items-center justify-center rounded-md ${
+                  activeSection === "response"
+                    ? "bg-purple-100 text-purple-600"
+                    : "bg-gray-100 text-gray-500"
+                }`}
+              >
+                <MessageCircle className="h-3.5 w-3.5" />
+              </div>
+              <span className="ml-2 text-sm font-medium">Response page</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <ResponseSection />
+          </AccordionContent>
+        </AccordionItem>
 
-        <SidebarAccordionItem
-          value="customer"
-          icon={<User className="h-3.5 w-3.5" />}
-          label="Customer details page"
-          isActive={activeSection === "customer"}
-        />
+        <AccordionItem value="customer" className="border-b">
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center">
+              <div
+                className={`flex h-6 w-6 items-center justify-center rounded-md ${
+                  activeSection === "customer"
+                    ? "bg-purple-100 text-purple-600"
+                    : "bg-gray-100 text-gray-500"
+                }`}
+              >
+                <User className="h-3.5 w-3.5" />
+              </div>
+              <span className="ml-2 text-sm font-medium">
+                Customer details page
+              </span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <CustomerDetailsSection />
+          </AccordionContent>
+        </AccordionItem>
 
-        <SidebarAccordionItem
-          value="thank-you"
-          icon={<ThumbsUp className="h-3.5 w-3.5" />}
-          label="Thank you page"
-          isActive={activeSection === "thank-you"}
-        />
+        <AccordionItem value="thank-you" className="border-b">
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center">
+              <div
+                className={`flex h-6 w-6 items-center justify-center rounded-md ${
+                  activeSection === "thank-you"
+                    ? "bg-purple-100 text-purple-600"
+                    : "bg-gray-100 text-gray-500"
+                }`}
+              >
+                <ThumbsUp className="h-3.5 w-3.5" />
+              </div>
+              <span className="ml-2 text-sm font-medium">Thank you page</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <ThankYouSection />
+          </AccordionContent>
+        </AccordionItem>
 
         <SidebarAccordionItem
           value="word-of-mouth"

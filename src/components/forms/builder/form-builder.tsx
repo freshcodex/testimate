@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { FormSidebar } from "@/components/forms/builder/form-sidebar";
 import { FormPreview } from "@/components/forms/builder/form-preview";
+import { useFormBuilder } from "@/hooks/use-form-builders";
+import { FormProvider } from "react-hook-form";
 
 export type FormSection =
   | "design"
@@ -24,38 +25,20 @@ export type FormSection =
   | "advanced";
 
 export function FormBuilder() {
-  const [activeSection, setActiveSection] = useState<FormSection>("design");
-  const [viewMode, setViewMode] = useState<"desktop" | "mobile">("mobile");
+  const {
+    form,
+    formValues,
+    activeSection,
+    viewMode,
+    handleSectionChange,
+    handleViewModeChange,
+  } = useFormBuilder();
 
-  // Form data state
-  const [formData, setFormData] = useState({
-    name: "My testimonial form",
-    design: {
-      logo: "heart",
-      primaryColor: "#6701E6",
-      backgroundColor: "#FFFFFF",
-      font: "Default",
-      showGradient: true,
-    },
-    content: {
-      title: "Share a testimonial!",
-      description: "Do you love using our product? We'd love to hear about it!",
-      bullets: [
-        "Share your experience with a quick video or text testimonial",
-        "Recording a video? Don't forget to smile 😊",
-      ],
-    },
+  const onSubmit = form.handleSubmit((data) => {
+    console.log("Form submitted:", data);
+    // Here you would save the form data to your backend
+    alert("Form saved successfully!");
   });
-
-  const updateFormData = (section: string, field: string, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [section]: {
-        ...(prev[section as keyof typeof prev] as Record<string, any>),
-        [field]: value,
-      },
-    }));
-  };
 
   return (
     <div className="flex h-full flex-col">
@@ -67,11 +50,13 @@ export function FormBuilder() {
           <ArrowLeft className="mr-2 h-4 w-4" />
           Forms
         </Link>
-        <h1 className="ml-4 text-lg font-semibold">{formData.name}</h1>
+        <h1 className="ml-4 text-lg font-semibold">{formValues.name}</h1>
         <div className="ml-auto">
           <Button
             variant="default"
             className="bg-black text-white hover:bg-gray-800"
+            onClick={onSubmit}
+            disabled={!form.formState.isValid}
           >
             Save changes
           </Button>
@@ -79,17 +64,17 @@ export function FormBuilder() {
       </div>
 
       <div className="flex flex-1 overflow-hidden">
-        <FormSidebar
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-          formData={formData}
-          updateFormData={updateFormData}
-        />
-        <FormPreview
-          viewMode={viewMode}
-          setViewMode={setViewMode}
-          formData={formData}
-        />
+        <FormProvider {...form}>
+          <FormSidebar
+            activeSection={activeSection}
+            setActiveSection={handleSectionChange}
+          />
+          <FormPreview
+            viewMode={viewMode}
+            setViewMode={handleViewModeChange}
+            formData={formValues}
+          />
+        </FormProvider>
       </div>
     </div>
   );
