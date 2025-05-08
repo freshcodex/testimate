@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { AppSidebar } from "@/components/proof/sidebar";
+import { AppSidebar } from "@/components/layouts/sidebar";
 import {
   SidebarProvider,
   SidebarInset,
