@@ -8,6 +8,9 @@ import { FormSidebar } from "@/components/forms/builder/form-sidebar";
 import { FormPreview } from "@/components/forms/builder/form-preview";
 import { useFormBuilder } from "@/hooks/use-form-builders";
 import { FormProvider } from "react-hook-form";
+import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export type FormSection =
   | "design"
@@ -25,6 +28,7 @@ export type FormSection =
   | "advanced";
 
 export function FormBuilder() {
+  const router = useRouter();
   const {
     form,
     formValues,
@@ -34,10 +38,30 @@ export function FormBuilder() {
     handleViewModeChange,
   } = useFormBuilder();
 
-  const onSubmit = form.handleSubmit((data) => {
-    console.log("Form submitted:", data);
-    // Here you would save the form data to your backend
-    alert("Form saved successfully!");
+  const utils = api.useUtils();
+  const createForm = api.collectionForms.create.useMutation({
+    onSuccess: async (data) => {
+      await utils.collectionForms.getAll.invalidate();
+      toast.success("Form saved successfully!");
+      router.push(`/dashboard/forms/${data?.id}`);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const onSubmit = form.handleSubmit(async (data) => {
+    createForm.mutate({
+      title: data.name,
+      projectId: 1, // TODO: Get this from context/props
+      design: data.design,
+      welcomePage: data.welcomePage,
+      responsePage: data.responsePage,
+      customerDetails: data.customerDetails,
+      thankYouPage: data.thankYouPage,
+      customFields: data.additionalFields,
+      customLabels: data.customLabels,
+    });
   });
 
   return (
@@ -64,9 +88,9 @@ export function FormBuilder() {
               variant="default"
               className="w-full bg-black text-white hover:bg-gray-800"
               onClick={onSubmit}
-              disabled={!form.formState.isValid}
+              disabled={!form.formState.isValid || createForm.isPending}
             >
-              Save changes
+              {createForm.isPending ? "Saving..." : "Save changes"}
             </Button>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HydrateClient } from "@/trpc/server";
-import { Navbar } from "./_components/navbar";
+import { Navbar } from "../components/navbar";
 
 export default async function Home() {
   return (
