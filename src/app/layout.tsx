@@ -5,6 +5,8 @@ import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/sonner";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 export const metadata: Metadata = {
   title: "Testimate",
   description: "Testimate",
@@ -22,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </TRPCReactProvider>
         <Toaster />
       </body>
     </html>

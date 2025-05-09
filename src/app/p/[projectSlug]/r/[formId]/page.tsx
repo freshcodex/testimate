@@ -6,6 +6,7 @@ import { ResponsePage } from "@/components/forms/shared/response-page";
 import { WelcomePage } from "@/components/forms/shared/welcome-page";
 import { ThankYouPage } from "@/components/forms/shared/thankyou-page";
 import { useState, useEffect } from "react";
+import { useQueryState } from "nuqs";
 import type { FormValues } from "@/lib/schema/form-schema";
 import type {
   CustomerDetailsConfig,
@@ -44,9 +45,19 @@ function FormSkeleton() {
 
 export default function SharedFormPage() {
   const params = useParams();
-  const [currentStep, setCurrentStep] = useState<
-    "welcome" | "response" | "thank-you"
-  >("welcome");
+  const [currentStep, setCurrentStep] = useQueryState("step", {
+    defaultValue: "welcome",
+    parse: (value): "welcome" | "response" | "thank-you" => {
+      if (
+        value === "welcome" ||
+        value === "response" ||
+        value === "thank-you"
+      ) {
+        return value;
+      }
+      return "welcome";
+    },
+  });
   const [formData, setFormData] = useState<FormValues | null>(null);
 
   const { data: form, isLoading } = api.collectionForms.getById.useQuery({
@@ -78,20 +89,22 @@ export default function SharedFormPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {currentStep === "welcome" && (
-        <div onClick={() => setCurrentStep("response")}>
-          <WelcomePage viewMode="desktop" formData={formData} />
-        </div>
-      )}
-      {currentStep === "response" && (
-        <div>
-          <ResponsePage viewMode="desktop" formData={formData} />
-        </div>
-      )}
-      {currentStep === "thank-you" && (
-        <ThankYouPage viewMode="desktop" formData={formData} />
-      )}
+    <div className="min-h-screen flex items-center justify-center">
+      <div className=" bg-gray-50">
+        {currentStep === "welcome" && (
+          <div className="h-full" onClick={() => setCurrentStep("response")}>
+            <WelcomePage viewMode="desktop" formData={formData} />
+          </div>
+        )}
+        {currentStep === "response" && (
+          <div onClick={() => setCurrentStep("thank-you")}>
+            <ResponsePage viewMode="desktop" formData={formData} />
+          </div>
+        )}
+        {currentStep === "thank-you" && (
+          <ThankYouPage viewMode="desktop" formData={formData} />
+        )}
+      </div>
     </div>
   );
 }
