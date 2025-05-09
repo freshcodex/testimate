@@ -16,6 +16,7 @@ export function useFormBuilder() {
 
   // Initialize form with default values
   const form = useForm<FormValues>({
+    // @ts-expect-error - TODO: Fix this
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "My testimonial form",

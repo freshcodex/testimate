@@ -3,7 +3,6 @@ import { Input } from "@/components/ui/input";
 import { User, Camera } from "lucide-react";
 
 interface CustomerDetailsContentProps {
-  nameEnabled: boolean;
   emailEnabled: boolean;
   jobTitleEnabled: boolean;
   companyEnabled: boolean;
@@ -12,7 +11,6 @@ interface CustomerDetailsContentProps {
 }
 
 export function CustomerDetailsContent({
-  nameEnabled,
   emailEnabled,
   jobTitleEnabled,
   companyEnabled,
@@ -26,14 +24,12 @@ export function CustomerDetailsContent({
       </div>
 
       <div className="space-y-4">
-        {nameEnabled && (
-          <div>
-            <label htmlFor="name" className="mb-1 block text-sm font-medium">
-              Your Name <span className="text-red-500">*</span>
-            </label>
-            <Input id="name" placeholder="Sherlock Holmes" />
-          </div>
-        )}
+        <div>
+          <label htmlFor="name" className="mb-1 block text-sm font-medium">
+            Your Name <span className="text-red-500">*</span>
+          </label>
+          <Input id="name" placeholder="Sherlock Holmes" />
+        </div>
 
         {emailEnabled && (
           <div>

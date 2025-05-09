@@ -23,7 +23,6 @@ export function CustomerDetailsPage({
         />
         <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white px-4 pt-6 shadow-lg overflow-auto">
           <CustomerDetailsContent
-            nameEnabled={customerDetails.nameEnabled}
             emailEnabled={customerDetails.emailEnabled}
             jobTitleEnabled={customerDetails.jobTitleEnabled}
             companyEnabled={customerDetails.companyEnabled}
@@ -44,7 +43,6 @@ export function CustomerDetailsPage({
       <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white p-8 shadow-lg overflow-auto">
         <div className="mx-auto max-w-md">
           <CustomerDetailsContent
-            nameEnabled={customerDetails.nameEnabled}
             emailEnabled={customerDetails.emailEnabled}
             jobTitleEnabled={customerDetails.jobTitleEnabled}
             companyEnabled={customerDetails.companyEnabled}

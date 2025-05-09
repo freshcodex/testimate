@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -18,7 +18,7 @@ const emailConfirmSchema = z.object({
 
 type EmailConfirmFormData = z.infer<typeof emailConfirmSchema>;
 
-export default function EmailConfirmPage() {
+function EmailConfirmForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -93,5 +93,13 @@ export default function EmailConfirmPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function EmailConfirmPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EmailConfirmForm />
+    </Suspense>
   );
 }
