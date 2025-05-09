@@ -4,11 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-  type FormValues,
-  formSchema,
-  type CustomLabelsValues,
-} from "@/lib/schema/form-schema";
+import { type FormValues, formSchema } from "@/lib/schema/form-schema";
 import type { FormSection } from "@/components/forms/builder/form-builder";
 
 export function useFormBuilder() {

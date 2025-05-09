@@ -1,5 +1,5 @@
-import { FormBuilder } from "@/components/forms/builder/form-builder";
+import { EditFormBuilder } from "@/components/forms/builder/edit-form-builder";
 
 export default function NewFormPage() {
-  return <FormBuilder />;
+  return <EditFormBuilder />;
 }
