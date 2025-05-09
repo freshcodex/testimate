@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { type FormValues, formSchema } from "@/lib/schema/form-schema";
+import {
+  type FormValues,
+  formSchema,
+  type CustomLabelsValues,
+} from "@/lib/schema/form-schema";
 import type { FormSection } from "@/components/forms/builder/form-builder";
 
 export function useFormBuilder() {
@@ -43,21 +47,72 @@ export function useFormBuilder() {
         collectImageAttachments: false,
       },
       customerDetails: {
-        collectName: true,
-        collectEmail: true,
-        collectCompany: false,
-        collectJobTitle: false,
+        emailEnabled: true,
+        emailRequired: true,
+        jobTitleEnabled: true,
+        jobTitleRequired: false,
+        userPhotoEnabled: true,
+        userPhotoRequired: false,
+        websiteUrlEnabled: true,
+        websiteUrlRequired: false,
+        companyEnabled: true,
+        companyRequired: false,
+        teamEnabled: false,
+        teamRequired: false,
+        companyLogoEnabled: true,
+        companyLogoRequired: false,
       },
       thankYouPage: {
         title: "Thank you for your testimonial!",
         message: "We appreciate you taking the time to share your experience.",
         showSocialShare: true,
       },
+      additionalFields: [],
+      customLabels: {
+        recordVideoButton: "Record a video",
+        writeReviewButton: "Write a testimonial",
+        videoTestimonialPageTitle: "Record a video testimonial",
+        openRecorderButton: "Open recorder",
+        uploadFileButton: "Upload a file",
+        recorderErrorMessage:
+          "We can't access your camera. To enable access: click the lock icon in your browser bar.",
+        textTestimonialPageTitle: "Write a text testimonial",
+        textTestimonialPlaceholder: "Write something nice ✨",
+        submitButtonLabel: "Submit",
+        attributionPageTitle: "Almost done 🙌",
+        yourName: "Your Name",
+        namePlaceholder: "Sherlock Holmes",
+        emailAddress: "Email address",
+        emailPlaceholder: "sherlock@bakerstreet.com",
+        headline: "Job Title",
+        taglinePlaceholder: "Head of Investigations",
+        pickAnImageLabel: "Pick an image",
+        yourWebsite: "Company Website",
+        websitePlaceholder: "https://bakerstreet.com",
+        yourAvatar: "Your Photo",
+        company: "Company",
+        companyPlaceholder: "Baker Street Detectives",
+        companyLogo: "Company Logo",
+        teamLabel: "Team",
+        customFieldPlaceholder: "Enter details here",
+        selectPlaceholder: "Select an option",
+        shareYourTestimonial: "Share your testimonial",
+        marketingConsent:
+          "By submitting, you give us permission to use this testimonial across social channels.",
+      },
     },
   });
 
   // Get form values for preview
   const formValues = form.watch();
+
+  // Helper to add an additional field
+  const addAdditionalField = (
+    field: FormValues["additionalFields"][number]
+  ) => {
+    const current = form.getValues("additionalFields") || [];
+    form.setValue("additionalFields", [...current, field]);
+  };
 
   // Handle accordion section change
   const handleSectionChange = (section: FormSection) => {
@@ -76,5 +131,6 @@ export function useFormBuilder() {
     viewMode,
     handleSectionChange,
     handleViewModeChange,
+    addAdditionalField,
   };
 }

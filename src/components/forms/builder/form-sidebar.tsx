@@ -29,6 +29,7 @@ import { WelcomeSection } from "./sections/welcome-section";
 import { ResponseSection } from "./sections/response-section";
 import { CustomerDetailsSection } from "./sections/customer-detail-sections";
 import { ThankYouSection } from "./sections/thankyou-section";
+import { CustomizeLabelsSection } from "./sections/customize-labels-section";
 
 interface FormSidebarProps {
   activeSection: FormSection;
@@ -47,7 +48,7 @@ export function FormSidebar({
   };
 
   return (
-    <div className="w-[380px] flex-shrink-0 overflow-auto border-r">
+    <div className="flex-shrink-0">
       <Accordion
         type="single"
         collapsible
@@ -117,7 +118,7 @@ export function FormSidebar({
           </AccordionContent>
         </AccordionItem>
 
-        <SidebarAccordionItem
+        {/* <SidebarAccordionItem
           value="word-of-mouth"
           icon={<Share2 className="h-4 w-4 text-indigo-500" />}
           label="Word of Mouth"
@@ -143,16 +144,21 @@ export function FormSidebar({
           icon={<Languages className="h-4 w-4 text-indigo-500" />}
           label="Auto-translate"
           isActive={activeSection === "auto-translate"}
-        />
+        /> */}
 
-        <SidebarAccordionItem
-          value="customize-labels"
-          icon={<Tag className="h-4 w-4 text-indigo-500" />}
-          label="Customize labels"
-          isActive={activeSection === "customize-labels"}
-        />
+        <AccordionItem value="customize-labels" className="border-b">
+          <AccordionTrigger className="px-4 py-3 hover:no-underline">
+            <div className="flex items-center">
+              <Tag className="h-4 w-4 text-indigo-500" />
+              <span className="ml-2 text-sm font-medium">Customize labels</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pb-4">
+            <CustomizeLabelsSection />
+          </AccordionContent>
+        </AccordionItem>
 
-        <SidebarAccordionItem
+        {/* <SidebarAccordionItem
           value="custom-domain"
           icon={<Globe2 className="h-4 w-4 text-indigo-500" />}
           label="Custom domain"
@@ -171,7 +177,7 @@ export function FormSidebar({
           icon={<Settings className="h-4 w-4 text-indigo-500" />}
           label="Advanced"
           isActive={activeSection === "advanced"}
-        />
+        /> */}
       </Accordion>
     </div>
   );

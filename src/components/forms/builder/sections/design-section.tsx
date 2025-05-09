@@ -28,9 +28,30 @@ export function DesignSection() {
               Logo
             </FormLabel>
             <div className="mt-1 border border-gray-200 p-4 rounded-md inline-block">
-              <div className="h-12 w-12 flex items-center justify-center bg-white rounded-md">
+              <div
+                className="h-12 w-12 flex items-center justify-center bg-white rounded-md cursor-pointer hover:bg-gray-50"
+                onClick={() => {
+                  const fileInput = document.querySelector(
+                    'input[type="file"]'
+                  ) as HTMLInputElement;
+                  fileInput?.click();
+                }}
+              >
                 <Heart className="h-8 w-8 text-purple-600" />
               </div>
+              <FormControl>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      field.onChange(file);
+                    }
+                  }}
+                />
+              </FormControl>
             </div>
             <FormMessage />
           </FormItem>
@@ -47,12 +68,8 @@ export function DesignSection() {
                 Primary Color
               </FormLabel>
               <div className="mt-1 flex items-center">
-                <div
-                  className="h-6 w-6 rounded-md mr-2"
-                  style={{ backgroundColor: field.value }}
-                ></div>
                 <FormControl>
-                  <Input {...field} className="h-9" />
+                  <Input type="color" {...field} className="h-9 w-20 p-1" />
                 </FormControl>
               </div>
               <FormMessage />
@@ -69,12 +86,8 @@ export function DesignSection() {
                 Background Color
               </FormLabel>
               <div className="mt-1 flex items-center">
-                <div
-                  className="h-6 w-6 rounded-md border border-gray-200 mr-2"
-                  style={{ backgroundColor: field.value }}
-                ></div>
                 <FormControl>
-                  <Input {...field} className="h-9" />
+                  <Input type="color" {...field} className="h-9 w-20 p-1" />
                 </FormControl>
               </div>
               <FormMessage />

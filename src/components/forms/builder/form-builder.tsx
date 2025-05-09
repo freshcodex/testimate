@@ -41,41 +41,41 @@ export function FormBuilder() {
   });
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="flex h-14 items-center border-b px-4">
-        <Link
-          href="/forms"
-          className="flex items-center text-sm text-gray-500 hover:text-gray-900"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Forms
-        </Link>
-        <h1 className="ml-4 text-lg font-semibold">{formValues.name}</h1>
-        <div className="ml-auto">
-          <Button
-            variant="default"
-            className="bg-black text-white hover:bg-gray-800"
-            onClick={onSubmit}
-            disabled={!form.formState.isValid}
-          >
-            Save changes
-          </Button>
-        </div>
-      </div>
-
-      <div className="flex flex-1 overflow-hidden">
-        <FormProvider {...form}>
+    <FormProvider {...form}>
+      <div className="h-screen grid grid-cols-[40%_60%]">
+        <div className="flex flex-col py-10 px-4 overflow-y-scroll">
+          <div className="px-4 py-2 space-y-2">
+            <Link
+              // DON't change this href Intentional
+              href="/dashboard/forms"
+              className="flex items-center text-sm text-gray-500 hover:text-gray-900"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Forms
+            </Link>
+            <h1 className="text-2xl font-semibold">{formValues.name}</h1>
+          </div>
           <FormSidebar
             activeSection={activeSection}
             setActiveSection={handleSectionChange}
           />
-          <FormPreview
-            viewMode={viewMode}
-            setViewMode={handleViewModeChange}
-            formData={formValues}
-          />
-        </FormProvider>
+          <div className="mt-auto px-4 py-2">
+            <Button
+              variant="default"
+              className="w-full bg-black text-white hover:bg-gray-800"
+              onClick={onSubmit}
+              disabled={!form.formState.isValid}
+            >
+              Save changes
+            </Button>
+          </div>
+        </div>
+        <FormPreview
+          viewMode={viewMode}
+          setViewMode={handleViewModeChange}
+          formData={formValues}
+        />
       </div>
-    </div>
+    </FormProvider>
   );
 }
