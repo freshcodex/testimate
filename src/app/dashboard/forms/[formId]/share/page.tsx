@@ -10,17 +10,21 @@ import { InviteCustomers } from "@/components/share-form/InviteCustomers";
 import { CourseIntegration } from "@/components/share-form/CourseIntegration";
 import { Automation } from "@/components/share-form/Automation";
 import { useParams } from "next/navigation";
+import { toast } from "sonner";
+
 export default function ShareFormPage() {
   const params = useParams();
   const [copied, setCopied] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("link");
   const [embedType, setEmbedType] = useState("inline");
 
-  const formLink = `https://testimate.io/p/shane-parrish-JvE/r/${params.formId}`;
+  // TODO: Change to the actual form link
+  const formLink = `http://localhost:3000/p/test-project/r/${params.formId}`;
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
     setCopied(type);
+    toast.success("Link copied to clipboard!");
     setTimeout(() => setCopied(null), 2000);
   };
 
