@@ -74,6 +74,7 @@ export function FormBuilder() {
           viewMode={viewMode}
           setViewMode={handleViewModeChange}
           formData={formValues}
+          activeSection={activeSection}
         />
       </div>
     </FormProvider>
