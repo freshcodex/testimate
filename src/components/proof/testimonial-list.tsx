@@ -3,15 +3,24 @@
 import { TestimonialCard } from "@/components/proof/testimonial-card";
 import { TestimonialActionBar } from "@/components/proof/testimonial-action-bar";
 import { DeleteTestimonialsDialog } from "@/components/proof/delete-testimonials-dialog";
-import { api } from "@/trpc/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTestimonialSelection } from "@/hooks/use-testimonial-selection";
+import { type testimonials } from "@/server/db/schema";
+import { type InferSelectModel } from "drizzle-orm";
 
-export function TestimonialList({ projectId }: { projectId: number }) {
-  const { data: testimonials, isLoading } = api.testimonials.getAll.useQuery({
-    projectId,
-  });
+type Testimonial = InferSelectModel<typeof testimonials>;
 
+interface TestimonialListProps {
+  projectId: number;
+  testimonials: Testimonial[];
+  isLoading: boolean;
+}
+
+export function TestimonialList({
+  projectId,
+  testimonials,
+  isLoading,
+}: TestimonialListProps) {
   const {
     selectedIds,
     selectedCount,
@@ -34,7 +43,7 @@ export function TestimonialList({ projectId }: { projectId: number }) {
     isExporting,
   } = useTestimonialSelection({
     projectId,
-    testimonials: testimonials ?? [],
+    testimonials,
   });
 
   if (isLoading) {

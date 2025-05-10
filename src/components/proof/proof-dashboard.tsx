@@ -1,3 +1,5 @@
+"use client";
+
 import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -5,8 +7,18 @@ import { Input } from "@/components/ui/input";
 import { StatusFilter } from "@/components/proof/status-filter";
 import { TagsFilter } from "@/components/proof/tags-filter";
 import { TestimonialList } from "@/components/proof/testimonial-list";
+import { useTestimonialFilters } from "@/hooks/use-testimonial-filters";
 
 export function ProofDashboard() {
+  const {
+    status,
+    setStatus,
+    searchQuery,
+    setSearchQuery,
+    testimonials,
+    isLoading,
+  } = useTestimonialFilters({ projectId: 1 }); // TODO: Replace with actual project ID
+
   return (
     // TODO: Make this responsive
     <div className="flex min-w-[700px] flex-col p-6">
@@ -24,9 +36,11 @@ export function ProofDashboard() {
             <Input
               placeholder="Search for your proof using natural language"
               className="pl-10 bg-white border-gray-300"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <StatusFilter />
+          <StatusFilter value={status} onValueChange={setStatus} />
           <TagsFilter />
           <Button variant="outline" size="icon" className="h-10 w-10">
             <Search className="h-4 w-4" />
@@ -34,9 +48,12 @@ export function ProofDashboard() {
         </div>
       </div>
 
-      {/* TODO: Replace with the project id */}
       <div className="w-full">
-        <TestimonialList projectId={1} />
+        <TestimonialList
+          projectId={1}
+          testimonials={testimonials}
+          isLoading={isLoading}
+        />
       </div>
 
       <div className="mt-4 flex items-center justify-between py-4">

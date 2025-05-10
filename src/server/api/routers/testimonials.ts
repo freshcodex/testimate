@@ -1,20 +1,18 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { desc, eq, and, inArray } from "drizzle-orm";
+import { desc, eq, and, inArray, or, like } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import { createUpdateSchema, createSelectSchema } from "drizzle-zod";
+import { createUpdateSchema } from "drizzle-zod";
 import {
   testimonials,
   projects,
   collectionForms,
-  testimonialTypeEnum,
-  integrationSourceEnum,
   insertTestimonialSchema,
   selectTestimonialSchema,
 } from "@/server/db/schema";
 import { createObjectCsvWriter } from "csv-writer";
 import { join } from "path";
-import { writeFile, readFile, unlink } from "fs/promises";
+import { readFile, unlink } from "fs/promises";
 import { tmpdir } from "os";
 
 const updateTestimonialSchema = createUpdateSchema(testimonials);
@@ -48,6 +46,56 @@ export const testimonialsRouter = createTRPCRouter({
         .orderBy(desc(testimonials.createdAt));
 
       return allTestimonials;
+    }),
+
+  getFilteredTestimonials: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.number(),
+        status: z.enum(["approved", "unapproved"]).optional(),
+        searchQuery: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // First verify the project belongs to the user
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(
+          and(
+            eq(projects.id, input.projectId),
+            eq(projects.createdBy, ctx.user.id)
+          )
+        );
+
+      if (!project) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found or you don't have access to it",
+        });
+      }
+
+      const filteredTestimonials = await ctx.db
+        .select()
+        .from(testimonials)
+        .where(
+          and(
+            eq(testimonials.projectId, input.projectId),
+            input.status
+              ? eq(testimonials.approved, input.status === "approved")
+              : undefined,
+            input.searchQuery?.trim()
+              ? or(
+                  like(testimonials.customerName, `%${input.searchQuery}%`),
+                  like(testimonials.customerEmail, `%${input.searchQuery}%`),
+                  like(testimonials.text, `%${input.searchQuery}%`)
+                )
+              : undefined
+          )
+        )
+        .orderBy(desc(testimonials.createdAt));
+
+      return filteredTestimonials;
     }),
 
   getById: protectedProcedure
