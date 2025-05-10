@@ -32,7 +32,7 @@ export default function ShareFormPage() {
     <div className="container mx-auto max-w-5xl py-8 px-4">
       <div className="mb-8">
         <Link
-          href="/forms"
+          href={`/dashboard/forms`}
           className="flex items-center text-sm text-gray-500 hover:text-gray-900 mb-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />

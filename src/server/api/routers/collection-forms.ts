@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { desc, eq, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createUpdateSchema, createSelectSchema } from "drizzle-zod";
@@ -49,7 +49,7 @@ export const collectionFormsRouter = createTRPCRouter({
       return forms;
     }),
 
-  getById: protectedProcedure
+  getById: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
       const [form] = await ctx.db
@@ -65,22 +65,22 @@ export const collectionFormsRouter = createTRPCRouter({
       }
 
       // Verify the user has access to the project
-      const [project] = await ctx.db
-        .select()
-        .from(projects)
-        .where(
-          and(
-            eq(projects.id, form.projectId),
-            eq(projects.createdBy, ctx.user.id)
-          )
-        );
+      // const [project] = await ctx.db
+      //   .select()
+      //   .from(projects)
+      //   .where(
+      //     and(
+      //       eq(projects.id, form.projectId),
+      //       eq(projects.createdBy, ctx.user.id)
+      //     )
+      //   );
 
-      if (!project) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You don't have access to this collection form",
-        });
-      }
+      // if (!project) {
+      //   throw new TRPCError({
+      //     code: "FORBIDDEN",
+      //     message: "You don't have access to this collection form",
+      //   });
+      // }
 
       return form;
     }),

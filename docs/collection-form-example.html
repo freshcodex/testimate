@@ -1,0 +1,45 @@
+The popup will open automatically after a delay.
+
+<script type="text/javascript">
+  function openTestimateForm() {
+    const backdrop = document.createElement("div");
+    backdrop.className = "testimate-modal-backdrop";
+    const modal = document.createElement("div");
+    modal.className = "testimate-modal";
+    modal.innerHTML =
+      '<iframe id="testimate-collector-iframe" src="http://localhost:3000/p/test-project/r/2" allow="camera;microphone" title="Testimate form" frameborder="0" scrolling="no" width="100%" height="700"></iframe>';
+    document.body.appendChild(backdrop);
+    document.body.appendChild(modal);
+    backdrop.onclick = function () {
+      document.body.removeChild(backdrop);
+      document.body.removeChild(modal);
+    };
+  }
+</script>
+<script type="text/javascript">
+  setTimeout(openTestimateForm, 3000); // Opens after 3 seconds
+</script>
+<style>
+  .testimate-modal {
+    font-family: system-ui, -apple-system, sans-serif;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  .testimate-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    backdrop-filter: blur(4px);
+  }
+</style>

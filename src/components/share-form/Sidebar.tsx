@@ -26,18 +26,18 @@ const sidebarItems = [
     title: "Embed",
     description: "Embed your form on your website to collect testimonials.",
   },
-  {
-    id: "course",
-    icon: GraduationCap,
-    title: "Add to Course",
-    description: "Collect student testimonials inside course.",
-  },
-  {
-    id: "automate",
-    icon: Zap,
-    title: "Automate",
-    description: "Automate your testimonial collection with Senja and Zapier.",
-  },
+  // {
+  //   id: "course",
+  //   icon: GraduationCap,
+  //   title: "Add to Course",
+  //   description: "Collect student testimonials inside course.",
+  // },
+  // {
+  //   id: "automate",
+  //   icon: Zap,
+  //   title: "Automate",
+  //   description: "Automate your testimonial collection with Senja and Zapier.",
+  // },
 ];
 
 export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
