@@ -273,6 +273,10 @@ export const testimonials = pgTable("testimonials", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Derive schemas from the table
+export const insertTestimonialSchema = createInsertSchema(testimonials);
+export const selectTestimonialSchema = createSelectSchema(testimonials);
+
 // Relations
 export const profilesRelations = relations(profiles, ({ many }) => ({
   projects: many(projects),

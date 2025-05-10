@@ -1,6 +1,7 @@
 import type { FormValues } from "@/lib/schema/form-schema";
 import { WelcomeHeader } from "./welcome-header";
 import { ResponseContent } from "./response-content";
+import { useParams } from "next/navigation";
 
 interface ResponsePageProps {
   viewMode: "desktop" | "mobile";
@@ -10,6 +11,10 @@ interface ResponsePageProps {
 export function ResponsePage({ viewMode, formData }: ResponsePageProps) {
   const { design, responsePage } = formData;
   const isMobile = viewMode === "mobile";
+
+  const { projectSlug, formId } = useParams();
+
+  console.log(projectSlug, formId);
 
   if (isMobile) {
     return (
@@ -24,6 +29,8 @@ export function ResponsePage({ viewMode, formData }: ResponsePageProps) {
             collectRatings={responsePage.collectRatings}
             primaryColor={design.primaryColor}
             isMobile={true}
+            formId={Number(formId)}
+            projectSlug={String(projectSlug)}
           />
         </div>
       </div>
@@ -42,6 +49,8 @@ export function ResponsePage({ viewMode, formData }: ResponsePageProps) {
             prompt={responsePage.prompt}
             collectRatings={responsePage.collectRatings}
             primaryColor={design.primaryColor}
+            formId={Number(formId)}
+            projectSlug={String(projectSlug)}
           />
         </div>
       </div>
