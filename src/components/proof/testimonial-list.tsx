@@ -1,73 +1,77 @@
+"use client";
+
 import { TestimonialCard } from "@/components/proof/testimonial-card";
+import { TestimonialActionBar } from "@/components/proof/testimonial-action-bar";
+import { api } from "@/trpc/react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useState } from "react";
 
-// Sample data for testimonials
-const testimonials = [
-  {
-    id: 1,
-    avatar: "ZX",
-    avatarColor: "bg-green-100 text-green-800",
-    name: "ZXZ",
-    username: "zx@as.com",
-    rating: 4,
-    content: "zxzxz",
-    days: 3,
-    country: "GB",
-    status: "unapproved" as const,
-    media: [],
-  },
-  {
-    id: 2,
-    avatar: "/placeholder.svg?height=60&width=60",
-    name: "Chicken Tikka",
-    username: "neupanebishal07@gmail.com",
-    role: "dev",
-    rating: 4,
-    days: 3,
-    country: "GB",
-    status: "approved" as const,
-    media: [
-      {
-        type: "video" as const,
-        thumbnail: "/placeholder.svg?height=150&width=250",
-        duration: "04:32",
-        title: "Introduce yourself and share what you do",
-      },
-      {
-        type: "video" as const,
-        thumbnail: "/placeholder.svg?height=150&width=250",
-        duration: "02:27",
-        title: "What was it like getting started...",
-      },
-    ],
-  },
-  {
-    id: 3,
-    avatar: "/placeholder.svg?height=60&width=60",
-    name: "Josh Jones",
-    rating: 5,
-    content:
-      "I can't say enough great things about The Farnam in Omaha. From the moment I arrived, the service has been exceptional across every touchpoint — valet, front desk, restaurant, and bars. As someone who travels frequently, it's rare to experience such consistently high quality service.",
-    weeks: 2,
-    country: "GB",
-    status: "approved" as const,
-    media: [
-      { type: "image" as const, src: "/placeholder.svg?height=120&width=150" },
-      { type: "image" as const, src: "/placeholder.svg?height=120&width=150" },
-      { type: "image" as const, src: "/placeholder.svg?height=120&width=150" },
-      { type: "image" as const, src: "/placeholder.svg?height=120&width=150" },
-      { type: "image" as const, src: "/placeholder.svg?height=120&width=150" },
-      { type: "image" as const, src: "/placeholder.svg?height=120&width=150" },
-      { type: "image" as const, src: "/placeholder.svg?height=120&width=150" },
-    ],
-  },
-];
+export function TestimonialList({ projectId }: { projectId: number }) {
+  const { data: testimonials, isLoading } = api.testimonials.getAll.useQuery({
+    projectId,
+  });
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-export function TestimonialList() {
+  const handleSelect = (id: number, checked: boolean) => {
+    setSelectedIds((prev) =>
+      checked ? [...prev, id] : prev.filter((selectedId) => selectedId !== id)
+    );
+  };
+  const handleSelectAll = (checked: boolean) => {
+    if (checked && testimonials) {
+      setSelectedIds(testimonials.map((t) => t.id));
+    } else {
+      setSelectedIds([]);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="rounded-lg border p-4">
+            <div className="flex items-center space-x-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-[200px]" />
+                <Skeleton className="h-4 w-[150px]" />
+              </div>
+            </div>
+            <div className="mt-4 space-y-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-[80%]" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!testimonials?.length) {
+    return (
+      <div className="text-center text-muted-foreground">
+        No testimonials found
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full">
       {testimonials.map((testimonial) => (
-        <TestimonialCard key={testimonial.id} testimonial={testimonial} />
+        <TestimonialCard
+          key={testimonial.id}
+          testimonial={testimonial}
+          checked={selectedIds.includes(testimonial.id)}
+          onCheck={(checked) => handleSelect(testimonial.id, checked)}
+        />
       ))}
+      {selectedIds.length > 0 && (
+        <TestimonialActionBar
+          selectedCount={selectedIds.length}
+          onSelectAll={handleSelectAll}
+          allSelected={selectedIds.length === testimonials.length}
+        />
+      )}
     </div>
   );
 }

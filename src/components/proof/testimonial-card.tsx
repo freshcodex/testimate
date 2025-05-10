@@ -5,58 +5,27 @@ import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { StarRating } from "@/components/proof/star-rating";
 import { StatusBadge } from "@/components/proof/status-badge";
+import { type testimonials } from "@/server/db/schema";
+import { type InferSelectModel } from "drizzle-orm";
 
-interface Media {
-  type: "video" | "image";
-  src?: string;
-  thumbnail?: string;
-  duration?: string;
-  title?: string;
-}
-
-interface TestimonialProps {
-  id: number;
-  avatar: string;
-  avatarColor?: string;
-  name: string;
-  username?: string;
-  role?: string;
-  rating: number;
-  content?: string;
-  days?: number;
-  weeks?: number;
-  country: string;
-  status: "approved" | "unapproved" | "pending";
-  media: Media[];
-}
+type Testimonial = InferSelectModel<typeof testimonials>;
 
 export function TestimonialCard({
   testimonial,
+  checked,
+  onCheck,
 }: {
-  testimonial: TestimonialProps;
+  testimonial: Testimonial;
+  checked?: boolean;
+  onCheck?: (checked: boolean) => void;
 }) {
-  const {
-    avatar,
-    avatarColor,
-    name,
-    username,
-    role,
-    rating,
-    content,
-    days,
-    weeks,
-    country,
-    status,
-    media,
-  } = testimonial;
-
   return (
-    <div className="flex items-start gap-4 rounded-lg border border-gray-200 bg-white p-4">
+    <div className="flex w-full items-start gap-4 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex-shrink-0">
-        {avatar.startsWith("/") ? (
+        {testimonial?.customerAvatar?.startsWith("/") ? (
           <Image
-            src={avatar || "/placeholder.svg"}
-            alt={name}
+            src={testimonial.customerAvatar || "/placeholder.svg"}
+            alt={testimonial.customerName}
             width={48}
             height={48}
             className="h-12 w-12 rounded-full object-cover"
@@ -65,10 +34,11 @@ export function TestimonialCard({
           <div
             className={cn(
               "flex h-12 w-12 items-center justify-center rounded-full text-lg font-semibold",
-              avatarColor || "bg-gray-100 text-gray-800"
+              testimonial.customFields?.avatarColor ||
+                "bg-gray-100 text-gray-800"
             )}
           >
-            {avatar}
+            {testimonial.customerAvatar}
           </div>
         )}
       </div>
@@ -77,28 +47,47 @@ export function TestimonialCard({
         <div className="mb-2">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-medium">{name}</h3>
-              {username && <p className="text-sm text-gray-500">{username}</p>}
-              {role && <p className="text-sm text-gray-500">{role}</p>}
+              <h3 className="font-medium">{testimonial.customerName}</h3>
+              {testimonial.customerEmail && (
+                <p className="text-sm text-gray-500">
+                  {testimonial.customerEmail}
+                </p>
+              )}
+              {testimonial.customFields?.role && (
+                <p className="text-sm text-gray-500">
+                  {testimonial.customFields.role}
+                </p>
+              )}
             </div>
             <div className="flex items-center gap-2">
-              <StatusBadge status={status} />
-              <Checkbox className="h-5 w-5 rounded border-gray-300" />
+              <StatusBadge
+                status={testimonial.approved ? "approved" : "unapproved"}
+              />
+              <Checkbox
+                className="h-5 w-5 rounded border-gray-300"
+                checked={checked}
+                onCheckedChange={onCheck}
+                aria-label="Select testimonial"
+              />
             </div>
           </div>
         </div>
 
-        <StarRating rating={rating} />
+        <StarRating rating={testimonial.rating as number} />
 
         <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
           <div className="flex items-center gap-1">
             <Heart className="h-4 w-4 fill-purple-500 text-purple-500" />
-            {days && <span>{days} days ago</span>}
-            {weeks && <span>{weeks} weeks ago</span>}
+            {testimonial.customFields?.days && (
+              <span>{testimonial.customFields.days} days ago</span>
+            )}
+            {testimonial.customFields?.weeks && (
+              <span>{testimonial.customFields.weeks} weeks ago</span>
+            )}
           </div>
           <div className="flex items-center gap-1">
             <span className="inline-block h-4 w-6 overflow-hidden rounded-sm">
-              {country === "GB" && (
+              {testimonial.customFields?.country === "GB" && (
                 <span className="flex h-full w-full items-center justify-center bg-red-500 text-[8px] text-white">
                   GB
                 </span>
@@ -107,11 +96,25 @@ export function TestimonialCard({
           </div>
         </div>
 
-        {content && <p className="mt-2 text-sm text-gray-700">{content}</p>}
+        {testimonial.text && (
+          <p className="mt-2 text-sm text-gray-700">{testimonial.text}</p>
+        )}
 
-        {media.length > 0 && (
+        {testimonial.type === "video" && testimonial.thumbnailUrl && (
+          <div className="mt-2">
+            <Image
+              src={testimonial.thumbnailUrl}
+              alt="Video thumbnail"
+              width={300}
+              height={200}
+              className="rounded-md object-cover"
+            />
+          </div>
+        )}
+
+        {/* {testimonial..length > 0 && (
           <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
-            {media.map((item, index) => (
+            {testimonial.media.map((item, index) => (
               <div key={index} className="relative overflow-hidden rounded-md">
                 {item.type === "video" && (
                   <div className="group relative">
@@ -149,7 +152,7 @@ export function TestimonialCard({
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

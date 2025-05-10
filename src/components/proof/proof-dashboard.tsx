@@ -8,7 +8,8 @@ import { TestimonialList } from "@/components/proof/testimonial-list";
 
 export function ProofDashboard() {
   return (
-    <div className="flex flex-col p-6">
+    // TODO: Make this responsive
+    <div className="flex min-w-[700px] flex-col p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Your Proof</h1>
         <Button>Invite a customer</Button>
@@ -33,7 +34,10 @@ export function ProofDashboard() {
         </div>
       </div>
 
-      <TestimonialList />
+      {/* TODO: Replace with the project id */}
+      <div className="w-full">
+        <TestimonialList projectId={1} />
+      </div>
 
       <div className="mt-4 flex items-center justify-between py-4">
         <p className="text-sm text-gray-500">
