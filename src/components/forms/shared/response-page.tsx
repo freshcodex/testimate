@@ -26,7 +26,6 @@ export function ResponsePage({ viewMode, formData }: ResponsePageProps) {
         <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white px-4 pt-6 shadow-lg">
           <ResponseContent
             prompt={responsePage.prompt}
-            collectRatings={responsePage.collectRatings}
             primaryColor={design.primaryColor}
             isMobile={true}
             formId={Number(formId)}
@@ -47,7 +46,6 @@ export function ResponsePage({ viewMode, formData }: ResponsePageProps) {
         <div className="mx-auto max-w-md">
           <ResponseContent
             prompt={responsePage.prompt}
-            collectRatings={responsePage.collectRatings}
             primaryColor={design.primaryColor}
             formId={Number(formId)}
             projectSlug={String(projectSlug)}

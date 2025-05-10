@@ -5,8 +5,9 @@ import { api } from "@/trpc/react";
 import { ResponsePage } from "@/components/forms/shared/response-page";
 import { WelcomePage } from "@/components/forms/shared/welcome-page";
 import { ThankYouPage } from "@/components/forms/shared/thankyou-page";
+import { CustomerDetailsPage } from "@/components/forms/shared/customer-details-page";
 import { useState, useEffect } from "react";
-import { useQueryState } from "nuqs";
+import { useFormStep } from "@/hooks/use-form-step";
 import type { FormValues } from "@/lib/schema/form-schema";
 import type {
   CustomerDetailsConfig,
@@ -45,19 +46,7 @@ function FormSkeleton() {
 
 export default function SharedFormPage() {
   const params = useParams();
-  const [currentStep, setCurrentStep] = useQueryState("step", {
-    defaultValue: "welcome",
-    parse: (value): "welcome" | "response" | "thank-you" => {
-      if (
-        value === "welcome" ||
-        value === "response" ||
-        value === "thank-you"
-      ) {
-        return value;
-      }
-      return "welcome";
-    },
-  });
+  const { currentStep, setCurrentStep } = useFormStep();
   const [formData, setFormData] = useState<FormValues | null>(null);
 
   const { data: form, isLoading } = api.collectionForms.getById.useQuery({
@@ -85,7 +74,7 @@ export default function SharedFormPage() {
 
   const handleSubmit = async (response: any) => {
     // TODO: Implement form submission
-    setCurrentStep("thank-you");
+    setCurrentStep("customer-details");
   };
 
   return (
@@ -99,6 +88,11 @@ export default function SharedFormPage() {
         {currentStep === "response" && (
           <div>
             <ResponsePage viewMode="desktop" formData={formData} />
+          </div>
+        )}
+        {currentStep === "customer-details" && (
+          <div>
+            <CustomerDetailsPage viewMode="desktop" formData={formData} />
           </div>
         )}
         {currentStep === "thank-you" && (

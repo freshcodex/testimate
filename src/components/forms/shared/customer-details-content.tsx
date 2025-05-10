@@ -1,6 +1,18 @@
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { User, Camera } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+  FormLabel,
+} from "@/components/ui/form";
+import { useTestimonialForm } from "@/hooks/use-testimonial-form";
+import { useFormStep } from "@/hooks/use-form-step";
 
 interface CustomerDetailsContentProps {
   emailEnabled: boolean;
@@ -8,7 +20,11 @@ interface CustomerDetailsContentProps {
   companyEnabled: boolean;
   primaryColor: string;
   isMobile?: boolean;
+  formId: number;
+  projectSlug: string;
 }
+
+// TODO: if the user directly navigates to the customer details page, we should show a message to the user that they need to submit the feedback first, we can do this bby checking form
 
 export function CustomerDetailsContent({
   emailEnabled,
@@ -16,32 +32,73 @@ export function CustomerDetailsContent({
   companyEnabled,
   primaryColor,
   isMobile = false,
+  formId,
+  projectSlug,
 }: CustomerDetailsContentProps) {
-  return (
-    <div className="rounded-lg bg-white p-4 shadow-sm">
-      <div className="mb-4 text-center">
-        <h2 className="text-xl font-semibold">Almost done 🙌</h2>
-      </div>
+  const { setCurrentStep } = useFormStep();
+  const createTestimonial = api.testimonials.create.useMutation({
+    onSuccess: () => {
+      toast.success("Testimonial submitted successfully!");
+      setCurrentStep("thank-you");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
-      <div className="space-y-4">
-        <div>
-          <label htmlFor="name" className="mb-1 block text-sm font-medium">
-            Your Name <span className="text-red-500">*</span>
-          </label>
-          <Input id="name" placeholder="Sherlock Holmes" />
-        </div>
+  const { form, handleSubmit } = useTestimonialForm({
+    formId,
+    projectSlug,
+  });
+
+  const onSubmit = handleSubmit((data) => {
+    createTestimonial.mutate({
+      ...data,
+      formId,
+      projectSlug,
+    });
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={onSubmit} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="customerName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Full Name</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="Sherlock Holmes"
+                  {...field}
+                  value={field.value || ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {emailEnabled && (
-          <div>
-            <label htmlFor="email" className="mb-1 block text-sm font-medium">
-              Email address <span className="text-red-500">*</span>
-            </label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="sherlock@bakerstreet.com"
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="customerEmail"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email Address</FormLabel>
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="sherlock@bakerstreet.com"
+                    {...field}
+                    value={field.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         )}
 
         <div>
@@ -60,31 +117,61 @@ export function CustomerDetailsContent({
         </div>
 
         {jobTitleEnabled && (
-          <div>
-            <label
-              htmlFor="jobTitle"
-              className="mb-1 block text-sm font-medium"
-            >
-              Job Title
-            </label>
-            <Input id="jobTitle" placeholder="Head of Investigations" />
-          </div>
+          <FormField
+            control={form.control}
+            name="customerTagline"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Title</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Head of Investigations"
+                    {...field}
+                    value={field.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         )}
 
-        <div>
-          <label htmlFor="website" className="mb-1 block text-sm font-medium">
-            Company Website
-          </label>
-          <Input id="website" placeholder="https://bakerstreet.com" />
-        </div>
+        <FormField
+          control={form.control}
+          name="customerUrl"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Website URL</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="https://bakerstreet.com"
+                  {...field}
+                  value={field.value || ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {companyEnabled && (
-          <div>
-            <label htmlFor="company" className="mb-1 block text-sm font-medium">
-              Company
-            </label>
-            <Input id="company" placeholder="Baker Street Detectives" />
-          </div>
+          <FormField
+            control={form.control}
+            name="customerCompany"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Company Name</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Baker Street Detectives"
+                    {...field}
+                    value={field.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         )}
 
         <div>
@@ -99,15 +186,20 @@ export function CustomerDetailsContent({
           </div>
         </div>
 
-        <Button className="w-full" style={{ backgroundColor: primaryColor }}>
-          Submit
+        <Button
+          type="submit"
+          className="w-full"
+          style={{ backgroundColor: primaryColor }}
+          disabled={createTestimonial.isPending}
+        >
+          {createTestimonial.isPending ? "Submitting..." : "Submit"}
         </Button>
 
         <p className="text-xs text-gray-500 text-center">
           By submitting, you give us permission to use this testimonial across
           social channels and other marketing efforts
         </p>
-      </div>
-    </div>
+      </form>
+    </Form>
   );
 }

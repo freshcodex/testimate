@@ -1,5 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { useTestimonialForm } from "@/hooks/use-testimonial-form";
 import { Heart, Facebook, Twitter, Linkedin, Link2 } from "lucide-react";
+import { useParams } from "next/navigation";
 
 interface ThankYouContentProps {
   title: string;
@@ -18,6 +20,14 @@ export function ThankYouContent({
 }: ThankYouContentProps) {
   const containerClass = isMobile ? "p-4" : "p-6";
   const titleClass = isMobile ? "text-lg" : "text-xl";
+
+  const { formId, projectSlug } = useParams();
+
+  // fetch the testimonial data from either the form hook or the database
+  const { formData } = useTestimonialForm({
+    formId: Number(formId),
+    projectSlug: String(projectSlug),
+  });
 
   return (
     <div className={`rounded-lg bg-white ${containerClass} shadow-sm`}>
@@ -41,20 +51,30 @@ export function ThankYouContent({
             <div className="rounded-lg border border-gray-200 p-4">
               <div className="flex items-center mb-2">
                 <div className="h-10 w-10 rounded-full bg-gray-200 overflow-hidden mr-2">
-                  <img
-                    src="/placeholder.svg?height=40&width=40"
-                    alt="User"
-                    className="h-full w-full object-cover"
-                  />
+                  {formData.customerAvatar ? (
+                    <img
+                      src={formData.customerAvatar}
+                      alt={formData.customerName}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src="/placeholder.svg?height=40&width=40"
+                      alt="User"
+                      className="h-full w-full object-cover"
+                    />
+                  )}
                 </div>
                 <div>
-                  <p className="font-medium">Sherlock Holmes</p>
-                  <p className="text-sm text-gray-500">@sherlock_holmes</p>
+                  <p className="font-medium">{formData.customerName}</p>
+                  {formData.customerTagline && (
+                    <p className="text-sm text-gray-500">
+                      {formData.customerTagline}
+                    </p>
+                  )}
                 </div>
               </div>
-              <p className="text-sm mb-2">
-                When your customer leaves a testimonial, they will see it here.
-              </p>
+              <p className="text-sm mb-2">{formData.text}</p>
               <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
                 <img
                   src="/placeholder.svg?height=16&width=16"

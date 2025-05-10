@@ -1,6 +1,7 @@
 import type { FormValues } from "@/lib/schema/form-schema";
 import { WelcomeHeader } from "./welcome-header";
 import { CustomerDetailsContent } from "./customer-details-content";
+import { useParams } from "next/navigation";
 
 interface CustomerDetailsPageProps {
   viewMode: "desktop" | "mobile";
@@ -13,6 +14,8 @@ export function CustomerDetailsPage({
 }: CustomerDetailsPageProps) {
   const { design, customerDetails } = formData;
   const isMobile = viewMode === "mobile";
+
+  const { formId, projectSlug } = useParams();
 
   if (isMobile) {
     return (
@@ -28,6 +31,8 @@ export function CustomerDetailsPage({
             companyEnabled={customerDetails.companyEnabled}
             primaryColor={design.primaryColor}
             isMobile={true}
+            formId={Number(formId)}
+            projectSlug={String(projectSlug)}
           />
         </div>
       </div>
@@ -47,6 +52,8 @@ export function CustomerDetailsPage({
             jobTitleEnabled={customerDetails.jobTitleEnabled}
             companyEnabled={customerDetails.companyEnabled}
             primaryColor={design.primaryColor}
+            formId={Number(formId)}
+            projectSlug={String(projectSlug)}
           />
         </div>
       </div>

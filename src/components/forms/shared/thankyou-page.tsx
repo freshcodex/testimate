@@ -1,7 +1,8 @@
 import type { FormValues } from "@/lib/schema/form-schema";
 import { WelcomeHeader } from "./welcome-header";
 import { ThankYouContent } from "./thankyou-content";
-
+import { useTestimonialForm } from "@/hooks/use-testimonial-form";
+import { useParams } from "next/navigation";
 interface ThankYouPageProps {
   viewMode: "desktop" | "mobile";
   formData: FormValues;
