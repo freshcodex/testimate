@@ -1,18 +1,43 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { Tag, Share2, Download, CheckCircle2, Trash2 } from "lucide-react";
+import {
+  Tag,
+  Share2,
+  Download,
+  CheckCircle2,
+  XCircle,
+  Trash2,
+} from "lucide-react";
 
 interface TestimonialActionBarProps {
   selectedCount: number;
   onSelectAll: (checked: boolean) => void;
   allSelected: boolean;
+  onApprove: () => void;
+  onUnapprove: () => void;
+  onDelete: () => void;
+  allSelectedApproved: boolean;
+  allSelectedUnapproved: boolean;
+  hasMixedApprovalStatus: boolean;
+  isApproving: boolean;
+  isUnapproving: boolean;
+  isDeleting: boolean;
 }
 
 export function TestimonialActionBar({
   selectedCount,
   onSelectAll,
   allSelected,
+  onApprove,
+  onUnapprove,
+  onDelete,
+  allSelectedApproved,
+  allSelectedUnapproved,
+  hasMixedApprovalStatus,
+  isApproving,
+  isUnapproving,
+  isDeleting,
 }: TestimonialActionBarProps) {
   return (
     <div
@@ -46,14 +71,43 @@ export function TestimonialActionBar({
           <Button size="sm" variant="outline">
             <Download className="size-4 mr-1" /> Export
           </Button>
-          <Button size="sm" variant="outline">
-            <CheckCircle2 className="size-4 mr-1" /> Approve
-          </Button>
+          {!hasMixedApprovalStatus && (
+            <>
+              {allSelectedUnapproved && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onApprove}
+                  disabled={isApproving}
+                >
+                  <CheckCircle2 className="size-4 mr-1" />
+                  {isApproving ? "Approving..." : "Approve"}
+                </Button>
+              )}
+              {allSelectedApproved && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={onUnapprove}
+                  disabled={isUnapproving}
+                >
+                  <XCircle className="size-4 mr-1" />
+                  {isUnapproving ? "Unapproving..." : "Unapprove"}
+                </Button>
+              )}
+            </>
+          )}
           {/* <Button size="sm" variant="outline">
             <GitMerge className="size-4 mr-1" /> Merge
           </Button> */}
-          <Button size="sm" variant="destructive">
-            <Trash2 className="size-4 mr-1" /> Delete
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={onDelete}
+            disabled={isDeleting}
+          >
+            <Trash2 className="size-4 mr-1" />
+            {isDeleting ? "Deleting..." : "Delete"}
           </Button>
         </div>
       </div>

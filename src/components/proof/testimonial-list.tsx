@@ -2,28 +2,38 @@
 
 import { TestimonialCard } from "@/components/proof/testimonial-card";
 import { TestimonialActionBar } from "@/components/proof/testimonial-action-bar";
+import { DeleteTestimonialsDialog } from "@/components/proof/delete-testimonials-dialog";
 import { api } from "@/trpc/react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useState } from "react";
+import { useTestimonialSelection } from "@/hooks/use-testimonial-selection";
 
 export function TestimonialList({ projectId }: { projectId: number }) {
   const { data: testimonials, isLoading } = api.testimonials.getAll.useQuery({
     projectId,
   });
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  const handleSelect = (id: number, checked: boolean) => {
-    setSelectedIds((prev) =>
-      checked ? [...prev, id] : prev.filter((selectedId) => selectedId !== id)
-    );
-  };
-  const handleSelectAll = (checked: boolean) => {
-    if (checked && testimonials) {
-      setSelectedIds(testimonials.map((t) => t.id));
-    } else {
-      setSelectedIds([]);
-    }
-  };
+  const {
+    selectedIds,
+    selectedCount,
+    allSelected,
+    handleSelect,
+    handleSelectAll,
+    handleBulkApprove,
+    handleBulkUnapprove,
+    handleBulkDelete,
+    confirmBulkDelete,
+    isDeleteDialogOpen,
+    setIsDeleteDialogOpen,
+    allSelectedApproved,
+    allSelectedUnapproved,
+    hasMixedApprovalStatus,
+    isApproving,
+    isUnapproving,
+    isDeleting,
+  } = useTestimonialSelection({
+    projectId,
+    testimonials: testimonials ?? [],
+  });
 
   if (isLoading) {
     return (
@@ -67,11 +77,26 @@ export function TestimonialList({ projectId }: { projectId: number }) {
       ))}
       {selectedIds.length > 0 && (
         <TestimonialActionBar
-          selectedCount={selectedIds.length}
+          selectedCount={selectedCount}
           onSelectAll={handleSelectAll}
-          allSelected={selectedIds.length === testimonials.length}
+          allSelected={allSelected}
+          onApprove={handleBulkApprove}
+          onUnapprove={handleBulkUnapprove}
+          onDelete={handleBulkDelete}
+          allSelectedApproved={allSelectedApproved}
+          allSelectedUnapproved={allSelectedUnapproved}
+          hasMixedApprovalStatus={hasMixedApprovalStatus}
+          isApproving={isApproving}
+          isUnapproving={isUnapproving}
+          isDeleting={isDeleting}
         />
       )}
+      <DeleteTestimonialsDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={confirmBulkDelete}
+        count={selectedCount}
+      />
     </div>
   );
 }

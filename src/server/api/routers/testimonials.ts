@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import { desc, eq, and } from "drizzle-orm";
+import { desc, eq, and, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createUpdateSchema, createSelectSchema } from "drizzle-zod";
 import {
@@ -187,6 +187,92 @@ export const testimonialsRouter = createTRPCRouter({
         .returning();
 
       return updatedTestimonial[0];
+    }),
+
+  bulkApprove: protectedProcedure
+    .input(z.object({ ids: z.array(z.number()), projectId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      // Verify the user has access to the project
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(
+          and(
+            eq(projects.id, input.projectId),
+            eq(projects.createdBy, ctx.user.id)
+          )
+        );
+
+      if (!project) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have access to this testimonial",
+        });
+      }
+
+      await ctx.db
+        .update(testimonials)
+        .set({ approved: true })
+        .where(inArray(testimonials.id, input.ids));
+
+      return { ids: input.ids };
+    }),
+
+  bulkUnapprove: protectedProcedure
+    .input(z.object({ ids: z.array(z.number()), projectId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      // Verify the user has access to the project
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(
+          and(
+            eq(projects.id, input.projectId),
+            eq(projects.createdBy, ctx.user.id)
+          )
+        );
+
+      if (!project) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have access to this testimonial",
+        });
+      }
+
+      await ctx.db
+        .update(testimonials)
+        .set({ approved: false })
+        .where(inArray(testimonials.id, input.ids));
+
+      return { ids: input.ids };
+    }),
+
+  bulkDelete: protectedProcedure
+    .input(z.object({ ids: z.array(z.number()), projectId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      // Verify the user has access to the project
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(
+          and(
+            eq(projects.id, input.projectId),
+            eq(projects.createdBy, ctx.user.id)
+          )
+        );
+
+      if (!project) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have access to this testimonial",
+        });
+      }
+
+      await ctx.db
+        .delete(testimonials)
+        .where(inArray(testimonials.id, input.ids));
+
+      return { ids: input.ids };
     }),
 
   delete: protectedProcedure
