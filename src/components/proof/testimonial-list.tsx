@@ -21,6 +21,7 @@ export function TestimonialList({ projectId }: { projectId: number }) {
     handleBulkApprove,
     handleBulkUnapprove,
     handleBulkDelete,
+    handleBulkExport,
     confirmBulkDelete,
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
@@ -30,6 +31,7 @@ export function TestimonialList({ projectId }: { projectId: number }) {
     isApproving,
     isUnapproving,
     isDeleting,
+    isExporting,
   } = useTestimonialSelection({
     projectId,
     testimonials: testimonials ?? [],
@@ -83,12 +85,14 @@ export function TestimonialList({ projectId }: { projectId: number }) {
           onApprove={handleBulkApprove}
           onUnapprove={handleBulkUnapprove}
           onDelete={handleBulkDelete}
+          onExport={handleBulkExport}
           allSelectedApproved={allSelectedApproved}
           allSelectedUnapproved={allSelectedUnapproved}
           hasMixedApprovalStatus={hasMixedApprovalStatus}
           isApproving={isApproving}
           isUnapproving={isUnapproving}
           isDeleting={isDeleting}
+          isExporting={isExporting}
         />
       )}
       <DeleteTestimonialsDialog

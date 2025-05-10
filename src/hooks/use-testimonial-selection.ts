@@ -43,6 +43,23 @@ export function useTestimonialSelection({
     },
   });
 
+  const bulkExport = api.testimonials.bulkExport.useMutation({
+    onSuccess: (data) => {
+      // Create a download link
+      const blob = new Blob([data.csvContent], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = data.filename;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      toast.success("Testimonials exported successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to export testimonials");
+    },
+  });
+
   const handleSelect = useCallback((id: number, checked: boolean) => {
     setSelectedIds((prev) =>
       checked ? [...prev, id] : prev.filter((selectedId) => selectedId !== id)
@@ -75,6 +92,11 @@ export function useTestimonialSelection({
     setIsDeleteDialogOpen(true);
   }, [selectedIds]);
 
+  const handleBulkExport = useCallback(() => {
+    if (selectedIds.length === 0) return;
+    bulkExport.mutate({ testimonialIds: selectedIds, projectId });
+  }, [selectedIds, projectId, bulkExport]);
+
   const confirmBulkDelete = useCallback(() => {
     bulkDelete.mutate({ ids: selectedIds, projectId });
   }, [selectedIds, projectId, bulkDelete]);
@@ -96,6 +118,7 @@ export function useTestimonialSelection({
     handleBulkApprove,
     handleBulkUnapprove,
     handleBulkDelete,
+    handleBulkExport,
     confirmBulkDelete,
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
@@ -105,5 +128,6 @@ export function useTestimonialSelection({
     isApproving: bulkApprove.isPending,
     isUnapproving: bulkUnapprove.isPending,
     isDeleting: bulkDelete.isPending,
+    isExporting: bulkExport.isPending,
   };
 }

@@ -17,12 +17,14 @@ interface TestimonialActionBarProps {
   onApprove: () => void;
   onUnapprove: () => void;
   onDelete: () => void;
+  onExport: () => void;
   allSelectedApproved: boolean;
   allSelectedUnapproved: boolean;
   hasMixedApprovalStatus: boolean;
   isApproving: boolean;
   isUnapproving: boolean;
   isDeleting: boolean;
+  isExporting: boolean;
 }
 
 export function TestimonialActionBar({
@@ -32,12 +34,14 @@ export function TestimonialActionBar({
   onApprove,
   onUnapprove,
   onDelete,
+  onExport,
   allSelectedApproved,
   allSelectedUnapproved,
   hasMixedApprovalStatus,
   isApproving,
   isUnapproving,
   isDeleting,
+  isExporting,
 }: TestimonialActionBarProps) {
   return (
     <div
@@ -68,8 +72,14 @@ export function TestimonialActionBar({
           <Button size="sm" variant="outline">
             <Share2 className="size-4 mr-1" /> Share
           </Button>
-          <Button size="sm" variant="outline">
-            <Download className="size-4 mr-1" /> Export
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onExport}
+            disabled={isExporting}
+          >
+            <Download className="size-4 mr-1" />
+            {isExporting ? "Exporting..." : "Export"}
           </Button>
           {!hasMixedApprovalStatus && (
             <>

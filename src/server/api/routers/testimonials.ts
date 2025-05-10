@@ -12,6 +12,10 @@ import {
   insertTestimonialSchema,
   selectTestimonialSchema,
 } from "@/server/db/schema";
+import { createObjectCsvWriter } from "csv-writer";
+import { join } from "path";
+import { writeFile, readFile, unlink } from "fs/promises";
+import { tmpdir } from "os";
 
 const updateTestimonialSchema = createUpdateSchema(testimonials);
 
@@ -311,5 +315,124 @@ export const testimonialsRouter = createTRPCRouter({
       await ctx.db.delete(testimonials).where(eq(testimonials.id, input.id));
 
       return { id: input.id };
+    }),
+
+  bulkExport: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.number(),
+        testimonialIds: z.array(z.number()),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify the project belongs to the user
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(
+          and(
+            eq(projects.id, input.projectId),
+            eq(projects.createdBy, ctx.user.id)
+          )
+        );
+
+      if (!project) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found or you don't have access to it",
+        });
+      }
+
+      // Get selected testimonials for the project
+      const selectedTestimonials = await ctx.db
+        .select()
+        .from(testimonials)
+        .where(
+          and(
+            eq(testimonials.projectId, input.projectId),
+            inArray(testimonials.id, input.testimonialIds)
+          )
+        )
+        .orderBy(desc(testimonials.createdAt));
+
+      if (selectedTestimonials.length === 0) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "No testimonials found with the provided IDs",
+        });
+      }
+
+      // Create a temporary file path
+      const tempFilePath = join(
+        tmpdir(),
+        `testimonials-${project.id}-${Date.now()}.csv`
+      );
+
+      // Create CSV writer
+      const csvWriter = createObjectCsvWriter({
+        path: tempFilePath,
+        header: [
+          { id: "type", title: "type" },
+          { id: "integration", title: "integration" },
+          { id: "title", title: "title" },
+          { id: "text", title: "text" },
+          { id: "rating", title: "rating" },
+          { id: "attachments", title: "attachments" },
+          { id: "url", title: "url" },
+          { id: "date", title: "date" },
+          { id: "platform_id", title: "platform_id" },
+          { id: "video_mp4_url", title: "video_mp4_url" },
+          { id: "tags", title: "tags" },
+          { id: "likes", title: "likes" },
+          { id: "customer_name", title: "customer_name" },
+          { id: "customer_email", title: "customer_email" },
+          { id: "customer_avatar", title: "customer_avatar" },
+          { id: "customer_tagline", title: "customer_tagline" },
+          { id: "customer_company", title: "customer_company" },
+          { id: "customer_company_logo", title: "customer_company_logo" },
+          { id: "reward", title: "reward" },
+          { id: "customer_url", title: "customer_url" },
+        ],
+      });
+
+      // Transform testimonials to match CSV format
+      const records = selectedTestimonials.map((testimonial) => ({
+        type: testimonial.type,
+        integration: testimonial.integrationSource,
+        title: testimonial.title || "",
+        text: testimonial.text || "",
+        rating: testimonial.rating || "",
+        attachments: "", // Not in schema
+        url: testimonial.url || "",
+        date: testimonial.originalDate || testimonial.createdAt,
+        platform_id: testimonial.sourceId || "",
+        video_mp4_url: testimonial.videoUrl || "",
+        tags: "", // Not in schema
+        likes: "", // Not in schema
+        customer_name: testimonial.customerName,
+        customer_email: testimonial.customerEmail || "",
+        customer_avatar: testimonial.customerAvatar || "",
+        customer_tagline: testimonial.customerTagline || "",
+        customer_company: testimonial.customerCompany || "",
+        customer_company_logo: testimonial.customerCompanyLogo || "",
+        reward: "", // Not in schema
+        customer_url: testimonial.customerUrl || "",
+      }));
+
+      // Write to CSV
+      await csvWriter.writeRecords(records);
+
+      // Read the file
+      const fileContent = await readFile(tempFilePath, "utf-8");
+
+      // Delete the temporary file
+      await unlink(tempFilePath);
+
+      return {
+        csvContent: fileContent,
+        filename: `testimonials-${project.slug}-${
+          new Date().toISOString().split("T")[0]
+        }.csv`,
+      };
     }),
 });
