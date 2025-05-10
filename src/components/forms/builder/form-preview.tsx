@@ -8,6 +8,7 @@ import { WelcomePreview } from "./previews/welcome-preview";
 import { ResponsePreview } from "./previews/response-preview";
 import { CustomerDetailsPreview } from "./previews/customer-details-preview";
 import { ThankYouPreview } from "./previews/thankyou-preview";
+import { useFormStep } from "@/hooks/use-form-step";
 
 interface FormPreviewProps {
   viewMode: "desktop" | "mobile";
@@ -82,43 +83,32 @@ function PreviewContent({
   collectionFormConfig,
   activeSection,
 }: PreviewContentProps) {
-  // Render different preview components based on the active section
-  switch (activeSection) {
-    case "welcome":
-      return (
-        <WelcomePreview
-          viewMode={viewMode}
-          collectionFormConfig={collectionFormConfig}
-        />
-      );
-    case "response":
-      return (
-        <ResponsePreview
-          viewMode={viewMode}
-          collectionFormConfig={collectionFormConfig}
-        />
-      );
-    case "customer":
-      return (
-        <CustomerDetailsPreview
-          viewMode={viewMode}
-          collectionFormConfig={collectionFormConfig}
-        />
-      );
-    case "thank-you":
-      return (
-        <ThankYouPreview
-          viewMode={viewMode}
-          collectionFormConfig={collectionFormConfig}
-        />
-      );
-    default:
-      // For other sections, show the welcome page as default
-      return (
-        <WelcomePreview
-          viewMode={viewMode}
-          collectionFormConfig={collectionFormConfig}
-        />
-      );
-  }
+  const { currentStep } = useFormStep();
+
+  const previewComponents: Record<
+    string,
+    React.ComponentType<{
+      viewMode: "desktop" | "mobile";
+      collectionFormConfig: CollectionFormConfig;
+    }>
+  > = {
+    welcome: WelcomePreview,
+    response: ResponsePreview,
+    customer: CustomerDetailsPreview,
+    "thank-you": ThankYouPreview,
+    "customer-details": CustomerDetailsPreview,
+  };
+
+  // Determine which component to render based on activeSection or currentStep
+  const Component =
+    previewComponents[activeSection] ||
+    previewComponents[currentStep] ||
+    WelcomePreview;
+
+  return (
+    <Component
+      viewMode={viewMode}
+      collectionFormConfig={collectionFormConfig}
+    />
+  );
 }
