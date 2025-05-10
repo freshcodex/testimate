@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Video, PenLine } from "lucide-react";
+import { useFormStep } from "@/hooks/use-form-step";
 
 interface WelcomeContentProps {
   title: string;
@@ -18,10 +19,16 @@ export function WelcomeContent({
   primaryColor,
   isMobile = false,
 }: WelcomeContentProps) {
+  const { setCurrentStep } = useFormStep();
+
   const buttonContainerClass = isMobile ? "flex flex-col gap-2" : "flex gap-4";
   const titleClass = isMobile ? "text-lg" : "text-xl";
   const messageClass = isMobile ? "text-sm" : "";
   const containerClass = isMobile ? "p-4" : "p-6";
+
+  const handleTextClick = () => {
+    setCurrentStep("response");
+  };
 
   return (
     <div className={`rounded-lg bg-white ${containerClass} shadow-sm`}>
@@ -53,6 +60,7 @@ export function WelcomeContent({
             className={
               isMobile ? "w-full justify-center" : "flex-1 justify-center"
             }
+            onClick={handleTextClick}
           >
             <PenLine className="mr-2 h-4 w-4" />
             Write a testimonial

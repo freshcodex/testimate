@@ -92,12 +92,12 @@ export default function SharedFormPage() {
     <div className="min-h-screen flex items-center justify-center">
       <div className=" bg-gray-50">
         {currentStep === "welcome" && (
-          <div className="h-full" onClick={() => setCurrentStep("response")}>
+          <div className="h-full">
             <WelcomePage viewMode="desktop" formData={formData} />
           </div>
         )}
         {currentStep === "response" && (
-          <div onClick={() => setCurrentStep("thank-you")}>
+          <div>
             <ResponsePage viewMode="desktop" formData={formData} />
           </div>
         )}

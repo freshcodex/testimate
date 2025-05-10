@@ -1,6 +1,9 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, ArrowLeft, PenLine } from "lucide-react";
+import { useFormStep } from "@/hooks/use-form-step";
 
 interface ResponseContentProps {
   prompt: string;
@@ -15,17 +18,32 @@ export function ResponseContent({
   primaryColor,
   isMobile = false,
 }: ResponseContentProps) {
+  const { setCurrentStep } = useFormStep();
+
   // Parse the prompt into an array of questions
   const questions = prompt
     .split("\n")
     .filter((line) => line.trim())
     .map((line) => line.replace(/^-\s*/, "").trim());
 
+  const handleBack = () => {
+    setCurrentStep("welcome");
+  };
+
+  const handleSubmit = () => {
+    setCurrentStep("thank-you");
+  };
+
   return (
     <div className="rounded-lg bg-white p-4 shadow-sm">
       <div className="mb-4 flex items-center">
         {!isMobile && (
-          <Button variant="ghost" size="sm" className="mr-auto p-0">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="mr-auto p-0"
+            onClick={handleBack}
+          >
             <ArrowLeft className="h-4 w-4" />
           </Button>
         )}
@@ -62,7 +80,11 @@ export function ResponseContent({
 
       <Textarea placeholder="asas" className="min-h-[150px] mb-4" />
 
-      <Button className="w-full" style={{ backgroundColor: primaryColor }}>
+      <Button
+        className="w-full"
+        style={{ backgroundColor: primaryColor }}
+        onClick={handleSubmit}
+      >
         <PenLine className="mr-2 h-4 w-4" />
         Submit
       </Button>
