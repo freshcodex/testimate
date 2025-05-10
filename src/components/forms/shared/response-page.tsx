@@ -14,8 +14,6 @@ export function ResponsePage({ viewMode, formData }: ResponsePageProps) {
 
   const { projectSlug, formId } = useParams();
 
-  console.log(projectSlug, formId);
-
   if (isMobile) {
     return (
       <div className="flex h-full flex-col">

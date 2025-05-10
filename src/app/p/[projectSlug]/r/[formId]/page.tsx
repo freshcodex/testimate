@@ -72,11 +72,6 @@ export default function SharedFormPage() {
     return <FormSkeleton />;
   }
 
-  const handleSubmit = async (response: any) => {
-    // TODO: Implement form submission
-    setCurrentStep("customer-details");
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className=" bg-gray-50">
