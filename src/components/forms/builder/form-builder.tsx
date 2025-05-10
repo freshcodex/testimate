@@ -31,7 +31,7 @@ export function FormBuilder() {
   const router = useRouter();
   const {
     form,
-    formValues,
+    collectionFormConfig,
     activeSection,
     viewMode,
     handleSectionChange,
@@ -77,7 +77,9 @@ export function FormBuilder() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Forms
             </Link>
-            <h1 className="text-2xl font-semibold">{formValues.name}</h1>
+            <h1 className="text-2xl font-semibold">
+              {collectionFormConfig.name}
+            </h1>
           </div>
           <FormSidebar
             activeSection={activeSection}
@@ -97,7 +99,7 @@ export function FormBuilder() {
         <FormPreview
           viewMode={viewMode}
           setViewMode={handleViewModeChange}
-          formData={formValues}
+          collectionFormConfig={collectionFormConfig}
           activeSection={activeSection}
         />
       </div>

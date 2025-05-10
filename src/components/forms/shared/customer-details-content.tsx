@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/form";
 import { useTestimonialForm } from "@/hooks/use-testimonial-form";
 import { useFormStep } from "@/hooks/use-form-step";
+import type { CollectionFormProps } from "./thankyou-page";
 
 interface CustomerDetailsContentProps {
-  emailEnabled: boolean;
-  jobTitleEnabled: boolean;
-  companyEnabled: boolean;
-  primaryColor: string;
+  config: CollectionFormProps["collectionFormConfig"]["customerDetails"];
   isMobile?: boolean;
+  customLabels: CollectionFormProps["collectionFormConfig"]["customLabels"];
+  design: CollectionFormProps["collectionFormConfig"]["design"];
   formId: number;
   projectSlug: string;
 }
@@ -27,11 +27,10 @@ interface CustomerDetailsContentProps {
 // TODO: if the user directly navigates to the customer details page, we should show a message to the user that they need to submit the feedback first, we can do this bby checking form
 
 export function CustomerDetailsContent({
-  emailEnabled,
-  jobTitleEnabled,
-  companyEnabled,
-  primaryColor,
+  config,
   isMobile = false,
+  customLabels,
+  design,
   formId,
   projectSlug,
 }: CustomerDetailsContentProps) {
@@ -84,7 +83,7 @@ export function CustomerDetailsContent({
           )}
         />
 
-        {emailEnabled && (
+        {config.emailEnabled && (
           <FormField
             control={form.control}
             name="customerEmail"
@@ -120,7 +119,7 @@ export function CustomerDetailsContent({
           </div>
         </div>
 
-        {jobTitleEnabled && (
+        {config.jobTitleEnabled && (
           <FormField
             control={form.control}
             name="customerTagline"
@@ -158,7 +157,7 @@ export function CustomerDetailsContent({
           )}
         />
 
-        {companyEnabled && (
+        {config.companyEnabled && (
           <FormField
             control={form.control}
             name="customerCompany"
@@ -193,7 +192,7 @@ export function CustomerDetailsContent({
         <Button
           type="submit"
           className="w-full"
-          style={{ backgroundColor: primaryColor }}
+          style={{ backgroundColor: design.primaryColor }}
           disabled={createTestimonial.isPending}
         >
           {createTestimonial.isPending ? "Submitting..." : "Submit"}

@@ -4,7 +4,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { type FormValues, formSchema } from "@/lib/schema/form-schema";
+import {
+  type CollectionFormConfig,
+  collectionFormSchema,
+} from "@/lib/schema/form-schema";
 import type { FormSection } from "@/components/forms/builder/form-builder";
 
 export function useFormBuilder() {
@@ -15,9 +18,8 @@ export function useFormBuilder() {
   const [viewMode, setViewMode] = useState<"desktop" | "mobile">("mobile");
 
   // Initialize form with default values
-  const form = useForm<FormValues>({
-    // @ts-expect-error - TODO: Fix this
-    resolver: zodResolver(formSchema),
+  const form = useForm<CollectionFormConfig>({
+    resolver: zodResolver(collectionFormSchema),
     defaultValues: {
       name: "My testimonial form",
       design: {
@@ -101,11 +103,11 @@ export function useFormBuilder() {
   });
 
   // Get form values for preview
-  const formValues = form.watch();
+  const collectionFormConfig = form.watch();
 
   // Helper to add an additional field
   const addAdditionalField = (
-    field: FormValues["additionalFields"][number]
+    field: CollectionFormConfig["additionalFields"][number]
   ) => {
     const current = form.getValues("additionalFields") || [];
     form.setValue("additionalFields", [...current, field]);
@@ -123,7 +125,7 @@ export function useFormBuilder() {
 
   return {
     form,
-    formValues,
+    collectionFormConfig,
     activeSection,
     viewMode,
     handleSectionChange,

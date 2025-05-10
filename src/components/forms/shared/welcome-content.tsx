@@ -1,23 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Video, PenLine } from "lucide-react";
 import { useFormStep } from "@/hooks/use-form-step";
+import type { CollectionFormProps } from "./thankyou-page";
 
 interface WelcomeContentProps {
-  title: string;
-  introductoryMessage: string;
-  collectVideo: boolean;
-  collectText: boolean;
-  primaryColor: string;
+  config: CollectionFormProps["collectionFormConfig"]["welcomePage"];
   isMobile?: boolean;
+  customLabels: CollectionFormProps["collectionFormConfig"]["customLabels"];
+  design: CollectionFormProps["collectionFormConfig"]["design"];
 }
 
 export function WelcomeContent({
-  title,
-  introductoryMessage,
-  collectVideo,
-  collectText,
-  primaryColor,
+  config,
   isMobile = false,
+  customLabels,
+  design,
 }: WelcomeContentProps) {
   const { setCurrentStep } = useFormStep();
 
@@ -33,28 +30,28 @@ export function WelcomeContent({
   return (
     <div className={`rounded-lg bg-white ${containerClass} shadow-sm`}>
       <h2 className={`mb-2 text-center ${titleClass} font-semibold`}>
-        {title}
+        {config.title}
       </h2>
       <div
         className={`mb-4 text-center text-gray-700 whitespace-pre-line ${messageClass}`}
       >
-        {introductoryMessage}
+        {config.introductoryMessage}
       </div>
 
       <div className={buttonContainerClass}>
-        {collectVideo && (
+        {config.collectVideo && (
           <Button
             className={
               isMobile ? "w-full justify-center" : "flex-1 justify-center"
             }
-            style={{ backgroundColor: primaryColor }}
+            style={{ backgroundColor: design.primaryColor }}
           >
             <Video className="mr-2 h-4 w-4" />
-            Record a video
+            {customLabels.recordVideoButton}
           </Button>
         )}
 
-        {collectText && (
+        {config.collectText && (
           <Button
             variant="outline"
             className={
@@ -63,7 +60,7 @@ export function WelcomeContent({
             onClick={handleTextClick}
           >
             <PenLine className="mr-2 h-4 w-4" />
-            Write a testimonial
+            {customLabels.writeReviewButton}
           </Button>
         )}
       </div>

@@ -2,21 +2,20 @@ import { Button } from "@/components/ui/button";
 import { useTestimonialForm } from "@/hooks/use-testimonial-form";
 import { Heart, Facebook, Twitter, Linkedin, Link2 } from "lucide-react";
 import { useParams } from "next/navigation";
+import type { CollectionFormProps } from "./thankyou-page";
 
 interface ThankYouContentProps {
-  title: string;
-  message: string;
-  showSocialShare: boolean;
-  primaryColor: string;
+  config: CollectionFormProps["collectionFormConfig"]["thankYouPage"];
   isMobile?: boolean;
+  customLabels: CollectionFormProps["collectionFormConfig"]["customLabels"];
+  design: CollectionFormProps["collectionFormConfig"]["design"];
 }
 
 export function ThankYouContent({
-  title,
-  message,
-  showSocialShare,
-  primaryColor,
+  config,
   isMobile = false,
+  customLabels,
+  design,
 }: ThankYouContentProps) {
   const containerClass = isMobile ? "p-4" : "p-6";
   const titleClass = isMobile ? "text-lg" : "text-xl";
@@ -45,18 +44,18 @@ export function ThankYouContent({
       <div className="mb-4 flex justify-center">
         <div
           className="flex h-16 w-16 items-center justify-center rounded-full"
-          style={{ backgroundColor: primaryColor }}
+          style={{ backgroundColor: design.primaryColor }}
         >
           <Heart className="h-10 w-10 text-white" />
         </div>
       </div>
 
       <h2 className={`mb-2 text-center ${titleClass} font-semibold`}>
-        {title}
+        {config.title}
       </h2>
-      <p className="mb-6 text-center text-gray-700">{message}</p>
+      <p className="mb-6 text-center text-gray-700">{config.message}</p>
 
-      {showSocialShare && (
+      {config.showSocialShare && (
         <>
           <div className="mb-4">
             <div className="rounded-lg border border-gray-200 p-4">

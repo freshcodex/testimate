@@ -18,11 +18,9 @@ export function WelcomePage({
         />
         <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white px-4 pt-6 shadow-lg">
           <WelcomeContent
-            title={welcomePage.title}
-            introductoryMessage={welcomePage.introductoryMessage}
-            collectVideo={welcomePage.collectVideo}
-            collectText={welcomePage.collectText}
-            primaryColor={design.primaryColor}
+            config={welcomePage}
+            customLabels={collectionFormConfig.customLabels}
+            design={design}
             isMobile={true}
           />
         </div>
@@ -39,11 +37,9 @@ export function WelcomePage({
       <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white p-8 shadow-lg">
         <div className="mx-auto max-w-md">
           <WelcomeContent
-            title={welcomePage.title}
-            introductoryMessage={welcomePage.introductoryMessage}
-            collectVideo={welcomePage.collectVideo}
-            collectText={welcomePage.collectText}
-            primaryColor={design.primaryColor}
+            config={welcomePage}
+            customLabels={collectionFormConfig.customLabels}
+            design={design}
           />
         </div>
       </div>

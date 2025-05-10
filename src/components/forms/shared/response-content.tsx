@@ -17,11 +17,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import type { CollectionFormProps } from "./thankyou-page";
 
 interface ResponseContentProps {
-  prompt: string;
-  primaryColor: string;
+  config: CollectionFormProps["collectionFormConfig"]["responsePage"];
   isMobile?: boolean;
+  customLabels: CollectionFormProps["collectionFormConfig"]["customLabels"];
+  design: CollectionFormProps["collectionFormConfig"]["design"];
   formId: number;
   projectSlug: string;
 }
@@ -32,8 +34,10 @@ const formSchema = z.object({
 });
 
 export function ResponseContent({
-  prompt,
-  primaryColor,
+  config,
+  isMobile = false,
+  customLabels,
+  design,
   formId,
   projectSlug,
 }: ResponseContentProps) {
@@ -62,7 +66,7 @@ export function ResponseContent({
     setCurrentStep("welcome");
   };
 
-  const questions = prompt.split("\n").filter(Boolean);
+  const questions = config.prompt.split("\n").filter(Boolean);
 
   return (
     <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
@@ -127,7 +131,7 @@ export function ResponseContent({
           <Button
             type="submit"
             className="w-full"
-            style={{ backgroundColor: primaryColor }}
+            style={{ backgroundColor: design.primaryColor }}
           >
             Continue
           </Button>

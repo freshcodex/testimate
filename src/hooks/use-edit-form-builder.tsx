@@ -6,7 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import { api } from "@/trpc/react";
 
-import { type FormValues, formSchema } from "@/lib/schema/form-schema";
+import {
+  type CollectionFormConfig,
+  collectionFormSchema,
+} from "@/lib/schema/form-schema";
 import type { FormSection } from "@/components/forms/builder/form-builder";
 
 export function useEditFormBuilder() {
@@ -28,9 +31,9 @@ export function useEditFormBuilder() {
   );
 
   // Initialize form with default values
-  const form = useForm<FormValues>({
+  const form = useForm<CollectionFormConfig>({
     // @ts-expect-error - TODO: Fix this
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(collectionFormSchema),
     defaultValues: {
       name: formData?.title ?? "My testimonial form",
       design: formData?.design ?? {}, // TODO: Get default values from zod schema
@@ -65,11 +68,11 @@ export function useEditFormBuilder() {
   }, [formData, form]);
 
   // Get form values for preview
-  const formValues = form.watch();
+  const collectionFormConfig = form.watch();
 
   // Helper to add an additional field
   const addAdditionalField = (
-    field: FormValues["additionalFields"][number]
+    field: CollectionFormConfig["additionalFields"][number]
   ) => {
     const current = form.getValues("additionalFields") || [];
     form.setValue("additionalFields", [...current, field]);
@@ -87,7 +90,7 @@ export function useEditFormBuilder() {
 
   return {
     form,
-    formValues,
+    collectionFormConfig,
     activeSection,
     viewMode,
     handleSectionChange,

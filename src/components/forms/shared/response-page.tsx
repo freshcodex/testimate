@@ -21,8 +21,9 @@ export function ResponsePage({
         />
         <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white px-4 pt-6 shadow-lg">
           <ResponseContent
-            prompt={responsePage.prompt}
-            primaryColor={design.primaryColor}
+            config={responsePage}
+            customLabels={collectionFormConfig.customLabels}
+            design={design}
             isMobile={true}
             formId={Number(formId)}
             projectSlug={String(projectSlug)}
@@ -41,8 +42,9 @@ export function ResponsePage({
       <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white p-8 shadow-lg">
         <div className="mx-auto max-w-md">
           <ResponseContent
-            prompt={responsePage.prompt}
-            primaryColor={design.primaryColor}
+            config={responsePage}
+            customLabels={collectionFormConfig.customLabels}
+            design={design}
             formId={Number(formId)}
             projectSlug={String(projectSlug)}
           />

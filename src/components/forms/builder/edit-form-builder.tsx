@@ -7,11 +7,11 @@ import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { FormSidebar } from "@/components/forms/builder/form-sidebar";
 import { FormPreview } from "@/components/forms/builder/form-preview";
-import { useFormBuilder } from "@/hooks/use-form-builders";
 import { FormProvider } from "react-hook-form";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useEditFormBuilder } from "@/hooks/use-edit-form-builder";
 
 export type FormSection =
   | "design"
@@ -33,12 +33,12 @@ export function EditFormBuilder() {
   const params = useParams();
   const {
     form,
-    formValues,
+    collectionFormConfig,
     activeSection,
     viewMode,
     handleSectionChange,
     handleViewModeChange,
-  } = useFormBuilder();
+  } = useEditFormBuilder();
 
   const utils = api.useUtils();
   const updateForm = api.collectionForms.update.useMutation({
@@ -79,7 +79,9 @@ export function EditFormBuilder() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Forms
             </Link>
-            <h1 className="text-2xl font-semibold">{formValues.name}</h1>
+            <h1 className="text-2xl font-semibold">
+              {collectionFormConfig.name}
+            </h1>
           </div>
           <FormSidebar
             activeSection={activeSection}
@@ -99,7 +101,7 @@ export function EditFormBuilder() {
         <FormPreview
           viewMode={viewMode}
           setViewMode={handleViewModeChange}
-          formData={formValues}
+          collectionFormConfig={collectionFormConfig}
           activeSection={activeSection}
         />
       </div>
