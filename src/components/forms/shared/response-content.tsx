@@ -2,8 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Star, ArrowLeft, PenLine } from "lucide-react";
+import { ArrowLeft, PenLine } from "lucide-react";
 import { useFormStep } from "@/hooks/use-form-step";
+import { StarRating } from "./star-rating";
+import { useState } from "react";
 
 interface ResponseContentProps {
   prompt: string;
@@ -19,6 +21,7 @@ export function ResponseContent({
   isMobile = false,
 }: ResponseContentProps) {
   const { setCurrentStep } = useFormStep();
+  const [rating, setRating] = useState(0);
 
   // Parse the prompt into an array of questions
   const questions = prompt
@@ -63,22 +66,14 @@ export function ResponseContent({
 
       {collectRatings && (
         <div className="mb-4">
-          <div className="flex">
-            {[1, 2, 3, 4, 5].map((rating) => (
-              <Star
-                key={rating}
-                className={`h-6 w-6 ${
-                  rating <= 4
-                    ? "text-yellow-400 fill-yellow-400"
-                    : "text-gray-300"
-                }`}
-              />
-            ))}
-          </div>
+          <StarRating value={rating} onChange={setRating} size={24} />
         </div>
       )}
 
-      <Textarea placeholder="asas" className="min-h-[150px] mb-4" />
+      <Textarea
+        placeholder="Write your testimonial here..."
+        className="min-h-[150px] mb-4"
+      />
 
       <Button
         className="w-full"
