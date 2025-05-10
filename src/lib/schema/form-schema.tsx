@@ -10,7 +10,7 @@ import {
 import * as z from "zod";
 
 // Main form schema
-export const formSchema = z.object({
+export const collectionFormSchema = z.object({
   name: z.string().min(1, "Form name is required"),
   design: designConfigSchema,
   welcomePage: welcomePageConfigSchema,
@@ -21,7 +21,7 @@ export const formSchema = z.object({
   customLabels: customLabelsSchema,
 });
 
-export type FormValues = z.infer<typeof formSchema>;
+export type CollectionFormConfig = z.infer<typeof collectionFormSchema>;
 export type DesignValues = z.infer<typeof designConfigSchema>;
 export type WelcomePageValues = z.infer<typeof welcomePageConfigSchema>;
 export type ResponsePageValues = z.infer<typeof responsePageConfigSchema>;

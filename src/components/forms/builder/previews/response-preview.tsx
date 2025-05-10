@@ -1,13 +1,21 @@
 "use client";
 
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 import { ResponsePage } from "../../shared/response-page";
 
 interface ResponsePreviewProps {
   viewMode: "desktop" | "mobile";
-  formData: FormValues;
+  collectionFormConfig: CollectionFormConfig;
 }
 
-export function ResponsePreview({ viewMode, formData }: ResponsePreviewProps) {
-  return <ResponsePage viewMode={viewMode} formData={formData} />;
+export function ResponsePreview({
+  viewMode,
+  collectionFormConfig,
+}: ResponsePreviewProps) {
+  return (
+    <ResponsePage
+      viewMode={viewMode}
+      collectionFormConfig={collectionFormConfig}
+    />
+  );
 }

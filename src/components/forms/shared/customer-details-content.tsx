@@ -37,7 +37,7 @@ export function CustomerDetailsContent({
 }: CustomerDetailsContentProps) {
   const { setCurrentStep } = useFormStep();
   const createTestimonial = api.testimonials.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Testimonial submitted successfully!");
       setCurrentStep("thank-you");
     },
@@ -46,10 +46,12 @@ export function CustomerDetailsContent({
     },
   });
 
-  const { form, handleSubmit } = useTestimonialForm({
-    formId,
-    projectSlug,
-  });
+  const { form, handleSubmit, setThankyouContentFormData } = useTestimonialForm(
+    {
+      formId,
+      projectSlug,
+    }
+  );
 
   const onSubmit = handleSubmit((data) => {
     createTestimonial.mutate({
@@ -57,6 +59,8 @@ export function CustomerDetailsContent({
       formId,
       projectSlug,
     });
+
+    setThankyouContentFormData(data);
   });
 
   return (

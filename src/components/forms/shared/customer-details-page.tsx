@@ -1,18 +1,13 @@
-import type { FormValues } from "@/lib/schema/form-schema";
 import { WelcomeHeader } from "./welcome-header";
 import { CustomerDetailsContent } from "./customer-details-content";
 import { useParams } from "next/navigation";
-
-interface CustomerDetailsPageProps {
-  viewMode: "desktop" | "mobile";
-  formData: FormValues;
-}
+import type { CollectionFormProps } from "./thankyou-page";
 
 export function CustomerDetailsPage({
   viewMode,
-  formData,
-}: CustomerDetailsPageProps) {
-  const { design, customerDetails } = formData;
+  collectionFormConfig,
+}: CollectionFormProps) {
+  const { design, customerDetails } = collectionFormConfig;
   const isMobile = viewMode === "mobile";
 
   const { formId, projectSlug } = useParams();

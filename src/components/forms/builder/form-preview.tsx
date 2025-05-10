@@ -2,7 +2,7 @@
 
 import { Monitor, Smartphone } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 import type { FormSection } from "./form-builder";
 import { WelcomePreview } from "./previews/welcome-preview";
 import { ResponsePreview } from "./previews/response-preview";
@@ -12,14 +12,14 @@ import { ThankYouPreview } from "./previews/thankyou-preview";
 interface FormPreviewProps {
   viewMode: "desktop" | "mobile";
   setViewMode: (mode: "desktop" | "mobile") => void;
-  formData: FormValues;
+  collectionFormConfig: CollectionFormConfig;
   activeSection: FormSection;
 }
 
 export function FormPreview({
   viewMode,
   setViewMode,
-  formData,
+  collectionFormConfig,
   activeSection,
 }: FormPreviewProps) {
   return (
@@ -52,7 +52,7 @@ export function FormPreview({
             <div className="h-full overflow-hidden">
               <PreviewContent
                 viewMode="mobile"
-                formData={formData}
+                collectionFormConfig={collectionFormConfig}
                 activeSection={activeSection}
               />
             </div>
@@ -61,7 +61,7 @@ export function FormPreview({
           <div className="h-[600px] w-[800px] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
             <PreviewContent
               viewMode="desktop"
-              formData={formData}
+              collectionFormConfig={collectionFormConfig}
               activeSection={activeSection}
             />
           </div>
@@ -73,27 +73,52 @@ export function FormPreview({
 
 interface PreviewContentProps {
   viewMode: "desktop" | "mobile";
-  formData: FormValues;
+  collectionFormConfig: CollectionFormConfig;
   activeSection: FormSection;
 }
 
 function PreviewContent({
   viewMode,
-  formData,
+  collectionFormConfig,
   activeSection,
 }: PreviewContentProps) {
   // Render different preview components based on the active section
   switch (activeSection) {
     case "welcome":
-      return <WelcomePreview viewMode={viewMode} formData={formData} />;
+      return (
+        <WelcomePreview
+          viewMode={viewMode}
+          collectionFormConfig={collectionFormConfig}
+        />
+      );
     case "response":
-      return <ResponsePreview viewMode={viewMode} formData={formData} />;
+      return (
+        <ResponsePreview
+          viewMode={viewMode}
+          collectionFormConfig={collectionFormConfig}
+        />
+      );
     case "customer":
-      return <CustomerDetailsPreview viewMode={viewMode} formData={formData} />;
+      return (
+        <CustomerDetailsPreview
+          viewMode={viewMode}
+          collectionFormConfig={collectionFormConfig}
+        />
+      );
     case "thank-you":
-      return <ThankYouPreview viewMode={viewMode} formData={formData} />;
+      return (
+        <ThankYouPreview
+          viewMode={viewMode}
+          collectionFormConfig={collectionFormConfig}
+        />
+      );
     default:
       // For other sections, show the welcome page as default
-      return <WelcomePreview viewMode={viewMode} formData={formData} />;
+      return (
+        <WelcomePreview
+          viewMode={viewMode}
+          collectionFormConfig={collectionFormConfig}
+        />
+      );
   }
 }

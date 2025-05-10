@@ -1,14 +1,12 @@
-import type { FormValues } from "@/lib/schema/form-schema";
 import { WelcomeHeader } from "./welcome-header";
 import { WelcomeContent } from "./welcome-content";
+import type { CollectionFormProps } from "./thankyou-page";
 
-interface WelcomePageProps {
-  viewMode: "desktop" | "mobile";
-  formData: FormValues;
-}
-
-export function WelcomePage({ viewMode, formData }: WelcomePageProps) {
-  const { design, welcomePage } = formData;
+export function WelcomePage({
+  viewMode,
+  collectionFormConfig,
+}: CollectionFormProps) {
+  const { design, welcomePage } = collectionFormConfig;
   const isMobile = viewMode === "mobile";
 
   if (isMobile) {

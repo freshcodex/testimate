@@ -23,11 +23,22 @@ export function ThankYouContent({
 
   const { formId, projectSlug } = useParams();
 
-  // fetch the testimonial data from either the form hook or the database
-  const { formData } = useTestimonialForm({
+  // TODO: fetch the testimonial data from either the form hook or the database
+  const { thankyouContentFormData, formData } = useTestimonialForm({
     formId: Number(formId),
     projectSlug: String(projectSlug),
+    initialData: {
+      customerName: "Shane Parrish",
+      customerAvatar: "/placeholder.svg?height=40&width=40",
+      customerTagline: "Software Engineer",
+      text: "This is a testimonial",
+    },
   });
+
+  // check if thankyouContentFormData is null if it is null then use formdata
+  const testimonialData = thankyouContentFormData
+    ? thankyouContentFormData
+    : formData;
 
   return (
     <div className={`rounded-lg bg-white ${containerClass} shadow-sm`}>
@@ -51,10 +62,10 @@ export function ThankYouContent({
             <div className="rounded-lg border border-gray-200 p-4">
               <div className="flex items-center mb-2">
                 <div className="h-10 w-10 rounded-full bg-gray-200 overflow-hidden mr-2">
-                  {formData.customerAvatar ? (
+                  {testimonialData?.customerAvatar ? (
                     <img
-                      src={formData.customerAvatar}
-                      alt={formData.customerName}
+                      src={testimonialData.customerAvatar}
+                      alt={testimonialData.customerName}
                       className="h-full w-full object-cover"
                     />
                   ) : (
@@ -66,15 +77,15 @@ export function ThankYouContent({
                   )}
                 </div>
                 <div>
-                  <p className="font-medium">{formData.customerName}</p>
-                  {formData.customerTagline && (
+                  <p className="font-medium">{testimonialData?.customerName}</p>
+                  {testimonialData?.customerTagline && (
                     <p className="text-sm text-gray-500">
-                      {formData.customerTagline}
+                      {testimonialData.customerTagline}
                     </p>
                   )}
                 </div>
               </div>
-              <p className="text-sm mb-2">{formData.text}</p>
+              <p className="text-sm mb-2">{thankyouContentFormData?.text}</p>
               <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
                 <img
                   src="/placeholder.svg?height=16&width=16"

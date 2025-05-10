@@ -8,7 +8,7 @@ import { ThankYouPage } from "@/components/forms/shared/thankyou-page";
 import { CustomerDetailsPage } from "@/components/forms/shared/customer-details-page";
 import { useState, useEffect } from "react";
 import { useFormStep } from "@/hooks/use-form-step";
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 import type {
   CustomerDetailsConfig,
   ResponsePageConfig,
@@ -47,7 +47,8 @@ function FormSkeleton() {
 export default function SharedFormPage() {
   const params = useParams();
   const { currentStep, setCurrentStep } = useFormStep();
-  const [formData, setFormData] = useState<FormValues | null>(null);
+  const [collectionFormConfig, setCollectionFormData] =
+    useState<CollectionFormConfig | null>(null);
 
   const { data: form, isLoading } = api.collectionForms.getById.useQuery({
     id: Number(params.formId),
@@ -55,7 +56,7 @@ export default function SharedFormPage() {
 
   useEffect(() => {
     if (form) {
-      setFormData({
+      setCollectionFormData({
         name: form.title,
         design: form?.design as DesignConfig,
         welcomePage: form?.welcomePage as WelcomePageConfig,
@@ -68,7 +69,7 @@ export default function SharedFormPage() {
     }
   }, [form]);
 
-  if (isLoading || !formData) {
+  if (isLoading || !collectionFormConfig) {
     return <FormSkeleton />;
   }
 
@@ -77,21 +78,33 @@ export default function SharedFormPage() {
       <div className=" bg-gray-50">
         {currentStep === "welcome" && (
           <div className="h-full">
-            <WelcomePage viewMode="desktop" formData={formData} />
+            <WelcomePage
+              viewMode="desktop"
+              collectionFormConfig={collectionFormConfig}
+            />
           </div>
         )}
         {currentStep === "response" && (
           <div>
-            <ResponsePage viewMode="desktop" formData={formData} />
+            <ResponsePage
+              viewMode="desktop"
+              collectionFormConfig={collectionFormConfig}
+            />
           </div>
         )}
         {currentStep === "customer-details" && (
           <div>
-            <CustomerDetailsPage viewMode="desktop" formData={formData} />
+            <CustomerDetailsPage
+              viewMode="desktop"
+              collectionFormConfig={collectionFormConfig}
+            />
           </div>
         )}
         {currentStep === "thank-you" && (
-          <ThankYouPage viewMode="desktop" formData={formData} />
+          <ThankYouPage
+            viewMode="desktop"
+            collectionFormConfig={collectionFormConfig}
+          />
         )}
       </div>
     </div>

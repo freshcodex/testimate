@@ -1,16 +1,21 @@
 "use client";
 
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 import { CustomerDetailsPage } from "../../shared/customer-details-page";
 
 interface CustomerDetailsPreviewProps {
   viewMode: "desktop" | "mobile";
-  formData: FormValues;
+  collectionFormConfig: CollectionFormConfig;
 }
 
 export function CustomerDetailsPreview({
   viewMode,
-  formData,
+  collectionFormConfig,
 }: CustomerDetailsPreviewProps) {
-  return <CustomerDetailsPage viewMode={viewMode} formData={formData} />;
+  return (
+    <CustomerDetailsPage
+      viewMode={viewMode}
+      collectionFormConfig={collectionFormConfig}
+    />
+  );
 }

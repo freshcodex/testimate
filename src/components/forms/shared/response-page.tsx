@@ -1,15 +1,13 @@
-import type { FormValues } from "@/lib/schema/form-schema";
 import { WelcomeHeader } from "./welcome-header";
 import { ResponseContent } from "./response-content";
 import { useParams } from "next/navigation";
+import type { CollectionFormProps } from "./thankyou-page";
 
-interface ResponsePageProps {
-  viewMode: "desktop" | "mobile";
-  formData: FormValues;
-}
-
-export function ResponsePage({ viewMode, formData }: ResponsePageProps) {
-  const { design, responsePage } = formData;
+export function ResponsePage({
+  viewMode,
+  collectionFormConfig,
+}: CollectionFormProps) {
+  const { design, responsePage } = collectionFormConfig;
   const isMobile = viewMode === "mobile";
 
   const { projectSlug, formId } = useParams();

@@ -1,15 +1,17 @@
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 import { WelcomeHeader } from "./welcome-header";
 import { ThankYouContent } from "./thankyou-content";
-import { useTestimonialForm } from "@/hooks/use-testimonial-form";
-import { useParams } from "next/navigation";
-interface ThankYouPageProps {
+
+export interface CollectionFormProps {
   viewMode: "desktop" | "mobile";
-  formData: FormValues;
+  collectionFormConfig: CollectionFormConfig;
 }
 
-export function ThankYouPage({ viewMode, formData }: ThankYouPageProps) {
-  const { design, thankYouPage } = formData;
+export function ThankYouPage({
+  viewMode,
+  collectionFormConfig,
+}: CollectionFormProps) {
+  const { design, thankYouPage } = collectionFormConfig;
   const isMobile = viewMode === "mobile";
 
   if (isMobile) {

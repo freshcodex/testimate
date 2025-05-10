@@ -1,13 +1,21 @@
 "use client";
 
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 import { WelcomePage } from "../../shared/welcome-page";
 
 interface WelcomePreviewProps {
   viewMode: "desktop" | "mobile";
-  formData: FormValues;
+  collectionFormConfig: CollectionFormConfig;
 }
 
-export function WelcomePreview({ viewMode, formData }: WelcomePreviewProps) {
-  return <WelcomePage viewMode={viewMode} formData={formData} />;
+export function WelcomePreview({
+  viewMode,
+  collectionFormConfig,
+}: WelcomePreviewProps) {
+  return (
+    <WelcomePage
+      viewMode={viewMode}
+      collectionFormConfig={collectionFormConfig}
+    />
+  );
 }

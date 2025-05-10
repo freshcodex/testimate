@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertTestimonialSchema } from "@/server/db/schema";
 import { z } from "zod";
+import { useState } from "react";
 
 const insertTestimonial = insertTestimonialSchema
   .omit({ projectId: true })
@@ -25,6 +26,9 @@ export function useTestimonialForm({
   projectSlug,
   initialData = {},
 }: UseTestimonialFormProps) {
+  const [thankyouContentFormData, setThankyouContentFormData] =
+    useState<TestimonialFormData | null>(null);
+
   const form = useForm<TestimonialFormData>({
     resolver: zodResolver(insertTestimonial),
     defaultValues: {
@@ -35,8 +39,6 @@ export function useTestimonialForm({
     },
   });
 
-  console.log(form.formState.errors);
-
   return {
     form,
     formData: form.getValues(),
@@ -44,5 +46,7 @@ export function useTestimonialForm({
     errors: form.formState.errors,
     isSubmitting: form.formState.isSubmitting,
     handleSubmit: form.handleSubmit,
+    setThankyouContentFormData,
+    thankyouContentFormData,
   };
 }
