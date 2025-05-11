@@ -5,10 +5,11 @@ import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import type { Tag, TagCategory } from "./tags-content";
+import type { Tag, TagCategory } from "@/types/tags";
 
 interface TagCreationModalProps {
   onClose: () => void;
+  // TODO: fix this type not accurately representing the tag insertion
   onCreateTag: (tag: Tag) => void;
 }
 
@@ -69,8 +70,8 @@ export function TagCreationModal({
       color: "bg-indigo-50",
     },
     {
-      id: "Job title",
-      name: "Job title",
+      id: "Job Title",
+      name: "Job Title",
       description:
         "Use this category for tags about your customer's job title.",
       example: "",
@@ -87,12 +88,11 @@ export function TagCreationModal({
   const handleCreateTag = () => {
     if (selectedCategory && tagName) {
       onCreateTag({
-        id: Math.random().toString(36).substring(2, 9),
         name: tagName,
         description: tagDescription,
         category: selectedCategory,
         testimonialCount: 0,
-      });
+      } as Tag);
     }
   };
 
@@ -214,6 +214,7 @@ export function TagCreationModal({
                 disabled={!tagName}
                 className="bg-black hover:bg-gray-800 text-white"
               >
+                {/* TODO: show loading state */}
                 Create
               </Button>
             </>

@@ -6,33 +6,55 @@ import { PlusIcon } from "lucide-react";
 import { EmptyState } from "./empty-state";
 import { TagCreationModal } from "./tag-creation-modal";
 import { TagList } from "./tag-list";
+import { useTags } from "@/hooks/use-tags";
+import type { Tag } from "@/types/tags";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export type TagCategory =
-  | "Product"
-  | "Company Size"
-  | "Business Type"
-  | "Industry"
-  | "Job title";
-
-export interface Tag {
-  id: string;
-  name: string;
-  description: string;
-  category: TagCategory;
-  testimonialCount: number;
+interface TagsContentProps {
+  projectId: number;
 }
 
-export function TagsContent() {
+export function TagsContent({ projectId }: TagsContentProps) {
   const [showModal, setShowModal] = useState(false);
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [showToast, setShowToast] = useState(false);
+  const { tags, isLoading, isCreating, createTag } = useTags({ projectId });
 
-  const handleCreateTag = (tag: Tag) => {
-    setTags([...tags, tag]);
+  const handleCreateTag = async (tag: Tag) => {
+    await createTag({
+      name: tag.name,
+      description: tag.description || "",
+      category: tag.category,
+    });
     setShowModal(false);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
   };
+
+  if (isLoading) {
+    return (
+      <div className="p-6 min-w-[800px]">
+        <div className="flex justify-between items-center mb-2">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-9 w-32" />
+        </div>
+        <Skeleton className="h-5 w-64 mb-8" />
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="rounded-lg border p-4">
+              <div className="flex items-center space-x-4">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[200px]" />
+                  <Skeleton className="h-4 w-[150px]" />
+                </div>
+              </div>
+              <div className="mt-4 space-y-2">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-[80%]" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     // todo: make this responsive
@@ -42,6 +64,7 @@ export function TagsContent() {
         <Button
           onClick={() => setShowModal(true)}
           className="bg-purple-600 hover:bg-purple-700"
+          disabled={isCreating}
         >
           <PlusIcon className="h-4 w-4 mr-2" />
           Create new
@@ -54,9 +77,10 @@ export function TagsContent() {
       {tags.length === 0 ? (
         <EmptyState onCreateTag={() => setShowModal(true)} />
       ) : (
-        <TagList tags={tags} />
+        <TagList tags={tags} projectId={projectId} />
       )}
 
+      {/* TODO: don't pass instead keep stuff in TagCreationModal */}
       {showModal && (
         <TagCreationModal
           onClose={() => setShowModal(false)}

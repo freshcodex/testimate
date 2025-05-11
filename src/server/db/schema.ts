@@ -48,6 +48,15 @@ export const integrationSourceEnum = pgEnum("integration_source", [
   "csv_import",
 ]);
 
+// Tag category enum
+export const tagCategoryEnum = pgEnum("tag_category", [
+  "Product",
+  "Company Size",
+  "Business Type",
+  "Industry",
+  "Job Title",
+]);
+
 // Profile table (references Supabase user)
 export const profiles = pgTable("profiles", {
   id: varchar("id", { length: 36 }).primaryKey(), // UUID from Supabase auth.users
@@ -209,6 +218,7 @@ export const collectionForms = pgTable("collection_forms", {
   design: json("design").$type<DesignConfig>(),
   welcomePage: json("welcome_page").$type<WelcomePageConfig>(),
   responsePage: json("response_page").$type<ResponsePageConfig>(),
+  // TODO: rename it to customerDetailsPage to be consistent
   customerDetails: json("customer_details").$type<CustomerDetailsConfig>(),
   thankYouPage: json("thank_you_page").$type<ThankYouPageConfig>(),
   customFields: json("custom_fields").$type<AdditionalFields>(),
@@ -289,6 +299,7 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   }),
   testimonials: many(testimonials),
   forms: many(collectionForms),
+  tags: many(tags),
 }));
 
 export const collectionFormsRelations = relations(
@@ -302,14 +313,78 @@ export const collectionFormsRelations = relations(
   })
 );
 
-export const testimonialsRelations = relations(testimonials, ({ one }) => ({
+export const testimonialsRelations = relations(
+  testimonials,
+  ({ one, many }) => ({
+    project: one(projects, {
+      fields: [testimonials.projectId],
+      references: [projects.id],
+    }),
+    form: one(collectionForms, {
+      fields: [testimonials.formId],
+      references: [collectionForms.id],
+      relationName: "testimonial_form",
+    }),
+    testimonialTags: many(testimonialTags),
+  })
+);
+
+// Tags table
+export const tags = pgTable("tags", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  category: tagCategoryEnum("category").notNull(),
+  projectId: integer("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// export type
+export type Tag = typeof tags.$inferSelect;
+
+// Testimonial-Tag junction table
+export const testimonialTags = pgTable(
+  "testimonial_tags",
+  {
+    testimonialId: integer("testimonial_id")
+      .notNull()
+      .references(() => testimonials.id, { onDelete: "cascade" }),
+    tagId: integer("tag_id")
+      .notNull()
+      .references(() => tags.id, { onDelete: "cascade" }),
+  },
+  (table) => {
+    return {
+      pk: uniqueIndex("testimonial_tags_pk").on(
+        table.testimonialId,
+        table.tagId
+      ),
+    };
+  }
+);
+
+// Add relations for tags
+export const tagsRelations = relations(tags, ({ one, many }) => ({
   project: one(projects, {
-    fields: [testimonials.projectId],
+    fields: [tags.projectId],
     references: [projects.id],
   }),
-  form: one(collectionForms, {
-    fields: [testimonials.formId],
-    references: [collectionForms.id],
-    relationName: "testimonial_form",
-  }),
+  testimonialTags: many(testimonialTags),
 }));
+
+export const testimonialTagsRelations = relations(
+  testimonialTags,
+  ({ one }) => ({
+    testimonial: one(testimonials, {
+      fields: [testimonialTags.testimonialId],
+      references: [testimonials.id],
+    }),
+    tag: one(tags, {
+      fields: [testimonialTags.tagId],
+      references: [tags.id],
+    }),
+  })
+);

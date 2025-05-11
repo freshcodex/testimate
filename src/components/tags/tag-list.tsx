@@ -1,16 +1,36 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Tag } from "./tags-content";
+import type { Tag } from "@/types/tags";
+import { useTags } from "@/hooks/use-tags";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface TagListProps {
   tags: Tag[];
+  projectId: number;
 }
 
-export function TagList({ tags }: TagListProps) {
+export function TagList({ tags, projectId }: TagListProps) {
+  const { deleteTag, isDeleting } = useTags({ projectId });
+
   return (
     <div className="space-y-4">
       {tags.map((tag) => (
-        <TagItem key={tag.id} tag={tag} />
+        <TagItem
+          key={tag.id}
+          tag={tag}
+          onDelete={() => deleteTag(Number(tag.id))}
+          isDeleting={isDeleting}
+        />
       ))}
     </div>
   );
@@ -18,9 +38,11 @@ export function TagList({ tags }: TagListProps) {
 
 interface TagItemProps {
   tag: Tag;
+  onDelete: () => void;
+  isDeleting: boolean;
 }
 
-function TagItem({ tag }: TagItemProps) {
+function TagItem({ tag, onDelete, isDeleting }: TagItemProps) {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case "Product":
@@ -80,6 +102,37 @@ function TagItem({ tag }: TagItemProps) {
           <Button variant="ghost" size="sm">
             Edit
           </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                disabled={isDeleting}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  tag and remove it from all associated testimonials.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={onDelete}
+                  className="bg-red-600 hover:bg-red-700"
+                  disabled={isDeleting}
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </div>

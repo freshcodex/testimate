@@ -3,7 +3,8 @@ import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 export default function Home() {
   return (
     <DashboardLayout>
-      <TagsContent />
+      {/* TODO: get project id from url */}
+      <TagsContent projectId={1} />
     </DashboardLayout>
   );
 }
