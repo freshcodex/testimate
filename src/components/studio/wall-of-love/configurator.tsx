@@ -1,7 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Copy, Check } from "lucide-react";
+import {
+  ArrowLeft,
+  Copy,
+  Check,
+  LayoutGrid,
+  Square,
+  Layers,
+  Palette,
+  Type,
+  Video,
+  Tag,
+  Sparkles,
+} from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { BasicSettings } from "@/components/studio/wall-of-love/settings/basic-settings";
@@ -13,6 +25,8 @@ import { VideoSettings } from "@/components/studio/wall-of-love/settings/video-s
 import { TagsSettings } from "@/components/studio/wall-of-love/settings/tags-settings";
 import { AIStyleSettings } from "@/components/studio/wall-of-love/settings/ai-style-settings";
 import { LivePreview } from "@/components/studio/wall-of-love/live-preview";
+import { Badge } from "@/components/ui/badge";
+import type { WallOfLoveConfig } from "./types";
 
 interface ConfiguratorProps {
   layout: string;
@@ -22,7 +36,9 @@ interface ConfiguratorProps {
 export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
   const [activeTab, setActiveTab] = useState("basic");
   const [copied, setCopied] = useState(false);
-  const [config, setConfig] = useState({
+  // TODO: use nuqs for this instead of useState; imp for prod
+  const [config, setConfig] = useState<WallOfLoveConfig>({
+    // Basic Settings
     layout,
     height: "800px",
     theme: "light",
@@ -32,6 +48,12 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
     pauseOnHover: true,
     scrollSpeed: "normal",
     shadowBackground: true,
+    showDate: true,
+    showSource: true,
+    showCaptions: false,
+    showStarRating: false,
+
+    // Colors
     primaryColor: "#6701E6",
     backgroundColor: "#FFFFFF",
     cardBackgroundColor: "#FFFFFF",
@@ -39,19 +61,41 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
     linkColor: "#6701E6",
     heartColor: "#DC2626",
     starColor: "#FBBF24",
+
+    // Text Settings
     fontFamily: "Lato",
     fontSize: "base",
     highlightStyle: "gradient",
+
+    // Video Settings
     showVideoDuration: true,
     playButtonColor: "#6701E6",
+
+    // Button Settings
     buttonColor: "#6701E6",
     selectedButtonColor: "#4444FF",
     buttonAlignment: "left",
     buttonFontColor: "#FFFFFF",
     selectedFontColor: "#FFFFFF",
+
+    // Border Settings
+    borderWidth: "0px",
+    borderColor: "#E5E7EB",
+    borderRadius: "8px",
+
+    // Shadow Settings
+    shadowColor: "rgba(0, 0, 0, 0.1)",
+    shadowBlur: "4px",
+    shadowOffset: "0px 2px",
+
+    // Tags Settings
+    showTags: true,
+    tagBackgroundColor: "#F3F4F6",
+    tagTextColor: "#374151",
+    tagBorderRadius: "4px",
   });
 
-  const handleConfigChange = (newConfig: Partial<typeof config>) => {
+  const handleConfigChange = (newConfig: Partial<WallOfLoveConfig>) => {
     setConfig({ ...config, ...newConfig });
   };
 
@@ -68,22 +112,31 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
     alert("Widget saved successfully!");
   };
 
+  const settingsTabs = [
+    { id: "basic", label: "Basic", icon: LayoutGrid },
+    { id: "border", label: "Border", icon: Square },
+    { id: "shadow", label: "Shadow", icon: Layers },
+    { id: "background", label: "Background", icon: Palette },
+    { id: "text", label: "Text", icon: Type },
+    { id: "video", label: "Video", icon: Video },
+    { id: "tags", label: "Tags", icon: Tag },
+    { id: "ai", label: "AI style", icon: Sparkles },
+  ];
+
   return (
     <div>
-      <div className="flex items-center mb-6">
+      <div className="flex flex-col space-y-2 mb-6">
         <button
           onClick={onBack}
-          className="flex items-center text-gray-600 hover:text-gray-900"
+          className="cursor-pointer flex items-center text-gray-600 hover:text-gray-900"
         >
           <ArrowLeft className="h-4 w-4 mr-1" />
           Back
         </button>
-        <div className="ml-4">
+        <div className="space-y-2">
           <h2 className="text-2xl font-bold">Embed a Wall of Love</h2>
-          <div className="flex items-center">
-            <div className="h-6 w-6 rounded-full bg-purple-100 flex items-center justify-center mr-2">
-              <span className="text-xs font-medium text-purple-600">2</span>
-            </div>
+          <div className="flex space-x-2 items-baseline">
+            <Badge>final step: 2</Badge>
             <span className="text-sm font-medium">
               Customize your Wall of Love
             </span>
@@ -102,208 +155,21 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
         </div>
       </div>
 
-      <div className="bg-gray-100 p-4 rounded-lg mb-6">
-        <pre className="text-sm overflow-x-auto">
-          <code>{embedCode}</code>
-        </pre>
-        <p className="text-xs text-gray-500 mt-2">
-          Height is set to {config.height} by default. You can change the height
-          parameter to what you like.
-        </p>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Settings Panel */}
         <div className="bg-white rounded-lg border shadow-sm p-4">
           <Tabs defaultValue="basic" onValueChange={setActiveTab}>
-            <TabsList className="grid grid-cols-4 mb-4">
-              <TabsTrigger
-                value="basic"
-                className="flex flex-col items-center py-2"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+            <TabsList className="flex flex-wrap gap-2 mb-4">
+              {settingsTabs.map((tab) => (
+                <TabsTrigger
+                  key={tab.id}
+                  value={tab.id}
+                  className="flex flex-col items-center py-2 min-h-5"
                 >
-                  <path d="M10.5 4.5H4.5V10.5H10.5V4.5Z" fill="currentColor" />
-                  <path d="M19.5 4.5H13.5V10.5H19.5V4.5Z" fill="currentColor" />
-                  <path
-                    d="M10.5 13.5H4.5V19.5H10.5V13.5Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M19.5 13.5H13.5V19.5H19.5V13.5Z"
-                    fill="currentColor"
-                  />
-                </svg>
-                <span className="text-xs mt-1">Basic</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="border"
-                className="flex flex-col items-center py-2"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    x="3"
-                    y="3"
-                    width="18"
-                    height="18"
-                    rx="2"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                  />
-                </svg>
-                <span className="text-xs mt-1">Border</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="shadow"
-                className="flex flex-col items-center py-2"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4 6C4 4.89543 4.89543 4 6 4H18C19.1046 4 20 4.89543 20 6V16C20 17.1046 19.1046 18 18 18H6C4.89543 18 4 17.1046 4 16V6Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M6 20C4.89543 20 4 19.1046 4 18V8C4 6.89543 4.89543 6 6 6H18C19.1046 6 20 6.89543 20 8V18C20 19.1046 19.1046 20 18 20H6Z"
-                    fill="currentColor"
-                    opacity="0.2"
-                  />
-                </svg>
-                <span className="text-xs mt-1">Shadow</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="background"
-                className="flex flex-col items-center py-2"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M3 8C3 5.79086 4.79086 4 7 4H17C19.2091 4 21 5.79086 21 8V16C21 18.2091 19.2091 20 17 20H7C4.79086 20 3 18.2091 3 16V8Z"
-                    fill="currentColor"
-                  />
-                  <path d="M12 8L16 14H8L12 8Z" fill="white" />
-                </svg>
-                <span className="text-xs mt-1">Background</span>
-              </TabsTrigger>
-            </TabsList>
-            <TabsList className="grid grid-cols-4">
-              <TabsTrigger
-                value="text"
-                className="flex flex-col items-center py-2"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M4 7V4H20V7"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M12 20V4"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M8 20H16"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span className="text-xs mt-1">Text</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="video"
-                className="flex flex-col items-center py-2"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    x="2"
-                    y="4"
-                    width="20"
-                    height="16"
-                    rx="2"
-                    fill="currentColor"
-                  />
-                  <path d="M15 12L10 15V9L15 12Z" fill="white" />
-                </svg>
-                <span className="text-xs mt-1">Video</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="tags"
-                className="flex flex-col items-center py-2"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M20.59 13.41L13.42 20.58C13.2343 20.766 13.0137 20.9135 12.7709 21.0141C12.5281 21.1148 12.2678 21.1666 12.005 21.1666C11.7422 21.1666 11.4819 21.1148 11.2391 21.0141C10.9963 20.9135 10.7757 20.766 10.59 20.58L2 12V2H12L20.59 10.59C20.9625 10.9647 21.1716 11.4716 21.1716 12C21.1716 12.5284 20.9625 13.0353 20.59 13.41Z"
-                    fill="currentColor"
-                  />
-                  <circle cx="7" cy="7" r="2" fill="white" />
-                </svg>
-                <span className="text-xs mt-1">Tags</span>
-              </TabsTrigger>
-              <TabsTrigger
-                value="ai"
-                className="flex flex-col items-center py-2"
-              >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                    fill="currentColor"
-                  />
-                </svg>
-                <span className="text-xs mt-1">AI style</span>
-              </TabsTrigger>
+                  <tab.icon className="h-2 w-2" />
+                  <span className="text-xs mt-1">{tab.label}</span>
+                </TabsTrigger>
+              ))}
             </TabsList>
 
             <div className="mt-6">
@@ -364,6 +230,16 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
           <h3 className="font-medium mb-4">Live preview</h3>
           <LivePreview config={config} />
         </div>
+      </div>
+
+      <div className="bg-gray-100 p-4 rounded-lg my-6">
+        <pre className="text-sm text-wrap">
+          <code>{embedCode}</code>
+        </pre>
+        <p className="text-xs text-gray-500 mt-2">
+          Height is set to {config.height} by default. You can change the height
+          parameter to what you like.
+        </p>
       </div>
 
       <div className="flex justify-between mt-8">
