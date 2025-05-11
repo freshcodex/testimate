@@ -4,6 +4,7 @@ import { type testimonials } from "@/server/db/schema";
 import { type InferSelectModel } from "drizzle-orm";
 import { toast } from "sonner";
 
+// TODO: In frontend always get data from route handler infer instead of using db schema
 type Testimonial = InferSelectModel<typeof testimonials>;
 
 interface UseTestimonialSelectionProps {
@@ -11,12 +12,14 @@ interface UseTestimonialSelectionProps {
   testimonials: Testimonial[];
 }
 
+// TODO: break this into multiple reusable and decoupled hooks
 export function useTestimonialSelection({
   projectId,
   testimonials,
 }: UseTestimonialSelectionProps) {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isTagModalOpen, setIsTagModalOpen] = useState(false);
 
   const utils = api.useUtils();
 
@@ -60,6 +63,17 @@ export function useTestimonialSelection({
     },
   });
 
+  const bulkTag = api.tags.bulkTagTestimonials.useMutation({
+    onSuccess: () => {
+      utils.testimonials.getAll.invalidate({ projectId });
+      toast.success("Testimonials tagged successfully");
+      setIsTagModalOpen(false);
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to tag testimonials");
+    },
+  });
+
   const handleSelect = useCallback((id: number, checked: boolean) => {
     setSelectedIds((prev) =>
       checked ? [...prev, id] : prev.filter((selectedId) => selectedId !== id)
@@ -97,6 +111,17 @@ export function useTestimonialSelection({
     bulkExport.mutate({ testimonialIds: selectedIds, projectId });
   }, [selectedIds, projectId, bulkExport]);
 
+  const handleBulkTag = useCallback(
+    async (tagId: number) => {
+      if (selectedIds.length === 0) return;
+      await bulkTag.mutateAsync({
+        testimonialIds: selectedIds,
+        tagId,
+      });
+    },
+    [selectedIds, bulkTag]
+  );
+
   const confirmBulkDelete = useCallback(() => {
     bulkDelete.mutate({ ids: selectedIds, projectId });
   }, [selectedIds, projectId, bulkDelete]);
@@ -119,9 +144,12 @@ export function useTestimonialSelection({
     handleBulkUnapprove,
     handleBulkDelete,
     handleBulkExport,
+    handleBulkTag,
     confirmBulkDelete,
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
+    isTagModalOpen,
+    setIsTagModalOpen,
     allSelectedApproved,
     allSelectedUnapproved,
     hasMixedApprovalStatus,
@@ -129,5 +157,8 @@ export function useTestimonialSelection({
     isUnapproving: bulkUnapprove.isPending,
     isDeleting: bulkDelete.isPending,
     isExporting: bulkExport.isPending,
+    isTagging: bulkTag.isPending,
+    projectId,
+    selectedTestimonialIds: selectedIds,
   };
 }

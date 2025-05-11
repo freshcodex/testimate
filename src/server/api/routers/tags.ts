@@ -1,13 +1,18 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { desc, eq, count, and } from "drizzle-orm";
+import { desc, eq, count, and, inArray } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import {
   createUpdateSchema,
   createSelectSchema,
   createInsertSchema,
 } from "drizzle-zod";
-import { tags, testimonialTags, projects } from "@/server/db/schema";
+import {
+  tags,
+  testimonialTags,
+  projects,
+  testimonials,
+} from "@/server/db/schema";
 
 const updateTagSchema = createUpdateSchema(tags);
 const baseSelectSchema = createSelectSchema(tags);
@@ -152,5 +157,73 @@ export const tagRouter = createTRPCRouter({
       await ctx.db.delete(tags).where(eq(tags.id, input.id));
 
       return { id: input.id };
+    }),
+
+  bulkTagTestimonials: protectedProcedure
+    .input(
+      z.object({
+        testimonialIds: z.array(z.number()),
+        tagId: z.number(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // First verify the tag exists and get its project
+      const [tag] = await ctx.db
+        .select()
+        .from(tags)
+        .where(eq(tags.id, input.tagId));
+
+      if (!tag) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Tag not found",
+        });
+      }
+
+      // Verify the user has access to the project
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(
+          and(
+            eq(projects.id, tag.projectId),
+            eq(projects.createdBy, ctx.user.id)
+          )
+        );
+
+      if (!project) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have access to this tag",
+        });
+      }
+
+      // Verify all testimonials belong to the same project
+      const [testimonialCount] = await ctx.db
+        .select({ count: count() })
+        .from(testimonials)
+        .where(
+          and(
+            eq(testimonials.projectId, tag.projectId),
+            inArray(testimonials.id, input.testimonialIds)
+          )
+        );
+
+      if (testimonialCount?.count !== input.testimonialIds.length) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Some testimonials do not belong to the project",
+        });
+      }
+
+      // Insert the tag associations
+      await ctx.db.insert(testimonialTags).values(
+        input.testimonialIds.map((testimonialId) => ({
+          testimonialId,
+          tagId: input.tagId,
+        }))
+      );
+
+      return { testimonialIds: input.testimonialIds, tagId: input.tagId };
     }),
 });

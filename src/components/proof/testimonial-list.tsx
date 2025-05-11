@@ -41,6 +41,10 @@ export function TestimonialList({
     isUnapproving,
     isDeleting,
     isExporting,
+    isTagging,
+    isTagModalOpen,
+    setIsTagModalOpen,
+    handleBulkTag,
   } = useTestimonialSelection({
     projectId,
     testimonials,
@@ -102,6 +106,11 @@ export function TestimonialList({
           isUnapproving={isUnapproving}
           isDeleting={isDeleting}
           isExporting={isExporting}
+          isTagging={isTagging}
+          isTagModalOpen={isTagModalOpen}
+          onTagModalOpenChange={setIsTagModalOpen}
+          onTag={handleBulkTag}
+          projectId={projectId}
         />
       )}
       <DeleteTestimonialsDialog
