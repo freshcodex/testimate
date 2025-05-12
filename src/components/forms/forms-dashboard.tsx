@@ -5,31 +5,21 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { FormsList } from "@/components/forms/form-list";
+import { CollectionFormsList } from "@/components/forms/form-list";
 import { EmptyState } from "@/components/forms/form-empty-state";
 import { PromotionCard } from "@/components/forms/promotion-card";
+import { api } from "@/trpc/react";
+import { useParams } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function FormsDashboard() {
-  const [forms, setForms] = useState<any[]>([
-    {
-      id: 1,
-      name: "My testimonial form",
-      status: "active",
-      stats: {
-        uniqueVisits: 0,
-        testimonials: 0,
-        responseRate: 0,
-      },
-      isBeta: true,
-    },
-  ]);
+  const { projectSlug } = useParams();
 
-  // Toggle between empty and populated state for demo purposes
-  const [isEmpty, setIsEmpty] = useState(false);
+  const { data: forms, isLoading } = api.collectionForms.getAll.useQuery({
+    projectSlug: projectSlug as string,
+  });
 
-  const toggleEmptyState = () => {
-    setIsEmpty(!isEmpty);
-  };
+  const isEmpty = !forms || forms.length === 0;
 
   return (
     <div className="flex flex-col p-6">
@@ -41,13 +31,6 @@ export function FormsDashboard() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={toggleEmptyState}
-            className="hidden md:flex"
-          >
-            {isEmpty ? "Show Forms" : "Show Empty State"}
-          </Button>
           <Link href="/dashboard/forms/new">
             <Button>
               <Plus className="h-4 w-4 mr-2" /> Create new
@@ -56,11 +39,20 @@ export function FormsDashboard() {
         </div>
       </div>
 
-      {isEmpty ? (
+      {isLoading ? (
+        <div className="space-y-4">
+          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-20 w-full" />
+        </div>
+      ) : isEmpty ? (
         <EmptyState />
       ) : (
         <>
-          <FormsList forms={forms} />
+          <CollectionFormsList
+            forms={forms}
+            projectSlug={projectSlug as string}
+          />
           <div className="mt-8">
             <PromotionCard />
           </div>

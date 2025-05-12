@@ -20,7 +20,7 @@ const baseSelectSchema = createSelectSchema(collectionForms);
 
 export const collectionFormsRouter = createTRPCRouter({
   getAll: protectedProcedure
-    .input(z.object({ projectId: z.number() }))
+    .input(z.object({ projectSlug: z.string() }))
     .query(async ({ ctx, input }) => {
       // First verify the project belongs to the user
       const [project] = await ctx.db
@@ -28,7 +28,7 @@ export const collectionFormsRouter = createTRPCRouter({
         .from(projects)
         .where(
           and(
-            eq(projects.id, input.projectId),
+            eq(projects.slug, input.projectSlug),
             eq(projects.createdBy, ctx.user.id)
           )
         );
@@ -43,7 +43,7 @@ export const collectionFormsRouter = createTRPCRouter({
       const forms = await ctx.db
         .select()
         .from(collectionForms)
-        .where(eq(collectionForms.projectId, input.projectId))
+        .where(eq(collectionForms.projectId, project.id))
         .orderBy(desc(collectionForms.createdAt));
 
       return forms;
@@ -240,5 +240,53 @@ export const collectionFormsRouter = createTRPCRouter({
         .where(eq(collectionForms.id, input.id));
 
       return { id: input.id };
+    }),
+
+  duplicate: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const [form] = await ctx.db
+        .select()
+        .from(collectionForms)
+        .where(eq(collectionForms.id, input.id));
+
+      if (!form) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Collection form not found",
+        });
+      }
+
+      // Verify the user has access to the project
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(
+          and(
+            eq(projects.id, form.projectId),
+            eq(projects.createdBy, ctx.user.id)
+          )
+        );
+
+      if (!project) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have access to this collection form",
+        });
+      }
+
+      // Create a new form with the same data but a new ID
+      const newForm = await ctx.db
+        .insert(collectionForms)
+        .values({
+          ...form,
+          id: undefined, // Let the database generate a new ID
+          title: `${form.title} (Copy)`,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .returning();
+
+      return newForm[0];
     }),
 });
