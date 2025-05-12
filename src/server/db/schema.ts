@@ -78,6 +78,9 @@ export const projects = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     slug: varchar("slug", { length: 255 }).notNull(),
     description: text("description"),
+    // TODO: add url, logo, etc.
+    // url: varchar("url"),
+    // logo: varchar("logo"),
     defaultLanguage: varchar("default_language", { length: 10 })
       .default("en")
       .notNull(),
