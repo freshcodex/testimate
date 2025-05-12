@@ -7,6 +7,8 @@ import {
   Share2,
   Tag,
   Zap,
+  Settings,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -22,24 +24,34 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useParams } from "next/navigation";
 
 export function AppSidebar() {
+  const { projectSlug } = useParams();
   return (
-    <Sidebar className="border-r border-gray-200">
+    <Sidebar className="border-r border-gray-200 min-w-64">
       <SidebarHeader className="h-16 border-b border-sidebar-border">
-        <div className="flex items-center gap-2 px-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-black text-white">
-            <span className="text-lg font-bold">B</span>
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-black text-white">
+              <span className="text-lg font-bold">B</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold">Bishal</span>
+              <span className="text-xs text-gray-500">Free plan</span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold">Bishal</span>
-            <span className="text-xs text-gray-500">Free plan</span>
-          </div>
+          <Link
+            href="/dashboard/new"
+            className="p-2 hover:bg-gray-100 rounded-md"
+          >
+            <Plus className="h-5 w-5 text-gray-600" />
+          </Link>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton className="text-purple-600">
@@ -48,7 +60,7 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
-        </SidebarGroup>
+        </SidebarGroup> */}
 
         <SidebarGroup>
           <SidebarGroupLabel>COLLECT</SidebarGroupLabel>
@@ -56,14 +68,14 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="#">
+                  <Link href={`/dashboard/${projectSlug}/forms`}>
                     <FileText className="h-4 w-4" />
                     <span>Forms</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
-              <SidebarMenuItem>
+              {/* <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="#">
                     <Import className="h-4 w-4" />
@@ -73,16 +85,16 @@ export function AppSidebar() {
                 <SidebarMenuBadge className="bg-green-100 text-green-800">
                   New
                 </SidebarMenuBadge>
-              </SidebarMenuItem>
+              </SidebarMenuItem> */}
 
-              <SidebarMenuItem>
+              {/* <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="#">
                     <Layers className="h-4 w-4" />
                     <span>Auto-collect</span>
                   </Link>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
+              </SidebarMenuItem> */}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -93,7 +105,7 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive>
-                  <Link href="#">
+                  <Link href={`/dashboard/${projectSlug}/proof`}>
                     <FileText className="h-4 w-4" />
                     <span>Proof</span>
                   </Link>
@@ -102,7 +114,7 @@ export function AppSidebar() {
 
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="#">
+                  <Link href={`/dashboard/${projectSlug}/tags`}>
                     <Tag className="h-4 w-4" />
                     <span>Tags</span>
                   </Link>
@@ -118,14 +130,14 @@ export function AppSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="#">
+                  <Link href={`/dashboard/${projectSlug}/studio`}>
                     <Share2 className="h-4 w-4" />
                     <span>Studio</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
-              <SidebarMenuItem>
+              {/* <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link href="#">
                     <FileText className="h-4 w-4" />
@@ -141,12 +153,12 @@ export function AppSidebar() {
                     <span>Rich snippet</span>
                   </Link>
                 </SidebarMenuButton>
-              </SidebarMenuItem>
+              </SidebarMenuItem> */}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupLabel>ANALYZE</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -160,10 +172,10 @@ export function AppSidebar() {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="border-t border-sidebar-border bg-accent">
         <div className="p-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -172,6 +184,12 @@ export function AppSidebar() {
               </div>
               <span className="text-sm">Shane Parrish</span>
             </div>
+            <Link
+              href={`/dashboard/${projectSlug}/settings`}
+              className="p-2 hover:bg-gray-100 rounded-md"
+            >
+              <Settings className="h-5 w-5 text-gray-600" />
+            </Link>
           </div>
         </div>
       </SidebarFooter>
