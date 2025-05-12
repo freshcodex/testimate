@@ -12,13 +12,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 
 export function DesignSection() {
-  const { control, formState } = useFormContext<FormValues>();
+  const { control } = useFormContext<CollectionFormConfig>();
 
   return (
-    <div className="space-y-4">
+    <div className="my-2 space-y-4">
       <FormField
         control={control}
         name="design.logo"
@@ -77,7 +77,7 @@ export function DesignSection() {
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={control}
           name="design.backgroundColor"
           render={({ field }) => (
@@ -93,7 +93,7 @@ export function DesignSection() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
       </div>
 
       <FormField

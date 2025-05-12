@@ -9,8 +9,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 
+// TODO: should come from db or a central place right now duplication
 const LABEL_FIELDS = [
   { name: "recordVideoButton", label: "Record a video button" },
   { name: "writeReviewButton", label: "Write a review button" },
@@ -43,10 +44,10 @@ const LABEL_FIELDS = [
 ];
 
 export function CustomizeLabelsSection() {
-  const { control, getValues } = useFormContext<FormValues>();
+  const { control, getValues } = useFormContext<CollectionFormConfig>();
 
   return (
-    <div className="space-y-4">
+    <div className="my-2 space-y-4">
       {LABEL_FIELDS.map((field) => (
         <FormField
           key={field.name}

@@ -20,7 +20,7 @@ export function useEditFormBuilder() {
   const [activeSection, setActiveSection] = useState<FormSection>("design");
 
   // View mode state (desktop or mobile)
-  const [viewMode, setViewMode] = useState<"desktop" | "mobile">("mobile");
+  const [viewMode, setViewMode] = useState<"desktop" | "mobile">("desktop");
 
   // Fetch form data
   const { data: formData } = api.collectionForms.getById.useQuery(

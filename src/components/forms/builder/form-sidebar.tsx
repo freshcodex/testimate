@@ -7,14 +7,7 @@ import {
   MessageCircle,
   User,
   ThumbsUp,
-  Share2,
-  Gift,
-  Globe,
-  Languages,
   Tag,
-  Globe2,
-  Heart,
-  Settings,
 } from "lucide-react";
 
 import {
@@ -56,64 +49,79 @@ export function FormSidebar({
         onValueChange={handleAccordionChange}
         className="w-full space-y-4"
       >
-        <AccordionItem value="design" className="border-b">
+        <AccordionItem
+          value="design"
+          className={`border-b ${activeSection !== "design" && "opacity-50"}`}
+        >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
-            <div className="flex items-center">
-              <Brush className="h-4 w-4 text-blue-500" />
-              <span className="ml-2 text-sm font-medium">Design</span>
+            <div className="flex items-center space-x-4">
+              <Brush className="h-6 w-6 text-blue-500" />
+              <span>Design</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
+          <AccordionContent className="px-4 pb-6">
             <DesignSection />
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="welcome" className="border-b">
+        <AccordionItem
+          value="welcome"
+          className={`border-b ${activeSection !== "welcome" && "opacity-50"}`}
+        >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
-            <div className="flex items-center">
-              <MessageSquare className="h-4 w-4 text-green-500" />
-              <span className="ml-2 text-sm font-medium">Welcome page</span>
+            <div className="flex items-center space-x-4">
+              <MessageSquare className="h-6 w-6 text-green-500" />
+              <span>Welcome page</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
+          <AccordionContent className="px-4 pb-6">
             <WelcomeSection />
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="response" className="border-b">
+        <AccordionItem
+          value="response"
+          className={`border-b ${activeSection !== "response" && "opacity-50"}`}
+        >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
-            <div className="flex items-center">
-              <MessageCircle className="h-4 w-4 text-orange-500" />
-              <span className="ml-2 text-sm font-medium">Response page</span>
+            <div className="flex items-center space-x-4">
+              <MessageCircle className="h-6 w-6 text-orange-500" />
+              <span>Response page</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
+          <AccordionContent className="px-4 pb-6">
             <ResponseSection />
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="customer" className="border-b">
+        <AccordionItem
+          value="customer"
+          className={`border-b ${activeSection !== "customer" && "opacity-50"}`}
+        >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
-            <div className="flex items-center">
-              <User className="h-4 w-4 text-purple-500" />
-              <span className="ml-2 text-sm font-medium">
-                Customer details page
-              </span>
+            <div className="flex items-center space-x-4">
+              <User className="h-6 w-6 text-purple-500" />
+              <span>Customer details page</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
+          <AccordionContent className="px-4 pb-6">
             <CustomerDetailsSection />
           </AccordionContent>
         </AccordionItem>
 
-        <AccordionItem value="thank-you" className="border-b">
+        <AccordionItem
+          value="thank-you"
+          className={`border-b ${
+            activeSection !== "thank-you" && "opacity-50"
+          }`}
+        >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
-            <div className="flex items-center">
-              <ThumbsUp className="h-4 w-4 text-pink-500" />
-              <span className="ml-2 text-sm font-medium">Thank you page</span>
+            <div className="flex items-center space-x-4">
+              <ThumbsUp className="h-6 w-6 text-pink-500" />
+              <span>Thank you page</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
+          <AccordionContent className="px-4 pb-6">
             <ThankYouSection />
           </AccordionContent>
         </AccordionItem>
@@ -146,14 +154,19 @@ export function FormSidebar({
           isActive={activeSection === "auto-translate"}
         /> */}
 
-        <AccordionItem value="customize-labels" className="border-b">
+        <AccordionItem
+          value="customize-labels"
+          className={`border-b ${
+            activeSection !== "customize-labels" ? "opacity-50 " : ""
+          }`}
+        >
           <AccordionTrigger className="px-4 py-3 hover:no-underline">
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
               <Tag className="h-4 w-4 text-indigo-500" />
               <span className="ml-2 text-sm font-medium">Customize labels</span>
             </div>
           </AccordionTrigger>
-          <AccordionContent className="px-4 pb-4">
+          <AccordionContent className="px-4 pb-6">
             <CustomizeLabelsSection />
           </AccordionContent>
         </AccordionItem>
@@ -180,39 +193,5 @@ export function FormSidebar({
         /> */}
       </Accordion>
     </div>
-  );
-}
-
-interface SidebarAccordionItemProps {
-  value: string;
-  icon: React.ReactNode;
-  label: string;
-  isActive: boolean;
-}
-
-function SidebarAccordionItem({
-  value,
-  icon,
-  label,
-  isActive,
-}: SidebarAccordionItemProps) {
-  return (
-    <AccordionItem value={value} className="border-b">
-      <AccordionTrigger className="px-4 py-3 hover:no-underline">
-        <div className="flex items-center">
-          <div className="flex h-6 w-6 items-center justify-center">{icon}</div>
-          <span className="ml-2 text-sm font-medium">{label}</span>
-        </div>
-      </AccordionTrigger>
-      <AccordionContent className="px-4 pb-4">
-        <div className="text-sm text-gray-500">
-          {isActive ? (
-            <p>Content for {label} goes here</p>
-          ) : (
-            <p>This section is currently inactive</p>
-          )}
-        </div>
-      </AccordionContent>
-    </AccordionItem>
   );
 }

@@ -13,13 +13,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 
 export function WelcomeSection() {
-  const { control } = useFormContext<FormValues>();
+  const { control } = useFormContext<CollectionFormConfig>();
 
   return (
-    <div className="space-y-4">
+    <div className="my-2 space-y-4">
       <FormField
         control={control}
         name="welcomePage.title"

@@ -12,14 +12,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 
 export function ResponseSection() {
-  const { control, watch } = useFormContext<FormValues>();
-  const useDifferentPrompts = watch("responsePage.useDifferentPrompts");
+  const { control } = useFormContext<CollectionFormConfig>();
 
   return (
-    <div className="space-y-4">
+    <div className="my-2 space-y-4">
       <FormField
         control={control}
         name="responsePage.useDifferentPrompts"

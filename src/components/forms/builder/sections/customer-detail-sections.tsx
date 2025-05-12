@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import type { FormValues } from "@/lib/schema/form-schema";
+import type { CollectionFormConfig } from "@/lib/schema/form-schema";
 import { Switch } from "@/components/ui/switch";
 import {
   AtSign,
@@ -107,10 +107,10 @@ const customerFields = [
 ];
 
 export function CustomerDetailsSection() {
-  const { control, watch } = useFormContext<FormValues>();
+  const { control, watch } = useFormContext<CollectionFormConfig>();
   const [open, setOpen] = React.useState(false);
   const additionalFields = watch("additionalFields") || [];
-  const { setValue, getValues } = useFormContext<FormValues>();
+  const { setValue, getValues } = useFormContext<CollectionFormConfig>();
 
   // Helper to remove a field by id
   const handleDeleteField = (id: string) => {
@@ -122,13 +122,15 @@ export function CustomerDetailsSection() {
   };
 
   // Helper to add a field
-  const handleAddField = (field: FormValues["additionalFields"][number]) => {
+  const handleAddField = (
+    field: CollectionFormConfig["additionalFields"][number]
+  ) => {
     const current = getValues("additionalFields") || [];
     setValue("additionalFields", [...current, field]);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="my-2 space-y-6">
       <p className="text-sm text-gray-500 mb-2">
         Select which customer details to collect:
       </p>
