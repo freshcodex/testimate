@@ -7,7 +7,7 @@ interface SingleWidgetDesignSelectorProps {
 const DESIGN_OPTIONS = [
   { value: "left-aligned", label: "Left aligned" },
   { value: "left-aligned-bold", label: "Left aligned - Bold" },
-  { value: "large-image", label: "With large image" },
+  { value: "with-large-image", label: "With large image" },
   { value: "simple-centered", label: "Simple centered" },
 ];
 

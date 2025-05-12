@@ -4,6 +4,7 @@ import LeftAlignedBoldTestimonial from "@/components/widgets/testimonial/variant
 import WithImageTestimonial from "@/components/widgets/testimonial/variants/with-image";
 import SimpleCenteredTestimonial from "@/components/widgets/testimonial/variants/simple-centered";
 import type { Design } from "./types";
+
 interface TestimonialProps extends TestimonialCardProps {
   style: Design;
 }
