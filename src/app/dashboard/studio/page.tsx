@@ -145,12 +145,11 @@ export default function StudioPage() {
             </TabsList>
           </Tabs>
         </div>
-
-        {activeTab === "wall-of-love" && <WallOfLoveTab />}
-        {activeTab === "single-widget" && <SingleWidgetTab />}
-        {activeTab === "video-widget" && <VideoWidgetTab />}
-        {activeTab === "saved" && <SavedWidgetsTab />}
       </div>
+      {activeTab === "wall-of-love" && <WallOfLoveTab />}
+      {activeTab === "single-widget" && <SingleWidgetTab />}
+      {activeTab === "video-widget" && <VideoWidgetTab />}
+      {activeTab === "saved" && <SavedWidgetsTab />}
     </div>
     // </DashboardLayout>
   );

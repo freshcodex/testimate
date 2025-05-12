@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   ArrowLeft,
   Copy,
@@ -13,8 +13,15 @@ import {
   Video,
   Tag,
   Sparkles,
+  GripVertical,
 } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { BasicSettings } from "@/components/studio/wall-of-love/settings/basic-settings";
 import { BorderSettings } from "@/components/studio/wall-of-love/settings/border-settings";
@@ -27,6 +34,11 @@ import { AIStyleSettings } from "@/components/studio/wall-of-love/settings/ai-st
 import { LivePreview } from "@/components/studio/wall-of-love/live-preview";
 import { Badge } from "@/components/ui/badge";
 import type { Layout, WallOfLoveConfig } from "./types";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 interface ConfiguratorProps {
   layout: string;
@@ -36,6 +48,39 @@ interface ConfiguratorProps {
 export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
   const [activeTab, setActiveTab] = useState("basic");
   const [copied, setCopied] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [settingsWidth, setSettingsWidth] = useState(300); // Default width in pixels
+  const resizerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing || !containerRef.current) return;
+
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const newWidth = e.clientX - containerRect.left;
+
+      // Set minimum and maximum widths
+      if (newWidth >= 200 && newWidth <= containerRect.width - 200) {
+        setSettingsWidth(newWidth);
+      }
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+    };
+
+    if (isResizing) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing]);
+
   // TODO: use nuqs for this instead of useState; imp for prod
   const [config, setConfig] = useState<WallOfLoveConfig>({
     // Basic Settings
@@ -125,7 +170,7 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
 
   return (
     <div>
-      <div className="flex flex-col space-y-2 mb-6">
+      <div className="container mx-auto px-4 py-8 flex flex-col space-y-2 mb-6">
         <button
           onClick={onBack}
           className="cursor-pointer flex items-center text-gray-600 hover:text-gray-900"
@@ -142,97 +187,104 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
             </span>
           </div>
         </div>
-      </div>
-
-      <div className="flex items-center mb-4">
-        <div className="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full">
-          <div className="h-4 w-4 rounded-full bg-green-500 mr-2 flex items-center justify-center">
-            <Check className="h-3 w-3 text-white" />
+        <div className="flex items-center mb-4">
+          <div className="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full">
+            <div className="h-4 w-4 rounded-full bg-green-500 mr-2 flex items-center justify-center">
+              <Check className="h-3 w-3 text-white" />
+            </div>
+            <span className="text-sm font-medium">
+              {layout.replace("-", " ")}
+            </span>
           </div>
-          <span className="text-sm font-medium">
-            {layout.replace("-", " ")}
-          </span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Settings Panel */}
-        <div className="bg-white rounded-lg border shadow-sm p-4">
-          <Tabs defaultValue="basic" onValueChange={setActiveTab}>
-            <TabsList className="flex flex-wrap gap-2 mb-4">
-              {settingsTabs.map((tab) => (
-                <TabsTrigger
-                  key={tab.id}
-                  value={tab.id}
-                  className="flex flex-col items-center py-2 min-h-5"
-                >
-                  <tab.icon className="h-2 w-2" />
-                  <span className="text-xs mt-1">{tab.label}</span>
-                </TabsTrigger>
-              ))}
-            </TabsList>
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="min-h-[calc(100vh-200px)] rounded-lg border m-4"
+      >
+        <ResizablePanel className="" defaultSize={20} minSize={15}>
+          <div className="h-full bg-white rounded-lg p-4 overflow-auto">
+            <Select value={activeTab} onValueChange={setActiveTab}>
+              <SelectTrigger className="w-full mb-4">
+                <SelectValue placeholder="Select setting" />
+              </SelectTrigger>
+              <SelectContent>
+                {settingsTabs.map((tab) => (
+                  <SelectItem key={tab.id} value={tab.id}>
+                    <div className="flex items-center gap-2">
+                      <tab.icon className="h-4 w-4" />
+                      <span>{tab.label}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
             <div className="mt-6">
-              <TabsContent value="basic">
+              {activeTab === "basic" && (
                 <BasicSettings
                   config={config}
                   onConfigChange={handleConfigChange}
                 />
-              </TabsContent>
-              <TabsContent value="border">
+              )}
+              {activeTab === "border" && (
                 <BorderSettings
                   config={config}
                   onConfigChange={handleConfigChange}
                 />
-              </TabsContent>
-              <TabsContent value="shadow">
+              )}
+              {activeTab === "shadow" && (
                 <ShadowSettings
                   config={config}
                   onConfigChange={handleConfigChange}
                 />
-              </TabsContent>
-              <TabsContent value="background">
+              )}
+              {activeTab === "background" && (
                 <BackgroundSettings
                   config={config}
                   onConfigChange={handleConfigChange}
                 />
-              </TabsContent>
-              <TabsContent value="text">
+              )}
+              {activeTab === "text" && (
                 <TextSettings
                   config={config}
                   onConfigChange={handleConfigChange}
                 />
-              </TabsContent>
-              <TabsContent value="video">
+              )}
+              {activeTab === "video" && (
                 <VideoSettings
                   config={config}
                   onConfigChange={handleConfigChange}
                 />
-              </TabsContent>
-              <TabsContent value="tags">
+              )}
+              {activeTab === "tags" && (
                 <TagsSettings
                   config={config}
                   onConfigChange={handleConfigChange}
                 />
-              </TabsContent>
-              <TabsContent value="ai">
+              )}
+              {activeTab === "ai" && (
                 <AIStyleSettings
                   config={config}
                   onConfigChange={handleConfigChange}
                 />
-              </TabsContent>
+              )}
             </div>
-          </Tabs>
-        </div>
+          </div>
+        </ResizablePanel>
 
-        {/* Preview Panel */}
-        <div className="bg-white rounded-lg border shadow-sm p-4">
-          <h3 className="font-medium mb-4">Live preview</h3>
-          <LivePreview config={config} />
-        </div>
-      </div>
+        <ResizableHandle />
 
-      <div className="bg-gray-100 p-4 rounded-lg my-6">
+        <ResizablePanel defaultSize={80} minSize={30}>
+          <div className="h-full bg-white rounded-lg p-4 overflow-auto">
+            <h3 className="font-medium mb-4">Live preview</h3>
+            <LivePreview config={config} />
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+
+      <div className="container mx-auto px-4 py-8 bg-gray-100 p-4 rounded-lg my-6">
         <pre className="text-sm text-wrap">
           <code>{embedCode}</code>
         </pre>
@@ -242,7 +294,7 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
         </p>
       </div>
 
-      <div className="flex justify-between mt-8">
+      <div className="container mx-auto px-4 py-8 flex justify-between mt-8">
         <Button variant="outline" onClick={onBack}>
           Cancel
         </Button>

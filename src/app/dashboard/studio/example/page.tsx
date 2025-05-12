@@ -72,7 +72,7 @@ const testimonials = [
 
 // Default configuration
 const defaultConfig: TestimonialLayoutConfig = {
-  layout: "carousel",
+  layout: "masonry-animated",
   height: "auto",
   theme: "light",
   showBranding: true,
