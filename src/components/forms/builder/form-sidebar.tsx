@@ -54,7 +54,7 @@ export function FormSidebar({
         collapsible
         value={activeSection}
         onValueChange={handleAccordionChange}
-        className="w-full space-y-6"
+        className="w-full space-y-4"
       >
         <AccordionItem value="design" className="border-b">
           <AccordionTrigger className="px-4 py-3 hover:no-underline">

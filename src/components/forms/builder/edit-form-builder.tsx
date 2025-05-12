@@ -45,7 +45,7 @@ export function EditFormBuilder() {
     onSuccess: async (data) => {
       await utils.collectionForms.getAll.invalidate();
       toast.success("Form updated successfully!");
-      router.push(`/dashboard/forms/${data?.id}/share`);
+      router.push(`/dashboard/${params.projectSlug}/forms/${data?.id}/share`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -72,22 +72,23 @@ export function EditFormBuilder() {
         <div className="flex flex-col py-10 px-4 overflow-y-scroll">
           <div className="px-4 py-2 space-y-2">
             <Link
-              // DON't change this href Intentional
-              href="/dashboard/forms"
+              href={`/dashboard/${params.projectSlug}/forms`}
               className="flex items-center text-sm text-gray-500 hover:text-gray-900"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Forms
             </Link>
-            <h1 className="text-2xl font-semibold">
-              {collectionFormConfig.name}
-            </h1>
+            <input
+              type="text"
+              className="text-2xl font-semibold bg-transparent border-none focus:outline-none w-full"
+              {...form.register("name")}
+            />
           </div>
           <FormSidebar
             activeSection={activeSection}
             setActiveSection={handleSectionChange}
           />
-          <div className="mt-auto px-4 py-2">
+          <div className="mt-auto px-4 py-6">
             <Button
               variant="default"
               className="w-full bg-black text-white hover:bg-gray-800"
