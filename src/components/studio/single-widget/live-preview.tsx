@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import type { SingleWidgetConfig } from "./types";
 import { TestimonialCard } from "@/components/widgets/testimonial/testimonial-card";
+import TestimonialFactory from "./testimonial-factory";
 
 interface LivePreviewProps {
   config: SingleWidgetConfig;
@@ -93,7 +94,12 @@ export function LivePreview({ config }: LivePreviewProps) {
       </div>
 
       <div className="bg-gray-100 p-4 rounded-lg">
-        <TestimonialCard config={testimonialConfig} {...testimonials} />
+        {/* <TestimonialCard config={testimonialConfig} {...testimonials} /> */}
+        <TestimonialFactory
+          config={testimonialConfig}
+          style={config.design}
+          {...testimonials}
+        />
       </div>
     </div>
   );

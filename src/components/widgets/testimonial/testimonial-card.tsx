@@ -21,7 +21,7 @@ export interface TestimonialProps {
 }
 
 // TODO: add other config options here; make it same as wholeconfig from wall-of-love there is only small things that are different here
-interface TestimonialCardProps extends TestimonialProps {
+export interface TestimonialCardProps extends TestimonialProps {
   config: {
     theme: Theme;
     primaryColor: string;

@@ -17,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export function SingleWidgetDesignSelector({
   onDesignSelect,
 }: SingleWidgetDesignSelectorProps) {
+  // here
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
