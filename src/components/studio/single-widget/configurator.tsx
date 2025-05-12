@@ -91,10 +91,10 @@ export function SingleWidgetConfigurator({
   }, [isResizing]);
 
   // TODO: use only stuff from the config, must be better way to do this
-  const embedCode = `<iframe height="${config.height}" id="testimonialto-${config.design}" src="http://localhost:3000/w/${config.design}?config=${urlParams}" frameborder="0" scrolling="no" width="100%"></iframe>`;
+  const embedCode = `<iframe height="${config.height}" id="testimonialto-${config.design}" src="http://localhost:3000/p/${config.design}?config=${urlParams}" frameborder="0" scrolling="no" width="100%"></iframe>`;
 
   const handleCopyCode = () => {
-    const url = `http://localhost:3000/w/${config.design}?config=${urlParams}`;
+    const url = `http://localhost:3000/p/${config.design}?config=${urlParams}`;
     console.log(url);
     navigator.clipboard.writeText(url);
     setCopied(true);
