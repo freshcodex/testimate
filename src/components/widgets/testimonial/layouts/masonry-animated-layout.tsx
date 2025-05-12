@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { TestimonialCard } from "../testimonial-card";
 import { cn } from "@/lib/utils";
 import type { TestimonialLayoutProps } from "../types";
@@ -10,60 +10,8 @@ export function MasonryAnimatedLayout({
   config,
 }: TestimonialLayoutProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const animationRef = useRef<number>(0);
-
-  // Determine if horizontal mode
   const isHorizontal = config.scrollDirection === "horizontal";
-  // Use config.height or fallback for horizontal row height
   const rowHeight = isHorizontal ? config.height || "340px" : undefined;
-
-  // Calculate scroll speed based on config
-  const getScrollSpeed = () => {
-    switch (config.scrollSpeed) {
-      case "slow":
-        return 0.5;
-      case "fast":
-        return 2;
-      default:
-        return 1;
-    }
-  };
-
-  // Handle scroll animation
-  useEffect(() => {
-    const animate = () => {
-      if (!containerRef.current) return;
-      const container = containerRef.current;
-      const contentWidth = container.scrollWidth;
-      const contentHeight = container.scrollHeight;
-      const visibleWidth = container.clientWidth;
-      const visibleHeight = container.clientHeight;
-      const speed = getScrollSpeed();
-
-      if (isHorizontal) {
-        let newPosition = scrollPosition + speed;
-        if (newPosition >= contentWidth - visibleWidth) {
-          newPosition = 0;
-        }
-        setScrollPosition(newPosition);
-      } else {
-        let newPosition = scrollPosition + speed;
-        if (newPosition >= contentHeight - visibleHeight) {
-          newPosition = 0;
-        }
-        setScrollPosition(newPosition);
-      }
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-    animationRef.current = requestAnimationFrame(animate);
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [scrollPosition, config.scrollSpeed, isHorizontal]);
 
   // Container styles
   const containerStyle = {
@@ -85,6 +33,18 @@ export function MasonryAnimatedLayout({
   // Create duplicated testimonials for infinite scroll
   const duplicatedTestimonials = [...testimonials, ...testimonials];
 
+  // Animation speed classes based on config
+  const getAnimationSpeed = () => {
+    switch (config.scrollSpeed) {
+      case "slow":
+        return "animate-[scroll_20s_linear_infinite] hover:animate-pause";
+      case "fast":
+        return "animate-[scroll_5s_linear_infinite] hover:animate-pause";
+      default:
+        return "animate-[scroll_10s_linear_infinite] hover:animate-pause";
+    }
+  };
+
   return (
     <div
       ref={containerRef}
@@ -99,13 +59,12 @@ export function MasonryAnimatedLayout({
         <div
           className={cn(
             "flex flex-nowrap items-start gap-4",
-            "transition-transform duration-100 ease-linear"
+            getAnimationSpeed(),
+            "transition-all duration-300"
           )}
           style={{
-            transform: `translateX(-${scrollPosition}px)`,
             minHeight: rowHeight,
             height: rowHeight,
-            willChange: "transform",
           }}
         >
           {duplicatedTestimonials.map((testimonial) => (
@@ -120,7 +79,6 @@ export function MasonryAnimatedLayout({
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
-                willChange: "transform",
               }}
             >
               <TestimonialCard
@@ -146,12 +104,9 @@ export function MasonryAnimatedLayout({
         <div
           className={cn(
             "relative",
-            "transition-transform duration-100 ease-linear"
+            getAnimationSpeed(),
+            "transition-all duration-300"
           )}
-          style={{
-            transform: `translateY(-${scrollPosition}px)`,
-            willChange: "transform",
-          }}
         >
           <div className="columns-1 md:columns-2 lg:columns-4 gap-4 space-y-4">
             {duplicatedTestimonials.map((testimonial) => (

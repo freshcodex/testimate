@@ -76,10 +76,10 @@ const defaultConfig: TestimonialLayoutConfig = {
   height: "auto",
   theme: "light",
   showBranding: true,
-  scrollDirection: "horizontal",
+  scrollDirection: "vertical",
   showHeartAnimation: false,
   pauseOnHover: true, // only for masonry-animated layout
-  scrollSpeed: "normal",
+  scrollSpeed: "fast",
   shadowBackground: false,
   showDate: true,
   showSource: true,
