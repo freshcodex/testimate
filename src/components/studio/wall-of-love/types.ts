@@ -10,21 +10,22 @@ export type FontFamily =
 export type FontSize = "xs" | "sm" | "base" | "lg" | "xl";
 export type HighlightStyle = "gradient" | "underline" | "highlight" | "none";
 export type ButtonAlignment = "left" | "center" | "right";
+export type Layout = "carousel" | "masonry-fixed" | "masonry-animated";
 
 export interface WallOfLoveConfig {
   // Basic Settings
-  layout: string;
+  layout: Layout;
   height: string;
   theme: Theme;
   showBranding: boolean;
-  scrollDirection: ScrollDirection;
-  showHeartAnimation: boolean;
+  scrollDirection: ScrollDirection; // vertical or horizontal scrolling; default is vertical
+  showHeartAnimation: boolean; // shows heart flowing around like confetti
   pauseOnHover: boolean;
   scrollSpeed: ScrollSpeed;
   shadowBackground: boolean;
   showDate: boolean;
-  showSource: boolean;
-  showCaptions: boolean;
+  showSource: boolean; // shows the source of the testimonial; default is true
+  showCaptions: boolean; // for videos testimonials
   showStarRating: boolean;
 
   // Colors
@@ -64,7 +65,7 @@ export interface WallOfLoveConfig {
   shadowOffset?: string;
 
   // Tags Settings
-  showTags?: boolean;
+  showTags?: boolean; // tags are shown inside the testimonial card; like a badge
   tagBackgroundColor?: string;
   tagTextColor?: string;
   tagBorderRadius?: string;

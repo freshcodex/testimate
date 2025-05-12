@@ -1,0 +1,146 @@
+"use client";
+
+import { TestimonialCard } from "../testimonial-card";
+import type { TestimonialLayoutProps } from "../types";
+import { cn } from "@/lib/utils";
+
+export function MasonryFixedLayout({
+  testimonials,
+  config,
+}: TestimonialLayoutProps) {
+  // Determine if horizontal mode
+  const isHorizontal = config.scrollDirection === "horizontal";
+  // Use config.height or fallback for horizontal row height
+  const rowHeight = isHorizontal ? config.height || "340px" : undefined;
+
+  // Container styles
+  const containerStyle = {
+    backgroundColor: config.backgroundColor || "transparent",
+    fontFamily: config.fontFamily || "inherit",
+    padding: "1rem",
+    height: !isHorizontal ? config.height || "auto" : undefined,
+    color: config.textColor || "inherit",
+    fontSize: config.fontSize || "base",
+    boxShadow: config.shadowBackground
+      ? `${config.shadowOffset || "0 4px"} ${config.shadowBlur || "6px"} ${
+          config.shadowColor || "rgba(0, 0, 0, 0.1)"
+        }`
+      : "none",
+    overflow: isHorizontal ? "visible" : "visible",
+  };
+
+  return (
+    <div
+      className={cn(
+        "masonry-testimonials-container w-full",
+        !isHorizontal && ""
+      )}
+      style={containerStyle}
+    >
+      {/* Masonry Row or Columns */}
+      {isHorizontal ? (
+        <div
+          className="flex flex-nowrap items-start overflow-x-auto gap-4"
+          style={{ minHeight: rowHeight, height: rowHeight }}
+        >
+          {testimonials.map((testimonial) => (
+            <div
+              key={testimonial.id}
+              className="flex-shrink-0 w-[320px] max-w-xs mr-4 break-inside-avoid testimonial-item"
+              style={{
+                borderWidth: config.borderWidth,
+                borderColor: config.borderColor,
+                borderRadius: config.borderRadius,
+                background: config.cardBackgroundColor,
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <TestimonialCard
+                {...testimonial}
+                config={{
+                  theme: config.theme,
+                  primaryColor: config.primaryColor,
+                  cardBackgroundColor: config.cardBackgroundColor,
+                  textColor: config.textColor,
+                  linkColor: config.linkColor,
+                  starColor: config.starColor,
+                  showStarRating: config.showStarRating,
+                  showDate: config.showDate,
+                  showSource: config.showSource,
+                  borderRadius: config.borderRadius,
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="columns-1 md:columns-2 lg:columns-4 gap-4 space-y-4">
+          {testimonials.map((testimonial) => (
+            <div
+              key={testimonial.id}
+              className="mb-4 break-inside-avoid testimonial-item"
+              style={{
+                borderWidth: config.borderWidth,
+                borderColor: config.borderColor,
+                borderRadius: config.borderRadius,
+                background: config.cardBackgroundColor,
+              }}
+            >
+              <TestimonialCard
+                {...testimonial}
+                config={{
+                  theme: config.theme,
+                  primaryColor: config.primaryColor,
+                  cardBackgroundColor: config.cardBackgroundColor,
+                  textColor: config.textColor,
+                  linkColor: config.linkColor,
+                  starColor: config.starColor,
+                  showStarRating: config.showStarRating,
+                  showDate: config.showDate,
+                  showSource: config.showSource,
+                  borderRadius: config.borderRadius,
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Branding always on a new line below testimonials */}
+      {config.showBranding && (
+        <div className="flex justify-center items-center mt-8 w-full">
+          <div
+            className="rounded-full p-2 mr-2"
+            style={{
+              backgroundColor: config.primaryColor || "rgb(224, 231, 255)",
+              color: config.textColor || "rgb(79, 70, 229)",
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
+              />
+            </svg>
+          </div>
+          <span
+            className="font-medium"
+            style={{ color: config.textColor || "rgb(55, 65, 81)" }}
+          >
+            Testimonial
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}

@@ -1,0 +1,17 @@
+import { type TestimonialLayoutProps } from "../types";
+import { CarouselLayout } from "./carousel-layout";
+import { MasonryAnimatedLayout } from "./masonry-animated-layout";
+import { MasonryFixedLayout } from "./masonry-fixed-layout";
+
+export function TestimonialLayoutFactory(props: TestimonialLayoutProps) {
+  const { config } = props;
+
+  switch (config.layout) {
+    case "carousel":
+      return <CarouselLayout {...props} />;
+    case "masonry-animated":
+      return <MasonryAnimatedLayout {...props} />;
+    default:
+      return <MasonryFixedLayout {...props} />;
+  }
+}
