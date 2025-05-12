@@ -20,6 +20,7 @@ export interface TestimonialProps {
   highlighted?: string[];
 }
 
+// TODO: add other config options here; make it same as wholeconfig from wall-of-love there is only small things that are different here
 interface TestimonialCardProps extends TestimonialProps {
   config: {
     theme: Theme;
@@ -31,7 +32,16 @@ interface TestimonialCardProps extends TestimonialProps {
     showStarRating: boolean;
     showDate: boolean;
     showSource: boolean;
+
+    // TODO: make it mandatory add border and shadow settings here
+    borderWidth?: string;
+    borderColor?: string;
     borderRadius?: string;
+    shadowColor?: string;
+    shadowBlur?: string;
+    shadowOffset?: string;
+
+    borderStyle?: string;
   };
 }
 
@@ -61,6 +71,13 @@ export function TestimonialCard({
     backgroundColor: config.cardBackgroundColor || "#ffffff",
     color: config.textColor || "#000000",
     borderRadius: config.borderRadius || "0.75rem",
+    borderWidth: config.borderWidth || "1px",
+    borderColor: config.borderColor || "transparent",
+    borderStyle: config.borderStyle || "solid",
+    boxShadow:
+      config.shadowColor && config.shadowBlur && config.shadowOffset
+        ? `${config.shadowOffset} ${config.shadowBlur} ${config.shadowColor}`
+        : "0 1px 3px rgba(0,0,0,0.1)",
   };
 
   // Generate avatar letter if no avatar image
