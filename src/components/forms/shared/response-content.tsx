@@ -88,25 +88,27 @@ export function ResponseContent({
           onSubmit={form.handleSubmit(handleContinue)}
           className="space-y-6"
         >
-          <FormField
-            control={form.control}
-            name="rating"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-sm font-medium">
-                  How would you rate your experience?
-                </FormLabel>
-                <FormControl>
-                  <StarRating
-                    value={field.value}
-                    onChange={field.onChange}
-                    size={24}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {config.collectRatings && (
+            <FormField
+              control={form.control}
+              name="rating"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-sm font-medium">
+                    How would you rate your experience?
+                  </FormLabel>
+                  <FormControl>
+                    <StarRating
+                      value={field.value}
+                      onChange={field.onChange}
+                      size={24}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           <FormField
             control={form.control}
@@ -114,7 +116,7 @@ export function ResponseContent({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-sm font-medium">
-                  Your Testimonial
+                  {customLabels.textTestimonialPlaceholder}
                 </FormLabel>
                 <FormControl>
                   <Textarea

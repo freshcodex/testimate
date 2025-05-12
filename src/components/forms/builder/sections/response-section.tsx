@@ -72,7 +72,7 @@ export function ResponseSection() {
           )}
         />
 
-        <FormField
+        {/* <FormField
           control={control}
           name="responsePage.collectImageAttachments"
           render={({ field }) => (
@@ -89,7 +89,7 @@ export function ResponseSection() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
       </div>
     </div>
   );

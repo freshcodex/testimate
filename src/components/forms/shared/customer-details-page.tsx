@@ -21,6 +21,7 @@ export function CustomerDetailsPage({
         />
         <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white px-4 pt-6 shadow-lg overflow-auto">
           <CustomerDetailsContent
+            additionalFields={collectionFormConfig.additionalFields}
             config={customerDetails}
             customLabels={collectionFormConfig.customLabels}
             design={design}
@@ -42,6 +43,7 @@ export function CustomerDetailsPage({
       <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white p-8 shadow-lg overflow-auto">
         <div className="mx-auto max-w-md">
           <CustomerDetailsContent
+            additionalFields={collectionFormConfig.additionalFields}
             config={customerDetails}
             customLabels={collectionFormConfig.customLabels}
             design={design}

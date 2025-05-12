@@ -26,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { CustomFieldModal } from "./custom-field-modal";
 
+// TODO: should come from db or a central place right now duplication
 const customerFields = [
   {
     key: "email",
@@ -143,47 +144,47 @@ export function CustomerDetailsSection() {
               className="border rounded-lg p-4 bg-white flex flex-col gap-2"
             >
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  {field.icon}
+                <div className="flex  gap-4">
+                  <span>{field.icon}</span>
                   <div>
-                    <div className="font-medium text-base">{field.label}</div>
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-sm">{field.label}</div>
+                    <div className="text-xs text-gray-400 mt-1">
                       {field.description}
                     </div>
+                    <div className="flex gap-4 items-end my-2">
+                      <FormField
+                        control={control}
+                        name={field.enabledName as any}
+                        render={({ field: enabledField }) => (
+                          <FormItem className="flex items-center gap-2">
+                            <FormControl>
+                              <Checkbox
+                                checked={!!enabledField.value}
+                                onCheckedChange={enabledField.onChange}
+                              />
+                            </FormControl>
+                            <FormLabel className="text-xs">Enabled</FormLabel>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={control}
+                        name={field.requiredName as any}
+                        render={({ field: requiredField }) => (
+                          <FormItem className="flex items-center gap-2">
+                            <FormControl>
+                              <Checkbox
+                                checked={!!requiredField.value}
+                                onCheckedChange={requiredField.onChange}
+                                disabled={!enabled}
+                              />
+                            </FormControl>
+                            <FormLabel className="text-xs">Required</FormLabel>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col gap-2 items-end min-w-[110px]">
-                  <FormField
-                    control={control}
-                    name={field.enabledName as any}
-                    render={({ field: enabledField }) => (
-                      <FormItem className="flex items-center gap-2">
-                        <FormLabel className="text-xs">Enabled</FormLabel>
-                        <FormControl>
-                          <Switch
-                            checked={!!enabledField.value}
-                            onCheckedChange={enabledField.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={control}
-                    name={field.requiredName as any}
-                    render={({ field: requiredField }) => (
-                      <FormItem className="flex items-center gap-2">
-                        <FormLabel className="text-xs">Required</FormLabel>
-                        <FormControl>
-                          <Switch
-                            checked={!!requiredField.value}
-                            onCheckedChange={requiredField.onChange}
-                            disabled={!enabled}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
                 </div>
               </div>
             </div>

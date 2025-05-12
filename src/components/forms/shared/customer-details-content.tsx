@@ -17,6 +17,7 @@ import type { CollectionFormProps } from "./thankyou-page";
 
 interface CustomerDetailsContentProps {
   config: CollectionFormProps["collectionFormConfig"]["customerDetails"];
+  additionalFields: CollectionFormProps["collectionFormConfig"]["additionalFields"];
   isMobile?: boolean;
   customLabels: CollectionFormProps["collectionFormConfig"]["customLabels"];
   design: CollectionFormProps["collectionFormConfig"]["design"];
@@ -26,8 +27,11 @@ interface CustomerDetailsContentProps {
 
 // TODO: if the user directly navigates to the customer details page, we should show a message to the user that they need to submit the feedback first, we can do this bby checking form
 
+//TODO: fix custom labels some fields have it and some don't; like fullname dont have it; keep type in central place to solve this issues
+
 export function CustomerDetailsContent({
   config,
+  additionalFields,
   isMobile = false,
   customLabels,
   design,
@@ -70,7 +74,7 @@ export function CustomerDetailsContent({
           name="customerName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel>{customLabels.yourName}</FormLabel>
               <FormControl>
                 <Input
                   placeholder="Sherlock Holmes"
@@ -89,11 +93,16 @@ export function CustomerDetailsContent({
             name="customerEmail"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email Address</FormLabel>
+                <FormLabel>
+                  {customLabels.emailAddress}
+                  {config.emailRequired && (
+                    <span className="text-red-400">*</span>
+                  )}
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="email"
-                    placeholder="sherlock@bakerstreet.com"
+                    placeholder={customLabels.emailPlaceholder}
                     {...field}
                     value={field.value || ""}
                   />
@@ -125,7 +134,12 @@ export function CustomerDetailsContent({
             name="customerTagline"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Job Title</FormLabel>
+                <FormLabel>
+                  Job Title
+                  {config.jobTitleRequired && (
+                    <span className="text-red-400">*</span>
+                  )}
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Head of Investigations"
@@ -144,7 +158,12 @@ export function CustomerDetailsContent({
           name="customerUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Website URL</FormLabel>
+              <FormLabel>
+                Website URL
+                {config.websiteUrlRequired && (
+                  <span className="text-red-400">*</span>
+                )}
+              </FormLabel>
               <FormControl>
                 <Input
                   placeholder="https://bakerstreet.com"
@@ -163,7 +182,12 @@ export function CustomerDetailsContent({
             name="customerCompany"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Name</FormLabel>
+                <FormLabel>
+                  Company Name
+                  {config.companyLogoRequired && (
+                    <span className="text-red-400">*</span>
+                  )}
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Baker Street Detectives"
@@ -176,6 +200,30 @@ export function CustomerDetailsContent({
             )}
           />
         )}
+
+        {additionalFields?.map((field) => (
+          <FormField
+            key={field.id}
+            control={form.control}
+            name={field.id as any}
+            render={({ field: formField }) => (
+              <FormItem>
+                <FormLabel>
+                  {field.label}
+                  {field.required && <span className="text-red-400">*</span>}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder={field.label}
+                    {...formField}
+                    value={formField.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
 
         <div>
           <label
