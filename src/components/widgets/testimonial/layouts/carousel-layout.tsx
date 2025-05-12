@@ -6,6 +6,7 @@ import { TestimonialCard } from "../testimonial-card";
 import { cn } from "@/lib/utils";
 import type { TestimonialLayoutProps } from "../types";
 import type { CarouselConfig } from "../types";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function CarouselLayout({
   testimonials,
@@ -17,6 +18,8 @@ export function CarouselLayout({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const [direction, setDirection] = useState(0);
+  const [carouselHeight, setCarouselHeight] = useState(0);
 
   // Adjust slidesToShow based on screen size
   const [visibleSlides, setVisibleSlides] = useState(
@@ -62,14 +65,17 @@ export function CarouselLayout({
 
   // Navigation functions
   const nextSlide = () => {
+    setDirection(1);
     setCurrentSlide((prev) => (prev === totalPages - 1 ? 0 : prev + 1));
   };
 
   const prevSlide = () => {
+    setDirection(-1);
     setCurrentSlide((prev) => (prev === 0 ? totalPages - 1 : prev - 1));
   };
 
   const goToSlide = (index: number) => {
+    setDirection(index > currentSlide ? 1 : -1);
     setCurrentSlide(index);
   };
 
@@ -127,10 +133,38 @@ export function CarouselLayout({
     fontFamily: config.fontFamily || "inherit",
   };
 
+  // Calculate carousel height
+  useEffect(() => {
+    const calculateHeight = () => {
+      if (!carouselRef.current) return;
+
+      // Get all testimonial cards in the current view
+      const cards = carouselRef.current.querySelectorAll(".testimonial-card");
+      if (cards.length === 0) return;
+
+      // Find the maximum height among all cards
+      const maxHeight = Math.max(
+        ...Array.from(cards).map((card) => card.getBoundingClientRect().height)
+      );
+
+      // Add some padding to account for navigation and spacing
+      const totalHeight = maxHeight + 80; // 80px for navigation and spacing
+      setCarouselHeight(totalHeight);
+    };
+
+    calculateHeight();
+    window.addEventListener("resize", calculateHeight);
+    return () => window.removeEventListener("resize", calculateHeight);
+  }, [currentSlide, visibleTestimonials]);
+
   return (
     <div
       className="carousel-testimonials-container relative w-full"
-      style={containerStyle}
+      style={{
+        ...containerStyle,
+        height: carouselHeight ? `${carouselHeight}px` : "auto",
+        minHeight: "400px", // Fallback minimum height
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
@@ -138,68 +172,74 @@ export function CarouselLayout({
       onTouchEnd={handleTouchEnd}
     >
       {/* Carousel content */}
-      <div ref={carouselRef} className="overflow-hidden px-4 py-6">
-        <div
-          className="flex transition-transform duration-500 ease-in-out"
-          style={{
-            transform: `translateX(0%)`,
-            gap: "1rem",
-          }}
-        >
-          {visibleTestimonials.map((testimonial, index) => (
-            <div
-              key={`${testimonial.id}-${index}`}
-              className={cn(
-                "flex-shrink-0",
-                visibleSlides === 1
-                  ? "w-full"
-                  : visibleSlides === 2
-                  ? "w-[calc(50%-0.5rem)]"
-                  : "w-[calc(33.333%-0.667rem)]"
-              )}
-            >
-              <TestimonialCard
-                {...testimonial}
-                config={{
-                  theme: config.theme,
-                  primaryColor: config.primaryColor,
-                  cardBackgroundColor: config.cardBackgroundColor,
-                  textColor: config.textColor,
-                  linkColor: config.linkColor,
-                  starColor: config.starColor,
-                  showStarRating: config.showStarRating,
-                  showDate: config.showDate,
-                  showSource: config.showSource,
-                  borderRadius: config.borderRadius,
-                }}
-              />
-            </div>
-          ))}
-        </div>
+      <div ref={carouselRef} className="overflow-hidden px-4 py-6 h-full">
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.div
+            key={currentSlide}
+            custom={direction}
+            initial={{ opacity: 0, x: direction * 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: direction * -100 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-auto h-full"
+          >
+            {visibleTestimonials.map((testimonial, index) => (
+              <motion.div
+                key={`${testimonial.id}-${index}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="w-full h-fit testimonial-card"
+              >
+                <TestimonialCard
+                  {...testimonial}
+                  config={{
+                    theme: config.theme,
+                    primaryColor: config.primaryColor,
+                    cardBackgroundColor: config.cardBackgroundColor,
+                    textColor: config.textColor,
+                    linkColor: config.linkColor,
+                    starColor: config.starColor,
+                    showStarRating: config.showStarRating,
+                    showDate: config.showDate,
+                    showSource: config.showSource,
+                    borderRadius: config.borderRadius,
+                  }}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Navigation arrows */}
-      <button
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
         className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md z-10 text-gray-700 hover:text-gray-900 transition-colors"
         onClick={prevSlide}
         aria-label="Previous slide"
       >
         <ChevronLeft size={24} />
-      </button>
+      </motion.button>
 
-      <button
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
         className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-md z-10 text-gray-700 hover:text-gray-900 transition-colors"
         onClick={nextSlide}
         aria-label="Next slide"
       >
         <ChevronRight size={24} />
-      </button>
+      </motion.button>
 
       {/* Pagination dots */}
       <div className="flex justify-center mt-4 space-x-2">
         {Array.from({ length: totalPages }).map((_, index) => (
-          <button
+          <motion.button
             key={index}
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
             className={cn(
               "w-2 h-2 rounded-full transition-all",
               currentSlide === index
@@ -214,8 +254,16 @@ export function CarouselLayout({
 
       {/* Branding if enabled */}
       {config.showBranding && (
-        <div className="flex justify-center items-center mt-8">
-          <div className="bg-indigo-100 text-indigo-600 rounded-full p-2 mr-2">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="flex justify-center items-center mt-8"
+        >
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            className="bg-indigo-100 text-indigo-600 rounded-full p-2 mr-2"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -230,9 +278,9 @@ export function CarouselLayout({
                 d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
               />
             </svg>
-          </div>
+          </motion.div>
           <span className="text-gray-700 font-medium">Testimonial</span>
-        </div>
+        </motion.div>
       )}
     </div>
   );

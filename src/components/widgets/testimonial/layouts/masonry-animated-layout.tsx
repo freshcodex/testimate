@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { motion } from "framer-motion";
 import { TestimonialCard } from "../testimonial-card";
 import { cn } from "@/lib/utils";
 import type { TestimonialLayoutProps } from "../types";
@@ -33,16 +34,58 @@ export function MasonryAnimatedLayout({
   // Create duplicated testimonials for infinite scroll
   const duplicatedTestimonials = [...testimonials, ...testimonials];
 
-  // Animation speed classes based on config
-  const getAnimationSpeed = () => {
+  // Get animation duration based on config
+  const getAnimationDuration = () => {
     switch (config.scrollSpeed) {
       case "slow":
-        return "animate-[scroll_20s_linear_infinite] hover:animate-pause";
+        return 20;
       case "fast":
-        return "animate-[scroll_5s_linear_infinite] hover:animate-pause";
+        return 5;
       default:
-        return "animate-[scroll_10s_linear_infinite] hover:animate-pause";
+        return 10;
     }
+  };
+
+  // Animation variants for horizontal scroll
+  const horizontalVariants = {
+    animate: {
+      x: isHorizontal ? [0, -50 * duplicatedTestimonials.length] : 0,
+      transition: {
+        x: {
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: getAnimationDuration(),
+          ease: "linear",
+        },
+      },
+    },
+    hover: {
+      x: "0%",
+      transition: {
+        duration: 0.3,
+      },
+    },
+  };
+
+  // Animation variants for vertical scroll
+  const verticalVariants = {
+    animate: {
+      y: !isHorizontal ? [0, -50 * duplicatedTestimonials.length] : 0,
+      transition: {
+        y: {
+          repeat: Infinity,
+          repeatType: "loop",
+          duration: getAnimationDuration(),
+          ease: "linear",
+        },
+      },
+    },
+    hover: {
+      y: "0%",
+      transition: {
+        duration: 0.3,
+      },
+    },
   };
 
   return (
@@ -56,19 +99,18 @@ export function MasonryAnimatedLayout({
     >
       {isHorizontal ? (
         // Horizontal scrolling layout
-        <div
-          className={cn(
-            "flex flex-nowrap items-start gap-4",
-            getAnimationSpeed(),
-            "transition-all duration-300"
-          )}
+        <motion.div
+          className="flex flex-nowrap items-start gap-4"
+          variants={horizontalVariants}
+          animate="animate"
+          whileHover={config.pauseOnHover ? "hover" : undefined}
           style={{
             minHeight: rowHeight,
             height: rowHeight,
           }}
         >
           {duplicatedTestimonials.map((testimonial) => (
-            <div
+            <motion.div
               key={testimonial.id + Math.random()}
               className="flex-shrink-0 w-[320px] max-w-xs mr-4 break-inside-avoid testimonial-item"
               style={{
@@ -96,21 +138,20 @@ export function MasonryAnimatedLayout({
                   borderRadius: config.borderRadius,
                 }}
               />
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       ) : (
         // Vertical scrolling layout
-        <div
-          className={cn(
-            "relative",
-            getAnimationSpeed(),
-            "transition-all duration-300"
-          )}
+        <motion.div
+          className="relative"
+          variants={verticalVariants}
+          animate="animate"
+          whileHover={config.pauseOnHover ? "hover" : undefined}
         >
           <div className="columns-1 md:columns-2 lg:columns-4 gap-4 space-y-4">
             {duplicatedTestimonials.map((testimonial) => (
-              <div
+              <motion.div
                 key={testimonial.id + Math.random()}
                 className="mb-4 break-inside-avoid testimonial-item"
                 style={{
@@ -135,10 +176,10 @@ export function MasonryAnimatedLayout({
                     borderRadius: config.borderRadius,
                   }}
                 />
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       )}
 
       {/* Branding if enabled */}

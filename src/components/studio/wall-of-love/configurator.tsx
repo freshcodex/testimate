@@ -26,7 +26,7 @@ import { TagsSettings } from "@/components/studio/wall-of-love/settings/tags-set
 import { AIStyleSettings } from "@/components/studio/wall-of-love/settings/ai-style-settings";
 import { LivePreview } from "@/components/studio/wall-of-love/live-preview";
 import { Badge } from "@/components/ui/badge";
-import type { WallOfLoveConfig } from "./types";
+import type { Layout, WallOfLoveConfig } from "./types";
 
 interface ConfiguratorProps {
   layout: string;
@@ -39,7 +39,7 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
   // TODO: use nuqs for this instead of useState; imp for prod
   const [config, setConfig] = useState<WallOfLoveConfig>({
     // Basic Settings
-    layout,
+    layout: layout as Layout,
     height: "800px",
     theme: "light",
     showBranding: true,
