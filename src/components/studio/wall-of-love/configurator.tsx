@@ -39,6 +39,8 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { useWallOfLoveConfig } from "@/hooks/use-wall-of-love-config";
+import { useQueryState } from "nuqs";
 
 interface ConfiguratorProps {
   layout: string;
@@ -52,6 +54,11 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
   const [settingsWidth, setSettingsWidth] = useState(300); // Default width in pixels
   const resizerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const { config, handleConfigChange } = useWallOfLoveConfig(layout);
+
+  // Get the current URL parameters from nuqs
+  const [urlParams] = useQueryState("config");
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -81,73 +88,13 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
     };
   }, [isResizing]);
 
-  // TODO: use nuqs for this instead of useState; imp for prod
-  const [config, setConfig] = useState<WallOfLoveConfig>({
-    // Basic Settings
-    layout: layout as Layout,
-    height: "800px",
-    theme: "light",
-    showBranding: true,
-    scrollDirection: "vertical",
-    showHeartAnimation: true,
-    pauseOnHover: true,
-    scrollSpeed: "normal",
-    shadowBackground: true,
-    showDate: true,
-    showSource: true,
-    showCaptions: false,
-    showStarRating: false,
-
-    // Colors
-    primaryColor: "#6701E6",
-    backgroundColor: "#FFFFFF",
-    cardBackgroundColor: "#FFFFFF",
-    textColor: "#000000",
-    linkColor: "#6701E6",
-    heartColor: "#DC2626",
-    starColor: "#FBBF24",
-
-    // Text Settings
-    fontFamily: "Lato",
-    fontSize: "base",
-    highlightStyle: "gradient",
-
-    // Video Settings
-    showVideoDuration: true,
-    playButtonColor: "#6701E6",
-
-    // Button Settings
-    buttonColor: "#6701E6",
-    selectedButtonColor: "#4444FF",
-    buttonAlignment: "left",
-    buttonFontColor: "#FFFFFF",
-    selectedFontColor: "#FFFFFF",
-
-    // Border Settings
-    borderWidth: "0px",
-    borderColor: "#E5E7EB",
-    borderRadius: "8px",
-
-    // Shadow Settings
-    shadowColor: "rgba(0, 0, 0, 0.1)",
-    shadowBlur: "4px",
-    shadowOffset: "0px 2px",
-
-    // Tags Settings
-    showTags: true,
-    tagBackgroundColor: "#F3F4F6",
-    tagTextColor: "#374151",
-    tagBorderRadius: "4px",
-  });
-
-  const handleConfigChange = (newConfig: Partial<WallOfLoveConfig>) => {
-    setConfig({ ...config, ...newConfig });
-  };
-
-  const embedCode = `<iframe height="${config.height}" id="testimonialto-${layout}" src="https://embed-v2.testimonial.to/w/${layout}?theme=${config.theme}" frameborder="0" scrolling="no" width="100%"></iframe>`;
+  // TODO: use only stuff from the config, must be better way to do this
+  const embedCode = `<iframe height="${config.height}" id="testimonialto-${layout}" src="http://localhost:3000/w/${layout}?config=${urlParams}" frameborder="0" scrolling="no" width="100%"></iframe>`;
 
   const handleCopyCode = () => {
-    navigator.clipboard.writeText(embedCode);
+    const url = `http://localhost:3000/w/${layout}?config=${urlParams}`;
+    console.log(url);
+    navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -285,7 +232,7 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
       </ResizablePanelGroup>
 
       <div className="container mx-auto px-4 py-8 bg-gray-100 p-4 rounded-lg my-6">
-        <pre className="text-sm text-wrap">
+        <pre className="text-sm text-wrap overflow-ellipsis">
           <code>{embedCode}</code>
         </pre>
         <p className="text-xs text-gray-500 mt-2">
