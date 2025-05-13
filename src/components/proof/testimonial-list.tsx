@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTestimonialSelection } from "@/hooks/use-testimonial-selection";
 import { type testimonials } from "@/server/db/schema";
 import { type InferSelectModel } from "drizzle-orm";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 type Testimonial = InferSelectModel<typeof testimonials>;
 
@@ -21,6 +22,7 @@ export function TestimonialList({
   testimonials,
   isLoading,
 }: TestimonialListProps) {
+  const [parent] = useAutoAnimate();
   const {
     selectedIds,
     selectedCount,
@@ -81,7 +83,7 @@ export function TestimonialList({
   }
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4 w-full" ref={parent}>
       {testimonials.map((testimonial) => (
         <TestimonialCard
           key={testimonial.id}

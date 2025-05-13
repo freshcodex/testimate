@@ -1,7 +1,6 @@
 import { Heart } from "lucide-react";
 import Image from "next/image";
 
-import { cn } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { StarRating } from "@/components/proof/star-rating";
 import { StatusBadge } from "@/components/proof/status-badge";
@@ -19,10 +18,11 @@ export function TestimonialCard({
   checked?: boolean;
   onCheck?: (checked: boolean) => void;
 }) {
+  console.log(JSON.stringify(testimonial, null, 2));
   return (
     <div className="flex w-full items-start gap-4 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex-shrink-0">
-        {testimonial?.customerAvatar?.startsWith("/") ? (
+        {testimonial?.customerAvatar?.startsWith("/") && (
           <Image
             src={testimonial.customerAvatar || "/placeholder.svg"}
             alt={testimonial.customerName}
@@ -30,16 +30,6 @@ export function TestimonialCard({
             height={48}
             className="h-12 w-12 rounded-full object-cover"
           />
-        ) : (
-          <div
-            className={cn(
-              "flex h-12 w-12 items-center justify-center rounded-full text-lg font-semibold",
-              testimonial.customFields?.avatarColor ||
-                "bg-gray-100 text-gray-800"
-            )}
-          >
-            {testimonial.customerAvatar}
-          </div>
         )}
       </div>
 
@@ -51,11 +41,6 @@ export function TestimonialCard({
               {testimonial.customerEmail && (
                 <p className="text-sm text-gray-500">
                   {testimonial.customerEmail}
-                </p>
-              )}
-              {testimonial.customFields?.role && (
-                <p className="text-sm text-gray-500">
-                  {testimonial.customFields.role}
                 </p>
               )}
             </div>
@@ -78,21 +63,7 @@ export function TestimonialCard({
         <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
           <div className="flex items-center gap-1">
             <Heart className="h-4 w-4 fill-purple-500 text-purple-500" />
-            {testimonial.customFields?.days && (
-              <span>{testimonial.customFields.days} days ago</span>
-            )}
-            {testimonial.customFields?.weeks && (
-              <span>{testimonial.customFields.weeks} weeks ago</span>
-            )}
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="inline-block h-4 w-6 overflow-hidden rounded-sm">
-              {testimonial.customFields?.country === "GB" && (
-                <span className="flex h-full w-full items-center justify-center bg-red-500 text-[8px] text-white">
-                  GB
-                </span>
-              )}
-            </span>
+            <span>{testimonial.createdAt.toLocaleDateString()} </span>
           </div>
         </div>
 

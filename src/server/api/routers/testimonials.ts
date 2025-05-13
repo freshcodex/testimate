@@ -51,7 +51,7 @@ export const testimonialsRouter = createTRPCRouter({
   getFilteredTestimonials: protectedProcedure
     .input(
       z.object({
-        projectId: z.number(),
+        projectSlug: z.string(),
         status: z.enum(["approved", "unapproved"]).optional(),
         searchQuery: z.string().optional(),
       })
@@ -63,7 +63,7 @@ export const testimonialsRouter = createTRPCRouter({
         .from(projects)
         .where(
           and(
-            eq(projects.id, input.projectId),
+            eq(projects.slug, input.projectSlug),
             eq(projects.createdBy, ctx.user.id)
           )
         );
@@ -80,7 +80,7 @@ export const testimonialsRouter = createTRPCRouter({
         .from(testimonials)
         .where(
           and(
-            eq(testimonials.projectId, input.projectId),
+            eq(testimonials.projectId, project.id),
             input.status
               ? eq(testimonials.approved, input.status === "approved")
               : undefined,

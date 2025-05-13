@@ -8,11 +8,11 @@ import { useQueryState } from "nuqs";
 type Status = "all" | "approved" | "unapproved";
 
 interface UseTestimonialFiltersProps {
-  projectId: number;
+  projectSlug: string;
 }
 
 export function useTestimonialFilters({
-  projectId,
+  projectSlug,
 }: UseTestimonialFiltersProps) {
   const [status, setStatus] = useQueryState<Status>("status", {
     defaultValue: "all",
@@ -30,7 +30,7 @@ export function useTestimonialFilters({
 
   const { data: testimonials, isLoading } =
     api.testimonials.getFilteredTestimonials.useQuery({
-      projectId,
+      projectSlug,
       status: status === "all" ? undefined : status,
       searchQuery: debouncedSearchQuery || undefined,
     });
