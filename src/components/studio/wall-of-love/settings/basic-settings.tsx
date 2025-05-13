@@ -9,30 +9,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import type { WallOfLoveConfig } from "../types";
 interface BasicSettingsProps {
-  config: any;
+  config: WallOfLoveConfig;
   onConfigChange: (config: any) => void;
 }
 
 export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
   return (
     <div className="space-y-6">
-      <div>
-        <Label htmlFor="scroll-direction">Scroll direction:</Label>
-        <Select
-          value={config.scrollDirection}
-          onValueChange={(value) => onConfigChange({ scrollDirection: value })}
-        >
-          <SelectTrigger id="scroll-direction" className="w-full mt-1">
-            <SelectValue placeholder="Select direction" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="vertical">Vertical</SelectItem>
-            <SelectItem value="horizontal">Horizontal</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      {config.layout === "masonry-animated" && (
+        <div>
+          <Label htmlFor="scroll-direction">Scroll direction:</Label>
+          <Select
+            value={config.scrollDirection}
+            onValueChange={(value) =>
+              onConfigChange({ scrollDirection: value })
+            }
+          >
+            <SelectTrigger id="scroll-direction" className="w-full mt-1">
+              <SelectValue placeholder="Select direction" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="vertical">Vertical</SelectItem>
+              <SelectItem value="horizontal">Horizontal</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      )}
 
       <div className="flex items-center space-x-2">
         <Checkbox
@@ -44,13 +48,13 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
         />
         <Label htmlFor="remove-branding" className="flex items-center">
           Remove Testimonial branding
-          <span className="ml-2 text-xs px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded">
+          {/* <span className="ml-2 text-xs px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded">
             🔒
-          </span>
+          </span> */}
         </Label>
       </div>
 
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <Checkbox
           id="dark-theme"
           checked={config.theme === "dark"}
@@ -59,13 +63,15 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
           }
         />
         <Label htmlFor="dark-theme">Dark theme</Label>
-      </div>
+      </div> */}
 
       <div className="flex items-center space-x-2">
         <Checkbox
           id="hide-date"
           checked={!config.showDate}
-          onCheckedChange={(checked) => onConfigChange({ showDate: !checked })}
+          onCheckedChange={(checked) =>
+            onConfigChange({ showDate: !checked as boolean })
+          }
         />
         <Label htmlFor="hide-date">Hide the date</Label>
       </div>
@@ -92,7 +98,7 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
         <Label htmlFor="show-captions">Show closed captions by default</Label>
       </div>
 
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <Checkbox
           id="add-star-rating"
           checked={config.showStarRating}
@@ -106,9 +112,9 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
             🔒
           </span>
         </Label>
-      </div>
+      </div> */}
 
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <Checkbox
           id="show-heart"
           checked={config.showHeartAnimation}
@@ -117,35 +123,41 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
           }
         />
         <Label htmlFor="show-heart">Show heart animation</Label>
-      </div>
+      </div> */}
 
-      <div className="flex items-center space-x-2">
-        <Checkbox
-          id="pause-animation"
-          checked={config.pauseOnHover}
-          onCheckedChange={(checked) =>
-            onConfigChange({ pauseOnHover: checked })
-          }
-        />
-        <Label htmlFor="pause-animation">Pause animation on mouse hover</Label>
-      </div>
+      {config.layout === "masonry-animated" && (
+        <>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="pause-animation"
+              checked={config.pauseOnHover}
+              onCheckedChange={(checked) =>
+                onConfigChange({ pauseOnHover: checked })
+              }
+            />
+            <Label htmlFor="pause-animation">
+              Pause animation on mouse hover
+            </Label>
+          </div>
 
-      <div>
-        <Label htmlFor="scroll-speed">Scroll speed:</Label>
-        <Select
-          value={config.scrollSpeed}
-          onValueChange={(value) => onConfigChange({ scrollSpeed: value })}
-        >
-          <SelectTrigger id="scroll-speed" className="w-full mt-1">
-            <SelectValue placeholder="Select speed" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="slow">Slow</SelectItem>
-            <SelectItem value="normal">Normal</SelectItem>
-            <SelectItem value="fast">Fast</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+          <div>
+            <Label htmlFor="scroll-speed">Scroll speed:</Label>
+            <Select
+              value={config.scrollSpeed}
+              onValueChange={(value) => onConfigChange({ scrollSpeed: value })}
+            >
+              <SelectTrigger id="scroll-speed" className="w-full mt-1">
+                <SelectValue placeholder="Select speed" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="slow">Slow</SelectItem>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="fast">Fast</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </>
+      )}
 
       <div className="flex items-center space-x-2">
         <Checkbox

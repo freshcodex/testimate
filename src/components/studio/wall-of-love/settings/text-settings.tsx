@@ -10,9 +10,10 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ColorPicker } from "@/components/studio/wall-of-love/color-picker";
+import type { WallOfLoveConfig } from "../types";
 
 interface TextSettingsProps {
-  config: any;
+  config: WallOfLoveConfig;
   onConfigChange: (config: any) => void;
 }
 
@@ -51,7 +52,7 @@ export function TextSettings({ config, onConfigChange }: TextSettingsProps) {
         />
       </div>
 
-      <div>
+      {/* <div>
         <Label htmlFor="font-family">Font family</Label>
         <div className="flex items-center gap-2 mt-1">
           <Select
@@ -113,7 +114,7 @@ export function TextSettings({ config, onConfigChange }: TextSettingsProps) {
             <SelectItem value="none">None</SelectItem>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
     </div>
   );
 }

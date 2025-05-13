@@ -33,14 +33,15 @@ import { TagsSettings } from "@/components/studio/wall-of-love/settings/tags-set
 import { AIStyleSettings } from "@/components/studio/wall-of-love/settings/ai-style-settings";
 import { LivePreview } from "@/components/studio/wall-of-love/live-preview";
 import { Badge } from "@/components/ui/badge";
-import type { Layout, WallOfLoveConfig } from "./types";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { useWallOfLoveConfig } from "@/hooks/use-wall-of-love-config";
-import { useQueryState } from "nuqs";
+import {
+  generateUrlParams,
+  useWallOfLoveConfig,
+} from "@/hooks/use-wall-of-love-config";
 
 interface ConfiguratorProps {
   layout: string;
@@ -52,13 +53,9 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
   const [copied, setCopied] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [settingsWidth, setSettingsWidth] = useState(300); // Default width in pixels
-  const resizerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { config, handleConfigChange } = useWallOfLoveConfig(layout);
-
-  // Get the current URL parameters from nuqs
-  const [urlParams] = useQueryState("config");
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -89,10 +86,16 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
   }, [isResizing]);
 
   // TODO: use only stuff from the config, must be better way to do this
-  const embedCode = `<iframe height="${config.height}" id="testimonialto-${layout}" src="http://localhost:3000/w/${layout}?config=${urlParams}" frameborder="0" scrolling="no" width="100%"></iframe>`;
+  const embedCode = `<iframe height="${
+    config.height
+  }" id="testimonialto-${layout}" src="http://localhost:3000/w/${layout}?config=${generateUrlParams(
+    config
+  )}" frameborder="0" scrolling="no" width="100%"></iframe>`;
 
   const handleCopyCode = () => {
-    const url = `http://localhost:3000/w/${layout}?config=${urlParams}`;
+    const url = `http://localhost:3000/w/${layout}?config=${generateUrlParams(
+      config
+    )}`;
     console.log(url);
     navigator.clipboard.writeText(url);
     setCopied(true);
@@ -110,9 +113,9 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
     { id: "shadow", label: "Shadow", icon: Layers },
     { id: "background", label: "Background", icon: Palette },
     { id: "text", label: "Text", icon: Type },
-    { id: "video", label: "Video", icon: Video },
-    { id: "tags", label: "Tags", icon: Tag },
-    { id: "ai", label: "AI style", icon: Sparkles },
+    // { id: "video", label: "Video", icon: Video },
+    // { id: "tags", label: "Tags", icon: Tag },
+    // { id: "ai", label: "AI style", icon: Sparkles },
   ];
 
   return (

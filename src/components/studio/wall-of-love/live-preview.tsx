@@ -16,8 +16,6 @@ interface LivePreviewProps {
 
 // TODO: when livepreview changes its height it should not affect config left side of panel
 export function LivePreview({ config }: LivePreviewProps) {
-  const [activeFilter, setActiveFilter] = useState("all");
-
   const testimonials: TestimonialProps[] = [
     {
       id: "1",
@@ -85,37 +83,10 @@ export function LivePreview({ config }: LivePreviewProps) {
     primaryColor: config.primaryColor || "#0066cc",
   };
 
+  console.log(JSON.stringify(testimonialConfig, null, 2));
+
   return (
     <div>
-      <div className="mb-4">
-        <Button size="sm" variant="outline" className="text-xs">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="mr-1"
-          >
-            <path
-              d="M12 6V12L16 14"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <circle
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
-          Themes
-        </Button>
-      </div>
-
       <div className="bg-gray-100 p-4 rounded-lg">
         <TestimonialList
           testimonials={testimonials}

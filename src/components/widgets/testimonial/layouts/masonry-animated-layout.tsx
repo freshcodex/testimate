@@ -100,7 +100,7 @@ export function MasonryAnimatedLayout({
       {isHorizontal ? (
         // Horizontal scrolling layout
         <motion.div
-          className="flex flex-nowrap items-start gap-4"
+          className="flex flex-nowrap items-start gap-4 p-4 mt-4"
           variants={horizontalVariants}
           animate="animate"
           whileHover={config.pauseOnHover ? "hover" : undefined}
@@ -113,38 +113,15 @@ export function MasonryAnimatedLayout({
             <motion.div
               key={testimonial.id + Math.random()}
               className="flex-shrink-0 w-[320px] max-w-xs mr-4 break-inside-avoid testimonial-item"
-              style={{
-                borderWidth: config.borderWidth,
-                borderColor: config.borderColor,
-                borderRadius: config.borderRadius,
-                background: config.cardBackgroundColor,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-              }}
             >
-              <TestimonialCard
-                {...testimonial}
-                config={{
-                  theme: config.theme,
-                  primaryColor: config.primaryColor,
-                  cardBackgroundColor: config.cardBackgroundColor,
-                  textColor: config.textColor,
-                  linkColor: config.linkColor,
-                  starColor: config.starColor,
-                  showStarRating: config.showStarRating,
-                  showDate: config.showDate,
-                  showSource: config.showSource,
-                  borderRadius: config.borderRadius,
-                }}
-              />
+              <TestimonialCard {...testimonial} config={config} />
             </motion.div>
           ))}
         </motion.div>
       ) : (
         // Vertical scrolling layout
         <motion.div
-          className="relative"
+          className="relative mt-3"
           variants={verticalVariants}
           animate="animate"
           whileHover={config.pauseOnHover ? "hover" : undefined}
@@ -154,28 +131,8 @@ export function MasonryAnimatedLayout({
               <motion.div
                 key={testimonial.id + Math.random()}
                 className="mb-4 break-inside-avoid testimonial-item"
-                style={{
-                  borderWidth: config.borderWidth,
-                  borderColor: config.borderColor,
-                  borderRadius: config.borderRadius,
-                  background: config.cardBackgroundColor,
-                }}
               >
-                <TestimonialCard
-                  {...testimonial}
-                  config={{
-                    theme: config.theme,
-                    primaryColor: config.primaryColor,
-                    cardBackgroundColor: config.cardBackgroundColor,
-                    textColor: config.textColor,
-                    linkColor: config.linkColor,
-                    starColor: config.starColor,
-                    showStarRating: config.showStarRating,
-                    showDate: config.showDate,
-                    showSource: config.showSource,
-                    borderRadius: config.borderRadius,
-                  }}
-                />
+                <TestimonialCard {...testimonial} config={config} />
               </motion.div>
             ))}
           </div>

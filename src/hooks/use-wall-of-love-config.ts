@@ -1,4 +1,4 @@
-import { useQueryState } from "nuqs";
+import { useState } from "react";
 import type {
   WallOfLoveConfig,
   Layout,
@@ -62,38 +62,20 @@ const defaultConfig: WallOfLoveConfig = {
   tagBorderRadius: "4px",
 };
 
-export function useWallOfLoveConfig(initialLayout: string) {
-  const [config, setConfig] = useQueryState<WallOfLoveConfig>("config", {
-    defaultValue: { ...defaultConfig, layout: initialLayout as Layout },
-    parse: (value) => {
-      try {
-        const parsedConfig = JSON.parse(decodeURIComponent(value));
-        // Ensure all required fields are present by merging with default config
-        return {
-          ...defaultConfig,
-          ...parsedConfig,
-          layout: parsedConfig.layout || (initialLayout as Layout),
-        };
-      } catch (error) {
-        console.warn("Failed to parse config from URL:", error);
-        return { ...defaultConfig, layout: initialLayout as Layout };
-      }
-    },
-    serialize: (value) => {
-      // Only serialize non-default values to keep URL clean
-      const nonDefaultValues = Object.entries(value).reduce(
-        (acc, [key, val]) => {
-          const typedKey = key as keyof WallOfLoveConfig;
-          if (JSON.stringify(val) !== JSON.stringify(defaultConfig[typedKey])) {
-            acc[typedKey] = val;
-          }
-          return acc;
-        },
-        {} as Partial<WallOfLoveConfig>
-      );
+export function generateUrlParams(config: WallOfLoveConfig): string {
+  // Remove undefined values and convert to a clean object
+  const cleanConfig = Object.fromEntries(
+    Object.entries(config).filter(([_, value]) => value !== undefined)
+  );
 
-      return encodeURIComponent(JSON.stringify(nonDefaultValues));
-    },
+  // Convert to base64 to make it URL safe and compact
+  return btoa(JSON.stringify(cleanConfig));
+}
+
+export function useWallOfLoveConfig(initialLayout: string) {
+  const [config, setConfig] = useState<WallOfLoveConfig>({
+    ...defaultConfig,
+    layout: initialLayout as Layout,
   });
 
   const handleConfigChange = (newConfig: Partial<WallOfLoveConfig>) => {

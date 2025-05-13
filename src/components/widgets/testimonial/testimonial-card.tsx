@@ -91,10 +91,10 @@ export function TestimonialCard({
 
   return (
     <div
-      className="testimonial-card overflow-hidden flex flex-col h-full shadow-sm"
+      className="testimonial-card overflow-hidden flex flex-col  shadow-sm"
       style={cardStyle}
     >
-      <div className="p-4 flex flex-col h-full">
+      <div className="p-4 flex flex-col ">
         {/* Header with avatar and name */}
         <div className="flex items-center mb-3">
           <div className="mr-3 flex-shrink-0">

@@ -10,9 +10,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ColorPicker } from "@/components/studio/wall-of-love/color-picker";
-
+import type { WallOfLoveConfig } from "../types";
 interface BorderSettingsProps {
-  config: any;
+  config: WallOfLoveConfig;
   onConfigChange: (config: any) => void;
 }
 
@@ -52,7 +52,7 @@ export function BorderSettings({
         />
       </div>
 
-      <div>
+      {/* <div>
         <Label htmlFor="border-style">Border style</Label>
         <Select
           value={config.borderStyle || "solid"}
@@ -67,7 +67,7 @@ export function BorderSettings({
             <SelectItem value="dotted">Dotted</SelectItem>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
 
       <div>
         <Label className="block mb-2">Border color</Label>
