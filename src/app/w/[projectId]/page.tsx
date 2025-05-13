@@ -1,10 +1,14 @@
 "use client";
 
 import { TestimonialList } from "@/components/widgets/testimonial/testimonial-list";
-import type { TestimonialLayoutConfig } from "@/components/widgets/testimonial/types";
+import type {
+  TestimonialLayoutConfig,
+  TestimonialProps,
+} from "@/components/widgets/testimonial/types";
 import type { WallOfLoveConfig } from "@/components/studio/wall-of-love/types";
 import { useWallOfLoveConfig } from "@/hooks/use-wall-of-love-config";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
+import { api } from "@/trpc/react";
 // Sample testimonials data
 const testimonials = [
   {
@@ -74,6 +78,11 @@ const testimonials = [
 export default function WallOfLovePage() {
   const searchParams = useSearchParams();
   const configParam = searchParams.get("config");
+  const { projectId } = useParams();
+
+  const { data: testimonials } = api.testimonials.getAll.useQuery({
+    projectId: Number(projectId),
+  });
 
   let initialConfig: Partial<WallOfLoveConfig> = {};
 
@@ -92,7 +101,7 @@ export default function WallOfLovePage() {
 
   return (
     <TestimonialList
-      testimonials={testimonials}
+      testimonials={testimonials as TestimonialProps[]}
       config={
         {
           ...config,

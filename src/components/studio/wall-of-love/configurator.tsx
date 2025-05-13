@@ -107,7 +107,6 @@ export function WallOfLoveConfigurator({
     const url = `http://localhost:3000/w/${layout}?config=${generateUrlParams(
       config
     )}`;
-    console.log(url);
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -288,6 +287,9 @@ export function WallOfLoveConfigurator({
         config={config}
         projectSlug={projectSlug}
         type="wall_of_love"
+        url={`http://localhost:3000/w/${layout}?config=${generateUrlParams(
+          config
+        )}`}
       />
     </div>
   );

@@ -16,8 +16,8 @@ import type {
   WelcomePageConfig,
   AdditionalFields,
   ThankYouPageConfig,
-} from "@/server/db/schema";
-import type { DesignConfig } from "@/server/db/schema";
+} from "@/server/db/zod-schemas";
+import type { DesignConfig } from "@/server/db/zod-schemas";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 function FormSkeleton() {
