@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { useTestimonialForm } from "@/hooks/use-testimonial-form";
 import { Heart, Facebook, Twitter, Linkedin, Link2 } from "lucide-react";
-import { useParams } from "next/navigation";
 import type { CollectionFormProps } from "./thankyou-page";
+import { useThankyouContent } from "@/hooks/use-thankyou-content";
 
 interface ThankYouContentProps {
   config: CollectionFormProps["collectionFormConfig"]["thankYouPage"];
@@ -20,24 +19,10 @@ export function ThankYouContent({
   const containerClass = isMobile ? "p-4" : "p-6";
   const titleClass = isMobile ? "text-lg" : "text-xl";
 
-  const { formId, projectSlug } = useParams();
-
   // TODO: fetch the testimonial data from either the form hook or the database
-  const { thankyouContentFormData, formData } = useTestimonialForm({
-    formId: Number(formId),
-    projectSlug: String(projectSlug),
-    initialData: {
-      customerName: "Shane Parrish",
-      customerAvatar: "/placeholder.svg?height=40&width=40",
-      customerTagline: "Software Engineer",
-      text: "This is a testimonial",
-    },
-  });
+  const { thankyouContentFormData: testimonialData } = useThankyouContent();
 
-  // check if thankyouContentFormData is null if it is null then use formdata
-  const testimonialData = thankyouContentFormData
-    ? thankyouContentFormData
-    : formData;
+  // maybe after success send id of testimonial through url bar and use that to fetch the testimonial data here; also pass some token to make it testimonial accessible just for 1hr
 
   return (
     <div className={`rounded-lg bg-white ${containerClass} shadow-sm`}>
@@ -84,7 +69,7 @@ export function ThankYouContent({
                   )}
                 </div>
               </div>
-              <p className="text-sm mb-2">{thankyouContentFormData?.text}</p>
+              <p className="text-sm mb-2">{testimonialData?.text}</p>
               <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
                 <img
                   src="/placeholder.svg?height=16&width=16"

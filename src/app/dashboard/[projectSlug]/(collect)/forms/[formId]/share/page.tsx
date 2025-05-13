@@ -16,7 +16,6 @@ export default function ShareFormPage() {
   const params = useParams();
   const [copied, setCopied] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("link");
-  const [embedType, setEmbedType] = useState("inline");
 
   // TODO: Change to the actual form link
   const formLink = `http://localhost:3000/p/test-project/r/${params.formId}`;
@@ -45,7 +44,7 @@ export default function ShareFormPage() {
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
         <div className="md:col-span-2">
-          {activeTab === "invite" && <InviteCustomers />}
+          {/* {activeTab === "invite" && <InviteCustomers />} */}
           {activeTab === "link" && (
             <LinkShare
               formLink={formLink}
@@ -56,8 +55,6 @@ export default function ShareFormPage() {
           {activeTab === "embed" && (
             <EmbedForm
               formLink={formLink}
-              embedType={embedType}
-              setEmbedType={setEmbedType}
               copied={copied}
               handleCopy={handleCopy}
             />

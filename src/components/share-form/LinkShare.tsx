@@ -9,6 +9,28 @@ interface LinkShareProps {
 }
 
 export function LinkShare({ formLink, copied, handleCopy }: LinkShareProps) {
+  const handleSocialShare = (platform: string) => {
+    const encodedUrl = encodeURIComponent(formLink);
+    let shareUrl = "";
+
+    switch (platform) {
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}`;
+        break;
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+        break;
+      case "whatsapp":
+        shareUrl = `https://wa.me/?text=${encodedUrl}`;
+        break;
+    }
+
+    window.open(shareUrl, "_blank", "width=600,height=400");
+  };
+
   return (
     <div className="bg-white p-6 rounded-lg border">
       <h2 className="text-xl font-semibold mb-4">Your form link</h2>
@@ -35,7 +57,7 @@ export function LinkShare({ formLink, copied, handleCopy }: LinkShareProps) {
         </button>
       </div>
 
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <h3 className="text-lg font-medium mb-2">Add a custom domain</h3>
         <p className="text-sm text-gray-500 mb-4">
           Collect and share testimonials with a branded URL like{" "}
@@ -58,7 +80,7 @@ export function LinkShare({ formLink, copied, handleCopy }: LinkShareProps) {
         <Button variant="outline" className="w-full">
           Upgrade
         </Button>
-      </div>
+      </div> */}
 
       <div>
         <h3 className="text-lg font-medium mb-2">Share on socials</h3>
@@ -71,6 +93,7 @@ export function LinkShare({ formLink, copied, handleCopy }: LinkShareProps) {
             variant="outline"
             size="icon"
             className="rounded-full bg-black text-white hover:bg-gray-800 border-none"
+            onClick={() => handleSocialShare("twitter")}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -87,6 +110,7 @@ export function LinkShare({ formLink, copied, handleCopy }: LinkShareProps) {
             variant="outline"
             size="icon"
             className="rounded-full bg-blue-600 text-white hover:bg-blue-700 border-none"
+            onClick={() => handleSocialShare("facebook")}
           >
             <Facebook className="h-4 w-4" />
           </Button>
@@ -94,6 +118,7 @@ export function LinkShare({ formLink, copied, handleCopy }: LinkShareProps) {
             variant="outline"
             size="icon"
             className="rounded-full bg-blue-500 text-white hover:bg-blue-600 border-none"
+            onClick={() => handleSocialShare("linkedin")}
           >
             <Linkedin className="h-4 w-4" />
           </Button>
@@ -101,6 +126,7 @@ export function LinkShare({ formLink, copied, handleCopy }: LinkShareProps) {
             variant="outline"
             size="icon"
             className="rounded-full bg-green-500 text-white hover:bg-green-600 border-none"
+            onClick={() => handleSocialShare("whatsapp")}
           >
             <MessageCircle className="h-4 w-4" />
           </Button>

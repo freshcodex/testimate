@@ -16,6 +16,7 @@ import {
 import { useTestimonialForm } from "@/hooks/use-testimonial-form";
 import { useFormStep } from "@/hooks/use-form-step";
 import type { CollectionFormProps } from "./thankyou-page";
+import { useThankyouContent } from "@/hooks/use-thankyou-content";
 
 interface CustomerDetailsContentProps {
   config: CollectionFormProps["collectionFormConfig"]["customerDetails"];
@@ -52,28 +53,28 @@ export function CustomerDetailsContent({
     },
   });
 
-  const { form, handleSubmit, setThankyouContentFormData } = useTestimonialForm(
-    {
-      formId,
-      projectSlug,
-    }
-  );
+  const { form, handleSubmit } = useTestimonialForm({
+    formId,
+    projectSlug,
+  });
+
+  const { setThankyouContentFormData } = useThankyouContent();
 
   useEffect(() => {
     formRef.current && autoAnimate(formRef.current);
   }, [formRef]);
 
   const onSubmit = handleSubmit((data) => {
+    // TODO: have a better way to handle this
+    setThankyouContentFormData(data);
+
     createTestimonial.mutate({
       ...data,
       formId,
       projectSlug,
     });
-
-    setThankyouContentFormData(data);
   });
 
-  // TODO: add auto animate height for the form
   return (
     <Form {...form}>
       <form ref={formRef} onSubmit={onSubmit} className="space-y-4">

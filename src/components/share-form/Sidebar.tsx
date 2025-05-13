@@ -6,13 +6,13 @@ interface SidebarProps {
 }
 
 const sidebarItems = [
-  {
-    id: "invite",
-    icon: Mail,
-    title: "Invite your customers",
-    description:
-      "Invite your customers to leave you a testimonial and track their progress.",
-  },
+  // {
+  //   id: "invite",
+  //   icon: Mail,
+  //   title: "Invite your customers",
+  //   description:
+  //     "Invite your customers to leave you a testimonial and track their progress.",
+  // },
   {
     id: "link",
     icon: Link2,
