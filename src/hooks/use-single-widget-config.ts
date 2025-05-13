@@ -1,4 +1,4 @@
-import { useQueryState } from "nuqs";
+import { useState } from "react";
 import type {
   Design,
   SingleWidgetConfig,
@@ -59,39 +59,21 @@ const defaultConfig: SingleWidgetConfig = {
   tagBorderRadius: "4px",
 };
 
-export function useSingleWidgetConfig(initialDesign: string) {
-  const [config, setConfig] = useQueryState<SingleWidgetConfig>("config", {
-    defaultValue: { ...defaultConfig, design: initialDesign as Design },
-    parse: (value) => {
-      try {
-        const parsedConfig = JSON.parse(decodeURIComponent(value));
-        // Ensure all required fields are present by merging with default config
-        return {
-          ...defaultConfig,
-          ...parsedConfig,
-          design: parsedConfig.design || initialDesign,
-        };
-      } catch (error) {
-        console.warn("Failed to parse config from URL:", error);
-        return { ...defaultConfig, design: initialDesign };
-      }
-    },
-    serialize: (value) => {
-      // Only serialize non-default values to keep URL clean
-      const nonDefaultValues = Object.entries(value).reduce(
-        (acc, [key, val]) => {
-          const typedKey = key as keyof SingleWidgetConfig;
-          if (JSON.stringify(val) !== JSON.stringify(defaultConfig[typedKey])) {
-            acc[typedKey] = val;
-          }
-          return acc;
-        },
-        {} as Partial<SingleWidgetConfig>
-      );
+export function generateUrlParams(config: SingleWidgetConfig): string {
+  // Remove undefined values and convert to a clean object
+  const cleanConfig = Object.fromEntries(
+    Object.entries(config).filter(([_, value]) => value !== undefined)
+  );
 
-      return encodeURIComponent(JSON.stringify(nonDefaultValues));
-    },
-  });
+  // Convert to base64 to make it URL safe and compact
+  return btoa(JSON.stringify(cleanConfig));
+}
+
+export function useSingleWidgetConfig(initialDesign: string) {
+  const [config, setConfig] = useState<SingleWidgetConfig>(() => ({
+    ...defaultConfig,
+    design: initialDesign as Design,
+  }));
 
   const handleConfigChange = (newConfig: Partial<SingleWidgetConfig>) => {
     setConfig((prevConfig) => ({ ...prevConfig, ...newConfig }));

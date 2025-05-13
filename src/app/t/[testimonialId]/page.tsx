@@ -1,68 +1,12 @@
-// here we'll show a single testimonial
-// for config we'll use url bar params
-
 "use client";
 
 import TestimonialFactory from "@/components/studio/single-widget/testimonial-factory";
 import type { Design } from "@/components/studio/single-widget/types";
 import type { SingleWidgetConfig } from "@/components/studio/single-widget/types";
+import { useSingleWidgetConfig } from "@/hooks/use-single-widget-config";
+import { useWallOfLoveConfig } from "@/hooks/use-wall-of-love-config";
 import { api } from "@/trpc/react";
-import { useParams } from "next/navigation";
-
-const defaultConfig: SingleWidgetConfig = {
-  // Basic Settings
-  design: "left-aligned" as Design,
-  height: "800px",
-  theme: "light",
-  showBranding: true,
-  showHeartAnimation: true,
-  shadowBackground: true,
-  showDate: true,
-  showSource: true,
-  showCaptions: false,
-  showStarRating: false,
-
-  // Colors
-  primaryColor: "#6701E6",
-  backgroundColor: "#FFFFFF",
-  cardBackgroundColor: "#FFFFFF",
-  textColor: "#000000",
-  linkColor: "#6701E6",
-  heartColor: "#DC2626",
-  starColor: "#FBBF24",
-
-  // Text Settings
-  fontFamily: "Lato",
-  fontSize: "base",
-  highlightStyle: "gradient",
-
-  // Video Settings
-  showVideoDuration: true,
-  playButtonColor: "#6701E6",
-
-  // Button Settings
-  buttonColor: "#6701E6",
-  selectedButtonColor: "#4444FF",
-  buttonAlignment: "left",
-  buttonFontColor: "#FFFFFF",
-  selectedFontColor: "#FFFFFF",
-
-  // Border Settings
-  borderWidth: "0px",
-  borderColor: "#E5E7EB",
-  borderRadius: "8px",
-
-  // Shadow Settings
-  shadowColor: "rgba(0, 0, 0, 0.1)",
-  shadowBlur: "4px",
-  shadowOffset: "0px 2px",
-
-  // Tags Settings
-  showTags: true,
-  tagBackgroundColor: "#F3F4F6",
-  tagTextColor: "#374151",
-  tagBorderRadius: "4px",
-};
+import { useParams, useSearchParams } from "next/navigation";
 
 const testimonial = {
   id: "1",
@@ -84,12 +28,39 @@ export default function TestimonialPage() {
   //   id: Number(params.testimonialId),
   // });
 
+  const searchParams = useSearchParams();
+  const configParam = searchParams.get("config");
+
+  let initialConfig: Partial<SingleWidgetConfig> = {};
+
+  if (configParam) {
+    try {
+      const decodedConfig = JSON.parse(atob(configParam));
+      initialConfig = decodedConfig;
+    } catch (error) {
+      console.error("Failed to parse config from URL:", error);
+    }
+  }
+
+  console.log(initialConfig);
+
+  const { config } = useSingleWidgetConfig(
+    initialConfig.design || "left-aligned"
+  );
+
   return (
-    <TestimonialFactory
-      config={defaultConfig}
-      //TODO: fix just for testing
-      style={params.testimonialId as Design}
-      {...testimonial}
-    />
+    <div className="w-full h-full p-4">
+      <TestimonialFactory
+        config={
+          {
+            ...config,
+            ...initialConfig,
+          } as SingleWidgetConfig
+        }
+        //TODO: fix just for testing
+        style={params.testimonialId as Design}
+        {...testimonial}
+      />
+    </div>
   );
 }

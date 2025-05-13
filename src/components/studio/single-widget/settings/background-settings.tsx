@@ -16,7 +16,7 @@ export function BackgroundSettings({
     <div className="space-y-6">
       <div>
         <Label className="block mb-2">Background color</Label>
-        <div className="flex items-center gap-2 mb-2">
+        {/* <div className="flex items-center gap-2 mb-2">
           <div className="px-3 py-1 bg-purple-100 text-purple-800 rounded text-sm">
             Gradient
           </div>
@@ -26,7 +26,7 @@ export function BackgroundSettings({
           <div className="px-3 py-1 bg-gray-100 rounded text-sm">
             Transparent
           </div>
-        </div>
+        </div> */}
         <ColorPicker
           color={config.backgroundColor}
           onChange={(color) => onConfigChange({ backgroundColor: color })}
@@ -35,14 +35,14 @@ export function BackgroundSettings({
 
       <div>
         <Label className="block mb-2">Card background color</Label>
-        <div className="flex items-center gap-2 mb-2">
+        {/* <div className="flex items-center gap-2 mb-2">
           <div className="px-3 py-1 bg-gray-100 rounded text-sm">
             Solid color
           </div>
           <div className="px-3 py-1 bg-gray-100 rounded text-sm">
             Transparent
           </div>
-        </div>
+        </div> */}
         <ColorPicker
           color={config.cardBackgroundColor}
           onChange={(color) => onConfigChange({ cardBackgroundColor: color })}

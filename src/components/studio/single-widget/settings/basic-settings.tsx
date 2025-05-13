@@ -2,10 +2,10 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-
+import type { SingleWidgetConfig } from "@/components/studio/single-widget/types";
 interface BasicSettingsProps {
-  config: any;
-  onConfigChange: (config: any) => void;
+  config: SingleWidgetConfig;
+  onConfigChange: (config: Partial<SingleWidgetConfig>) => void;
 }
 
 export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
@@ -21,9 +21,9 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
         />
         <Label htmlFor="remove-branding" className="flex items-center">
           Remove Testimonial branding
-          <span className="ml-2 text-xs px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded">
+          {/* <span className="ml-2 text-xs px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded">
             🔒
-          </span>
+          </span> */}
         </Label>
       </div>
 
@@ -58,7 +58,7 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
         <Label htmlFor="hide-source">Hide source icons</Label>
       </div>
 
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <Checkbox
           id="show-captions"
           checked={config.showCaptions}
@@ -67,9 +67,9 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
           }
         />
         <Label htmlFor="show-captions">Show closed captions by default</Label>
-      </div>
+      </div> */}
 
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <Checkbox
           id="add-star-rating"
           checked={config.showStarRating}
@@ -83,9 +83,9 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
             🔒
           </span>
         </Label>
-      </div>
+      </div> */}
 
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <Checkbox
           id="show-heart"
           checked={config.showHeartAnimation}
@@ -94,9 +94,9 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
           }
         />
         <Label htmlFor="show-heart">Show heart animation</Label>
-      </div>
+      </div> */}
 
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <Checkbox
           id="shadow-background"
           checked={config.shadowBackground}
@@ -107,7 +107,7 @@ export function BasicSettings({ config, onConfigChange }: BasicSettingsProps) {
         <Label htmlFor="shadow-background">
           Top and bottom shadow background
         </Label>
-      </div>
+      </div> */}
     </div>
   );
 }

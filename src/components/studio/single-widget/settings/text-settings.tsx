@@ -35,7 +35,7 @@ export function TextSettings({ config, onConfigChange }: TextSettingsProps) {
         />
       </div>
 
-      <div>
+      {/* <div>
         <Label className="block mb-2">Heart color</Label>
         <ColorPicker
           color={config.heartColor}
@@ -113,7 +113,7 @@ export function TextSettings({ config, onConfigChange }: TextSettingsProps) {
             <SelectItem value="none">None</SelectItem>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
     </div>
   );
 }
