@@ -42,6 +42,43 @@ export const tagRouter = createTRPCRouter({
       return projectTags;
     }),
 
+  getAllByProjectSlug: protectedProcedure
+    .input(z.object({ projectSlug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      // get project by slug here
+
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(eq(projects.slug, input.projectSlug));
+
+      if (!project) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found",
+        });
+      }
+
+      const projectTags = await ctx.db
+        .select({
+          id: tags.id,
+          name: tags.name,
+          description: tags.description,
+          category: tags.category,
+          projectId: tags.projectId,
+          createdAt: tags.createdAt,
+          updatedAt: tags.updatedAt,
+          testimonialCount: count(testimonialTags.tagId),
+        })
+        .from(tags)
+        .leftJoin(testimonialTags, eq(tags.id, testimonialTags.tagId))
+        .where(eq(tags.projectId, project.id))
+        .groupBy(tags.id)
+        .orderBy(desc(tags.createdAt));
+
+      return projectTags;
+    }),
+
   getById: protectedProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {

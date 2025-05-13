@@ -24,10 +24,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 
 export function AppSidebar() {
   const { projectSlug } = useParams();
+  const pathname = usePathname();
+
+  const isActive = (path: string) => {
+    return pathname === `/dashboard/${projectSlug}/${path}`;
+  };
+
   return (
     <Sidebar className="border-r border-gray-200 min-w-64">
       <SidebarHeader className="h-16 border-b border-sidebar-border">
@@ -67,7 +73,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive("forms")}>
                   <Link href={`/dashboard/${projectSlug}/forms`}>
                     <FileText className="h-4 w-4" />
                     <span>Forms</span>
@@ -104,7 +110,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive>
+                <SidebarMenuButton asChild isActive={isActive("proof")}>
                   <Link href={`/dashboard/${projectSlug}/proof`}>
                     <FileText className="h-4 w-4" />
                     <span>Proof</span>
@@ -113,7 +119,7 @@ export function AppSidebar() {
               </SidebarMenuItem>
 
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive("tags")}>
                   <Link href={`/dashboard/${projectSlug}/tags`}>
                     <Tag className="h-4 w-4" />
                     <span>Tags</span>
@@ -129,7 +135,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={isActive("studio")}>
                   <Link href={`/dashboard/${projectSlug}/studio`}>
                     <Share2 className="h-4 w-4" />
                     <span>Studio</span>

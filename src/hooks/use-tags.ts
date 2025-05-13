@@ -1,27 +1,32 @@
 import { useState, useCallback } from "react";
 import { api } from "@/trpc/react";
-import type { Tag, TagCategory } from "@/types/tags";
+import type { Tag, TagCategory } from "@/types";
 import { toast } from "sonner";
 
 interface UseTagsProps {
-  projectId: number;
+  projectSlug: string;
 }
 
-export function useTags({ projectId }: UseTagsProps) {
+export function useTags({ projectSlug }: UseTagsProps) {
   const [isCreating, setIsCreating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const utils = api.useUtils();
 
   // Fetch tags
-  const { data: tags = [], isLoading } = api.tags.getAllByProjectId.useQuery({
-    projectId,
-  });
+  const { data: tags = [], isLoading } = api.tags.getAllByProjectSlug.useQuery(
+    {
+      projectSlug,
+    },
+    {
+      enabled: !!projectSlug,
+    }
+  );
 
   // Create tag mutation
   const createTagMutation = api.tags.create.useMutation({
     onSuccess: () => {
-      utils.tags.getAllByProjectId.invalidate({ projectId });
+      utils.tags.getAllByProjectSlug.invalidate({ projectSlug });
       toast.success("Tag created successfully");
     },
     onError: (error) => {
@@ -33,7 +38,7 @@ export function useTags({ projectId }: UseTagsProps) {
   // Delete tag mutation
   const deleteTagMutation = api.tags.delete.useMutation({
     onSuccess: () => {
-      utils.tags.getAllByProjectId.invalidate({ projectId });
+      utils.tags.getAllByProjectSlug.invalidate({ projectSlug });
       toast.success("Tag deleted successfully");
     },
     onError: (error) => {
@@ -48,18 +53,18 @@ export function useTags({ projectId }: UseTagsProps) {
       name: string;
       description: string;
       category: TagCategory;
+      projectId: number;
     }) => {
       try {
         setIsCreating(true);
         await createTagMutation.mutateAsync({
           ...tagData,
-          projectId,
         });
       } finally {
         setIsCreating(false);
       }
     },
-    [createTagMutation, projectId]
+    [createTagMutation]
   );
 
   // Delete tag handler

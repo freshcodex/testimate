@@ -1,7 +1,9 @@
 import { ArrowRight, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Tag } from "@/types/tags";
+import type { Tag } from "@/types";
 import { useTags } from "@/hooks/use-tags";
+import autoAnimate from "@formkit/auto-animate";
+import { useRef, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,14 +18,19 @@ import {
 
 interface TagListProps {
   tags: Tag[];
-  projectId: number;
+  projectSlug: string;
 }
 
-export function TagList({ tags, projectId }: TagListProps) {
-  const { deleteTag, isDeleting } = useTags({ projectId });
+export function TagList({ tags, projectSlug }: TagListProps) {
+  const { deleteTag, isDeleting } = useTags({ projectSlug });
+  const parent = useRef(null);
+
+  useEffect(() => {
+    parent.current && autoAnimate(parent.current);
+  }, [parent]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" ref={parent}>
       {tags.map((tag) => (
         <TagItem
           key={tag.id}

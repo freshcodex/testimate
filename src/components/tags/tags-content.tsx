@@ -7,22 +7,24 @@ import { EmptyState } from "./empty-state";
 import { TagCreationModal } from "./tag-creation-modal";
 import { TagList } from "./tag-list";
 import { useTags } from "@/hooks/use-tags";
-import type { Tag } from "@/types/tags";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { Tag } from "@/types";
 
 interface TagsContentProps {
+  projectSlug: string;
   projectId: number;
 }
 
-export function TagsContent({ projectId }: TagsContentProps) {
+export function TagsContent({ projectSlug, projectId }: TagsContentProps) {
   const [showModal, setShowModal] = useState(false);
-  const { tags, isLoading, isCreating, createTag } = useTags({ projectId });
+  const { tags, isLoading, isCreating, createTag } = useTags({ projectSlug });
 
   const handleCreateTag = async (tag: Tag) => {
     await createTag({
       name: tag.name,
       description: tag.description || "",
       category: tag.category,
+      projectId: projectId,
     });
     setShowModal(false);
   };
@@ -77,7 +79,7 @@ export function TagsContent({ projectId }: TagsContentProps) {
       {tags.length === 0 ? (
         <EmptyState onCreateTag={() => setShowModal(true)} />
       ) : (
-        <TagList tags={tags} projectId={projectId} />
+        <TagList tags={tags} projectSlug={projectSlug} />
       )}
 
       {/* TODO: don't pass instead keep stuff in TagCreationModal */}
