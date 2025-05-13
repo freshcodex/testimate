@@ -20,6 +20,8 @@ import type {
   ThankYouPageConfig,
   WelcomePageConfig,
 } from "./zod-schemas";
+import type { SingleWidgetConfig } from "@/components/studio/single-widget/types";
+import type { WallOfLoveConfig } from "@/components/studio/wall-of-love/types";
 
 // Enums
 export const testimonialTypeEnum = pgEnum("testimonial_type", [
@@ -265,3 +267,23 @@ export const testimonialTagsRelations = relations(
     }),
   })
 );
+
+export const widgetTypeEnum = pgEnum("widget_type", [
+  "single_widget",
+  "wall_of_love",
+]);
+
+// Widget table
+export const widgets = pgTable("widgets", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  type: widgetTypeEnum("type").notNull(),
+  config: json("config").$type<SingleWidgetConfig | WallOfLoveConfig>(),
+  url: text("url"), // raw url with config params
+  projectId: integer("project_id")
+    .notNull()
+    .references(() => projects.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
