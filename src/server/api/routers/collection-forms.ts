@@ -90,7 +90,7 @@ export const collectionFormsRouter = createTRPCRouter({
       z.object({
         title: z.string().min(1),
         description: z.string().optional(),
-        projectId: z.number(),
+        projectSlug: z.string(),
         design: designConfigSchema,
         welcomePage: welcomePageConfigSchema,
         responsePage: responsePageConfigSchema,
@@ -109,7 +109,7 @@ export const collectionFormsRouter = createTRPCRouter({
         .from(projects)
         .where(
           and(
-            eq(projects.id, input.projectId),
+            eq(projects.slug, input.projectSlug),
             eq(projects.createdBy, ctx.user.id)
           )
         );
@@ -125,6 +125,7 @@ export const collectionFormsRouter = createTRPCRouter({
         .insert(collectionForms)
         .values({
           ...input,
+          projectId: project.id,
         })
         .returning();
 

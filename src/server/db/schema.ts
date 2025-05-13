@@ -280,7 +280,8 @@ export const testimonials = pgTable("testimonials", {
   approved: boolean("approved").default(false).notNull(),
   featured: boolean("featured").default(false).notNull(),
   language: varchar("language", { length: 10 }).default("en").notNull(),
-  customFields: json("custom_fields").$type<Record<string, any>>(),
+  // TODO: better type for this use additionalFieldsSchema
+  customFields: json("custom_fields").$type<AdditionalFields>(),
   originalDate: timestamp("original_date"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

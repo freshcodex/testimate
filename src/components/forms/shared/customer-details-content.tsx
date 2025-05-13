@@ -3,6 +3,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { User, Camera } from "lucide-react";
+import { useRef, useEffect } from "react";
+import autoAnimate from "@formkit/auto-animate";
 import {
   Form,
   FormControl,
@@ -38,6 +40,7 @@ export function CustomerDetailsContent({
   formId,
   projectSlug,
 }: CustomerDetailsContentProps) {
+  const formRef = useRef<HTMLFormElement>(null);
   const { setCurrentStep } = useFormStep();
   const createTestimonial = api.testimonials.create.useMutation({
     onSuccess: (data) => {
@@ -56,6 +59,10 @@ export function CustomerDetailsContent({
     }
   );
 
+  useEffect(() => {
+    formRef.current && autoAnimate(formRef.current);
+  }, [formRef]);
+
   const onSubmit = handleSubmit((data) => {
     createTestimonial.mutate({
       ...data,
@@ -66,9 +73,10 @@ export function CustomerDetailsContent({
     setThankyouContentFormData(data);
   });
 
+  // TODO: add auto animate height for the form
   return (
     <Form {...form}>
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form ref={formRef} onSubmit={onSubmit} className="space-y-4">
         <FormField
           control={form.control}
           name="customerName"
@@ -113,20 +121,25 @@ export function CustomerDetailsContent({
           />
         )}
 
-        <div>
-          <label htmlFor="photo" className="mb-1 block text-sm font-medium">
-            Your Photo
-          </label>
-          <div className="flex items-center gap-2">
-            <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
-              <User className="h-6 w-6 text-gray-500" />
+        {config.userPhotoEnabled && (
+          <div>
+            <label htmlFor="photo" className="mb-1 block text-sm font-medium">
+              Your Photo
+              {config.userPhotoRequired && (
+                <span className="text-red-400 ml-1">*</span>
+              )}
+            </label>
+            <div className="flex items-center gap-2">
+              <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                <User className="h-6 w-6 text-gray-500" />
+              </div>
+              <Button variant="outline" size="sm" className="text-xs">
+                <Camera className="mr-1 h-3 w-3" />
+                Pick an image
+              </Button>
             </div>
-            <Button variant="outline" size="sm" className="text-xs">
-              <Camera className="mr-1 h-3 w-3" />
-              Pick an image
-            </Button>
           </div>
-        </div>
+        )}
 
         {config.jobTitleEnabled && (
           <FormField
@@ -153,28 +166,30 @@ export function CustomerDetailsContent({
           />
         )}
 
-        <FormField
-          control={form.control}
-          name="customerUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Website URL
-                {config.websiteUrlRequired && (
-                  <span className="text-red-400">*</span>
-                )}
-              </FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="https://bakerstreet.com"
-                  {...field}
-                  value={field.value || ""}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {config.websiteUrlEnabled && (
+          <FormField
+            control={form.control}
+            name="customerUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Website URL
+                  {config.websiteUrlRequired && (
+                    <span className="text-red-400">*</span>
+                  )}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="https://bakerstreet.com"
+                    {...field}
+                    value={field.value || ""}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         {config.companyEnabled && (
           <FormField
@@ -184,7 +199,7 @@ export function CustomerDetailsContent({
               <FormItem>
                 <FormLabel>
                   Company Name
-                  {config.companyLogoRequired && (
+                  {config.companyRequired && (
                     <span className="text-red-400">*</span>
                   )}
                 </FormLabel>
@@ -201,6 +216,24 @@ export function CustomerDetailsContent({
           />
         )}
 
+        {config.companyLogoEnabled && (
+          <div>
+            <label
+              htmlFor="companyLogo"
+              className="mb-1 block text-sm font-medium"
+            >
+              Company Logo
+              {config.companyLogoRequired && (
+                <span className="text-red-400 ml-1">*</span>
+              )}
+            </label>
+            <div className="h-16 w-16 rounded-md bg-gray-100 flex items-center justify-center border border-gray-200">
+              <Camera className="h-6 w-6 text-gray-400" />
+            </div>
+          </div>
+        )}
+
+        {/* TODO: zod form should respect or have info about whether this field is required or not */}
         {additionalFields?.map((field) => (
           <FormField
             key={field.id}
@@ -214,6 +247,7 @@ export function CustomerDetailsContent({
                 </FormLabel>
                 <FormControl>
                   <Input
+                    required={field.required}
                     placeholder={field.label}
                     {...formField}
                     value={formField.value || ""}
@@ -224,18 +258,6 @@ export function CustomerDetailsContent({
             )}
           />
         ))}
-
-        <div>
-          <label
-            htmlFor="companyLogo"
-            className="mb-1 block text-sm font-medium"
-          >
-            Company Logo
-          </label>
-          <div className="h-16 w-16 rounded-md bg-gray-100 flex items-center justify-center border border-gray-200">
-            <Camera className="h-6 w-6 text-gray-400" />
-          </div>
-        </div>
 
         <Button
           type="submit"

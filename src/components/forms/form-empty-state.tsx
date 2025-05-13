@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { FileText, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -9,8 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
-export function EmptyState() {
+export function EmptyState({ projectSlug }: { projectSlug: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-12">
       <div className="mb-6 rounded-full bg-purple-100 p-3">
@@ -21,11 +21,13 @@ export function EmptyState() {
         Create your first form to start collecting testimonials and feedback
         from your customers.
       </p>
-      <Button>
-        <Plus className="mr-2 h-4 w-4" /> Create your first form
-      </Button>
+      <Link href={`/dashboard/${projectSlug}/forms/new`}>
+        <Button>
+          <Plus className="mr-2 h-4 w-4" /> Create your first form
+        </Button>
+      </Link>
 
-      <div className="mt-12 grid w-full max-w-4xl gap-6 md:grid-cols-2">
+      <div className="mt-12 ">
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Quick start guide</CardTitle>
@@ -54,13 +56,13 @@ export function EmptyState() {
                 <span>Collect and manage testimonials</span>
               </li>
             </ul>
-            <Button variant="link" className="mt-4 px-0 ">
+            {/* <Button variant="link" className="mt-4 px-0 ">
               View documentation
-            </Button>
+            </Button> */}
           </CardContent>
         </Card>
 
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle className="text-lg">Watch a demo</CardTitle>
             <CardDescription>
@@ -98,7 +100,7 @@ export function EmptyState() {
               />
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   );

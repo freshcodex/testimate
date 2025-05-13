@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -31,7 +30,7 @@ export function FormsDashboard() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <Link href="/dashboard/forms/new">
+          <Link href={`/dashboard/${projectSlug}/forms/new`}>
             <Button>
               <Plus className="h-4 w-4 mr-2" /> Create new
             </Button>
@@ -46,7 +45,7 @@ export function FormsDashboard() {
           <Skeleton className="h-20 w-full" />
         </div>
       ) : isEmpty ? (
-        <EmptyState />
+        <EmptyState projectSlug={projectSlug as string} />
       ) : (
         <>
           <CollectionFormsList

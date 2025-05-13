@@ -13,21 +13,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useEditFormBuilder } from "@/hooks/use-edit-form-builder";
 
-export type FormSection =
-  | "design"
-  | "welcome"
-  | "response"
-  | "customer"
-  | "thank-you"
-  | "word-of-mouth"
-  | "collect-more"
-  | "language"
-  | "auto-translate"
-  | "customize-labels"
-  | "custom-domain"
-  | "remove-branding"
-  | "advanced";
-
 export function EditFormBuilder() {
   const router = useRouter();
   const params = useParams();

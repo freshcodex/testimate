@@ -9,9 +9,10 @@ import { FormPreview } from "@/components/forms/builder/form-preview";
 import { useFormBuilder } from "@/hooks/use-form-builders";
 import { FormProvider } from "react-hook-form";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+// TODO: keep this in central place for reusability
 export type FormSection =
   | "design"
   | "welcome"
@@ -29,6 +30,7 @@ export type FormSection =
 
 export function FormBuilder() {
   const router = useRouter();
+  const { projectSlug } = useParams();
   const {
     form,
     collectionFormConfig,
@@ -43,7 +45,7 @@ export function FormBuilder() {
     onSuccess: async (data) => {
       await utils.collectionForms.getAll.invalidate();
       toast.success("Form saved successfully!");
-      router.push(`/dashboard/forms/${data?.id}`);
+      router.push(`/dashboard/${projectSlug}/forms/${data?.id}`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -53,7 +55,7 @@ export function FormBuilder() {
   const onSubmit = form.handleSubmit(async (data) => {
     createForm.mutate({
       title: data.name,
-      projectId: 1, // TODO: Get this from context/props
+      projectSlug: projectSlug as string,
       design: data.design,
       welcomePage: data.welcomePage,
       responsePage: data.responsePage,
@@ -70,8 +72,7 @@ export function FormBuilder() {
         <div className="flex flex-col py-10 px-4 overflow-y-scroll">
           <div className="px-4 py-2 space-y-2">
             <Link
-              // DON't change this href Intentional
-              href="/dashboard/forms"
+              href={`/dashboard/${projectSlug}/forms`}
               className="flex items-center text-sm text-gray-500 hover:text-gray-900"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />

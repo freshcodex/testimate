@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Brush,
   MessageSquare,
@@ -9,6 +9,7 @@ import {
   ThumbsUp,
   Tag,
 } from "lucide-react";
+import autoAnimate from "@formkit/auto-animate";
 
 import {
   Accordion,
@@ -33,6 +34,12 @@ export function FormSidebar({
   activeSection,
   setActiveSection,
 }: FormSidebarProps) {
+  const accordionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    accordionRef.current && autoAnimate(accordionRef.current);
+  }, [accordionRef]);
+
   // This function handles the accordion state changes
   const handleAccordionChange = (value: string) => {
     if (value) {
@@ -43,11 +50,12 @@ export function FormSidebar({
   return (
     <div className="flex-shrink-0">
       <Accordion
+        ref={accordionRef}
         type="single"
         collapsible
         value={activeSection}
         onValueChange={handleAccordionChange}
-        className="w-full space-y-4"
+        className="w-full space-y-4 [&_[data-state]]:transition-none"
       >
         <AccordionItem
           value="design"

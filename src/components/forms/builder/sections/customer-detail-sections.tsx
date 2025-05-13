@@ -83,17 +83,17 @@ const customerFields = [
     defaultRequired: false,
     icon: <Building2 className="h-5 w-5 text-gray-500" />,
   },
-  {
-    key: "team",
-    label: "Collect Team",
-    description:
-      "Collect team so you can search for testimonials by department and display it in some widgets.",
-    enabledName: "customerDetails.teamEnabled",
-    requiredName: "customerDetails.teamRequired",
-    defaultEnabled: false,
-    defaultRequired: false,
-    icon: <Users className="h-5 w-5 text-gray-500" />,
-  },
+  // {
+  //   key: "team",
+  //   label: "Collect Team",
+  //   description:
+  //     "Collect team so you can search for testimonials by department and display it in some widgets.",
+  //   enabledName: "customerDetails.teamEnabled",
+  //   requiredName: "customerDetails.teamRequired",
+  //   defaultEnabled: false,
+  //   defaultRequired: false,
+  //   icon: <Users className="h-5 w-5 text-gray-500" />,
+  // },
   {
     key: "companyLogo",
     label: "Collect Company Logo",
