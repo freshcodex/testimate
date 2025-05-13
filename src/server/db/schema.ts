@@ -85,7 +85,7 @@ export const projects = pgTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 255 }).notNull(),
-    slug: varchar("slug", { length: 255 }).notNull(),
+    slug: varchar("slug", { length: 255 }).notNull().unique(),
     description: text("description"),
     // TODO: add url, logo, etc.
     // url: varchar("url"),
@@ -179,6 +179,7 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   testimonials: many(testimonials),
   forms: many(collectionForms),
   tags: many(tags),
+  widgets: many(widgets),
 }));
 
 export const collectionFormsRelations = relations(
@@ -281,9 +282,17 @@ export const widgets = pgTable("widgets", {
   type: widgetTypeEnum("type").notNull(),
   config: json("config").$type<SingleWidgetConfig | WallOfLoveConfig>(),
   url: text("url"), // raw url with config params
-  projectId: integer("project_id")
+  projectSlug: varchar("project_slug", { length: 255 })
     .notNull()
-    .references(() => projects.id, { onDelete: "cascade" }),
+    .references(() => projects.slug, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+// Add widget relations
+export const widgetsRelations = relations(widgets, ({ one }) => ({
+  project: one(projects, {
+    fields: [widgets.projectSlug],
+    references: [projects.slug],
+  }),
+}));

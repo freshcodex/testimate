@@ -15,6 +15,13 @@
       "when": 1747125675400,
       "tag": "0001_parallel_ultimatum",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1747125829771,
+      "tag": "0002_pretty_selene",
+      "breakpoints": true
     }
   ]
 }
