@@ -1,5 +1,6 @@
 import type { Theme } from "@/components/studio/wall-of-love/types";
 
+// TODO: Either derive this from WallOfLoveConfig or keep it in central place
 export interface TestimonialProps {
   id: string;
   name: string;
@@ -31,7 +32,7 @@ export interface TestimonialCardConfig {
 }
 
 export interface TestimonialLayoutConfig {
-  layout: "carousel" | "masonry-fixed" | "masonry-animated";
+  layout: "carousel-slider" | "masonry-fixed" | "masonry-animated";
   height: string | "auto";
   theme: Theme;
   showBranding: boolean;

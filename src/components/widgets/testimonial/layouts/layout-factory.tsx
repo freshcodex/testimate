@@ -7,7 +7,7 @@ export function TestimonialLayoutFactory(props: TestimonialLayoutProps) {
   const { config } = props;
 
   switch (config.layout) {
-    case "carousel":
+    case "carousel-slider":
       return <CarouselLayout {...props} />;
     case "masonry-animated":
       return <MasonryAnimatedLayout {...props} />;

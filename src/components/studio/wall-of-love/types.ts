@@ -10,7 +10,7 @@ export type FontFamily =
 export type FontSize = "xs" | "sm" | "base" | "lg" | "xl";
 export type HighlightStyle = "gradient" | "underline" | "highlight" | "none";
 export type ButtonAlignment = "left" | "center" | "right";
-export type Layout = "carousel" | "masonry-fixed" | "masonry-animated";
+export type Layout = "carousel-slider" | "masonry-fixed" | "masonry-animated";
 
 export interface WallOfLoveConfig {
   // Basic Settings
