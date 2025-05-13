@@ -2,7 +2,9 @@
 
 import { TestimonialList } from "@/components/widgets/testimonial/testimonial-list";
 import type { TestimonialLayoutConfig } from "@/components/widgets/testimonial/types";
+import type { WallOfLoveConfig } from "@/components/studio/wall-of-love/types";
 import { useWallOfLoveConfig } from "@/hooks/use-wall-of-love-config";
+import { useSearchParams } from "next/navigation";
 // Sample testimonials data
 const testimonials = [
   {
@@ -70,14 +72,33 @@ const testimonials = [
 ];
 
 export default function WallOfLovePage() {
-  // TODO: fetch the testimonials from the db
-  // TODO: have layout also embedded in the url bar
-  const config = useWallOfLoveConfig("masonry-fixed");
+  const searchParams = useSearchParams();
+  const configParam = searchParams.get("config");
+
+  let initialConfig: Partial<WallOfLoveConfig> = {};
+
+  if (configParam) {
+    try {
+      const decodedConfig = JSON.parse(atob(configParam));
+      initialConfig = decodedConfig;
+    } catch (error) {
+      console.error("Failed to parse config from URL:", error);
+    }
+  }
+
+  const { config } = useWallOfLoveConfig(
+    initialConfig.layout || "masonry-fixed"
+  );
 
   return (
     <TestimonialList
       testimonials={testimonials}
-      config={config.config as TestimonialLayoutConfig}
+      config={
+        {
+          ...config,
+          ...initialConfig,
+        } as TestimonialLayoutConfig
+      }
     />
   );
 }

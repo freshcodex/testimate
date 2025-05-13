@@ -119,8 +119,8 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
   ];
 
   return (
-    <div>
-      <div className="container mx-auto px-4 py-8 flex flex-col space-y-2 mb-6">
+    <div className="flex flex-col min-h-screen">
+      <div className="container mx-auto px-4 py-4 sm:py-6 flex flex-col space-y-2">
         <button
           onClick={onBack}
           className="cursor-pointer flex items-center text-gray-600 hover:text-gray-900"
@@ -137,7 +137,7 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
             </span>
           </div>
         </div>
-        <div className="flex items-center mb-4">
+        <div className="flex items-center">
           <div className="flex items-center bg-green-100 text-green-800 px-3 py-1 rounded-full">
             <div className="h-4 w-4 rounded-full bg-green-500 mr-2 flex items-center justify-center">
               <Check className="h-3 w-3 text-white" />
@@ -151,10 +151,10 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
 
       <ResizablePanelGroup
         direction="horizontal"
-        className="min-h-[calc(100vh-200px)] rounded-lg border m-4"
+        className="flex-1 rounded-lg border mx-4 my-2"
       >
-        <ResizablePanel className="" defaultSize={20} minSize={15}>
-          <div className="h-full bg-white rounded-lg p-4 overflow-auto">
+        <ResizablePanel className="min-w-[250px]" defaultSize={20} minSize={15}>
+          <div className="h-full bg-white rounded-lg p-4 overflow-y-auto">
             <Select value={activeTab} onValueChange={setActiveTab}>
               <SelectTrigger className="w-full mb-4">
                 <SelectValue placeholder="Select setting" />
@@ -227,15 +227,17 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
         <ResizableHandle />
 
         <ResizablePanel defaultSize={80} minSize={30}>
-          <div className="h-full bg-white rounded-lg p-4 overflow-auto">
+          <div className="h-full bg-white rounded-lg p-4 overflow-y-auto">
             <h3 className="font-medium mb-4">Live preview</h3>
-            <LivePreview config={config} />
+            <div className="w-full overflow-x-auto">
+              <LivePreview config={config} />
+            </div>
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
 
-      <div className="container mx-auto px-4 py-8 bg-gray-100 p-4 rounded-lg my-6">
-        <pre className="text-sm text-wrap overflow-ellipsis">
+      <div className="container mx-auto px-4 py-4 bg-gray-100 rounded-lg mx-4 my-4">
+        <pre className="text-sm break-all whitespace-pre-wrap">
           <code>{embedCode}</code>
         </pre>
         <p className="text-xs text-gray-500 mt-2">
@@ -244,7 +246,7 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
         </p>
       </div>
 
-      <div className="container mx-auto px-4 py-8 flex justify-between mt-8">
+      <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between gap-4 mb-4">
         <Button variant="outline" onClick={onBack}>
           Cancel
         </Button>
