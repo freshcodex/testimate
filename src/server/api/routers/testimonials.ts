@@ -9,6 +9,8 @@ import {
   collectionForms,
   insertTestimonialSchema,
   selectTestimonialSchema,
+  testimonialTags,
+  tags,
 } from "@/server/db/schema";
 import { createObjectCsvWriter } from "csv-writer";
 import { join } from "path";
@@ -75,27 +77,36 @@ export const testimonialsRouter = createTRPCRouter({
         });
       }
 
-      const filteredTestimonials = await ctx.db
-        .select()
-        .from(testimonials)
-        .where(
-          and(
-            eq(testimonials.projectId, project.id),
-            input.status
-              ? eq(testimonials.approved, input.status === "approved")
-              : undefined,
-            input.searchQuery?.trim()
-              ? or(
-                  like(testimonials.customerName, `%${input.searchQuery}%`),
-                  like(testimonials.customerEmail, `%${input.searchQuery}%`),
-                  like(testimonials.text, `%${input.searchQuery}%`)
-                )
-              : undefined
-          )
-        )
-        .orderBy(desc(testimonials.createdAt));
+      const filteredTestimonials = await ctx.db.query.testimonials.findMany({
+        where: and(
+          eq(testimonials.projectId, project.id),
+          input.status
+            ? eq(testimonials.approved, input.status === "approved")
+            : undefined,
+          input.searchQuery?.trim()
+            ? or(
+                like(testimonials.customerName, `%${input.searchQuery}%`),
+                like(testimonials.customerEmail, `%${input.searchQuery}%`),
+                like(testimonials.text, `%${input.searchQuery}%`)
+              )
+            : undefined
+        ),
+        with: {
+          testimonialTags: {
+            with: {
+              tag: true,
+            },
+          },
+        },
+        orderBy: desc(testimonials.createdAt),
+      });
 
-      return filteredTestimonials;
+      // Transform the response to include tags directly
+      return filteredTestimonials.map((testimonial) => ({
+        ...testimonial,
+        tags: testimonial.testimonialTags.map((tt) => tt.tag),
+        testimonialTags: undefined, // Remove the junction table data
+      }));
     }),
 
   getById: protectedProcedure

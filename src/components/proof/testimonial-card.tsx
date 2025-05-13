@@ -4,21 +4,18 @@ import Image from "next/image";
 import { Checkbox } from "@/components/ui/checkbox";
 import { StarRating } from "@/components/proof/star-rating";
 import { StatusBadge } from "@/components/proof/status-badge";
-import { type testimonials } from "@/server/db/schema";
-import { type InferSelectModel } from "drizzle-orm";
-
-type Testimonial = InferSelectModel<typeof testimonials>;
+import { Badge } from "@/components/ui/badge";
+import type { FilteredTestimonial } from "@/types";
 
 export function TestimonialCard({
   testimonial,
   checked,
   onCheck,
 }: {
-  testimonial: Testimonial;
+  testimonial: FilteredTestimonial;
   checked?: boolean;
   onCheck?: (checked: boolean) => void;
 }) {
-  console.log(JSON.stringify(testimonial, null, 2));
   return (
     <div className="flex w-full items-start gap-4 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex-shrink-0">
@@ -59,6 +56,16 @@ export function TestimonialCard({
         </div>
 
         <StarRating rating={testimonial.rating as number} />
+
+        {testimonial.tags && testimonial.tags.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {testimonial.tags.map((tag) => (
+              <Badge key={tag.id} variant="secondary" className="text-xs">
+                {tag.name}
+              </Badge>
+            ))}
+          </div>
+        )}
 
         <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
           <div className="flex items-center gap-1">

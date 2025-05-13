@@ -2,25 +2,27 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { useTags } from "@/hooks/use-tags";
-import type { Tag } from "@/types/tags";
+import type { Tag } from "@/types";
 
 interface TagSelectionModalProps {
   onClose: () => void;
-  projectId: number;
+  projectSlug: string;
   onTagSelect: (tagId: number) => Promise<void>;
   isTagging: boolean;
 }
 
 export function TagSelectionModal({
   onClose,
-  projectId,
+  projectSlug,
   onTagSelect,
   isTagging,
 }: TagSelectionModalProps) {
-  const { tags, isLoading } = useTags({ projectId });
+  const { tags, isLoading } = useTags({ projectSlug });
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
 
   // TODO: handle already selected tags state; for that implement backend to give associated testimonials as well
+
+  // TODO: Add feature for toggling tags, add and remove tags from testimonials
 
   const handleTagSelect = (tag: Tag) => {
     setSelectedTag(tag);

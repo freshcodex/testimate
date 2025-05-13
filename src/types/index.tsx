@@ -7,3 +7,6 @@ export type TagCategory = Tag["category"];
 
 // get the type of data from collectionForms
 export type CollectionForm = RouterOutput["collectionForms"]["getAll"][number];
+
+export type FilteredTestimonial =
+  RouterOutput["testimonials"]["getFilteredTestimonials"][number];

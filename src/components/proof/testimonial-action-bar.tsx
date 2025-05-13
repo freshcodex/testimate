@@ -20,6 +20,7 @@ interface TestimonialActionBarProps {
   onDelete: () => void;
   onExport: () => void;
   onTag: (tagId: number) => Promise<void>;
+  onShare: () => void;
   allSelectedApproved: boolean;
   allSelectedUnapproved: boolean;
   hasMixedApprovalStatus: boolean;
@@ -28,7 +29,8 @@ interface TestimonialActionBarProps {
   isDeleting: boolean;
   isExporting: boolean;
   isTagging: boolean;
-  projectId: number;
+  isSingleSelection: boolean;
+  projectSlug: string;
   isTagModalOpen: boolean;
   onTagModalOpenChange: (open: boolean) => void;
 }
@@ -42,6 +44,7 @@ export function TestimonialActionBar({
   onDelete,
   onExport,
   onTag,
+  onShare,
   allSelectedApproved,
   allSelectedUnapproved,
   hasMixedApprovalStatus,
@@ -50,7 +53,8 @@ export function TestimonialActionBar({
   isDeleting,
   isExporting,
   isTagging,
-  projectId,
+  isSingleSelection,
+  projectSlug,
   isTagModalOpen,
   onTagModalOpenChange,
 }: TestimonialActionBarProps) {
@@ -59,8 +63,10 @@ export function TestimonialActionBar({
       <div
         className={cn(
           "fixed bottom-0 left-0 z-50 w-full border-t bg-white px-4 py-3 shadow-lg flex items-center gap-4",
-          "md:px-8"
+          "md:px-8",
+          selectedCount === 0 && "translate-y-full"
         )}
+        style={{ transition: "transform 0.2s ease-in-out" }}
         role="region"
         aria-label="Testimonial actions"
       >
@@ -80,15 +86,11 @@ export function TestimonialActionBar({
             >
               <Tag className="size-4 mr-1" /> Tag
             </Button>
-            {/* <Button size="sm" variant="outline">
-              <Languages className="size-4 mr-1" /> Translate
-            </Button>
-            <Button size="sm" variant="outline">
-              <BarChart2 className="size-4 mr-1" /> Analyze
-            </Button> */}
-            <Button size="sm" variant="outline">
-              <Share2 className="size-4 mr-1" /> Share
-            </Button>
+            {isSingleSelection && (
+              <Button size="sm" variant="outline" onClick={onShare}>
+                <Share2 className="size-4 mr-1" /> Share
+              </Button>
+            )}
             <Button
               size="sm"
               variant="outline"
@@ -124,9 +126,6 @@ export function TestimonialActionBar({
                 )}
               </>
             )}
-            {/* <Button size="sm" variant="outline">
-              <GitMerge className="size-4 mr-1" /> Merge
-            </Button> */}
             <Button
               size="sm"
               variant="destructive"
@@ -143,7 +142,7 @@ export function TestimonialActionBar({
       {isTagModalOpen && (
         <TagSelectionModal
           onClose={() => onTagModalOpenChange(false)}
-          projectId={projectId}
+          projectSlug={projectSlug}
           onTagSelect={onTag}
           isTagging={isTagging}
         />

@@ -3,6 +3,7 @@ import { api } from "@/trpc/react";
 import { type testimonials } from "@/server/db/schema";
 import { type InferSelectModel } from "drizzle-orm";
 import { toast } from "sonner";
+import { useParams } from "next/navigation";
 
 // TODO: In frontend always get data from route handler infer instead of using db schema
 type Testimonial = InferSelectModel<typeof testimonials>;
@@ -21,11 +22,16 @@ export function useTestimonialSelection({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
 
+  const { projectSlug } = useParams();
+
   const utils = api.useUtils();
 
   const bulkApprove = api.testimonials.bulkApprove.useMutation({
     onSuccess: () => {
       utils.testimonials.getAll.invalidate({ projectId });
+      utils.testimonials.getFilteredTestimonials.invalidate({
+        projectSlug: projectSlug as string,
+      });
       toast.success("Testimonials approved");
     },
   });
@@ -33,6 +39,9 @@ export function useTestimonialSelection({
   const bulkUnapprove = api.testimonials.bulkUnapprove.useMutation({
     onSuccess: () => {
       utils.testimonials.getAll.invalidate({ projectId });
+      utils.testimonials.getFilteredTestimonials.invalidate({
+        projectSlug: projectSlug as string,
+      });
       toast.success("Testimonials unapproved");
     },
   });
@@ -40,6 +49,9 @@ export function useTestimonialSelection({
   const bulkDelete = api.testimonials.bulkDelete.useMutation({
     onSuccess: () => {
       utils.testimonials.getAll.invalidate({ projectId });
+      utils.testimonials.getFilteredTestimonials.invalidate({
+        projectSlug: projectSlug as string,
+      });
       toast.success("Testimonials deleted");
       setSelectedIds([]); // Clear selection after deletion
       setIsDeleteDialogOpen(false); // Close dialog after successful deletion
@@ -66,6 +78,9 @@ export function useTestimonialSelection({
   const bulkTag = api.tags.bulkTagTestimonials.useMutation({
     onSuccess: () => {
       utils.testimonials.getAll.invalidate({ projectId });
+      utils.testimonials.getFilteredTestimonials.invalidate({
+        projectSlug: projectSlug as string,
+      });
       toast.success("Testimonials tagged successfully");
       setIsTagModalOpen(false);
     },
@@ -126,6 +141,19 @@ export function useTestimonialSelection({
     bulkDelete.mutate({ ids: selectedIds, projectId });
   }, [selectedIds, projectId, bulkDelete]);
 
+  const handleShare = useCallback(async () => {
+    if (selectedIds.length !== 1) return;
+
+    const shareUrl = `${window.location.origin}/t/${selectedIds[0]}`;
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("Link copied to clipboard");
+    } catch (err) {
+      toast.error("Failed to copy link to clipboard");
+    }
+  }, [selectedIds]);
+
   const selectedTestimonials = testimonials.filter((t) =>
     selectedIds.includes(t.id)
   );
@@ -159,6 +187,8 @@ export function useTestimonialSelection({
     isExporting: bulkExport.isPending,
     isTagging: bulkTag.isPending,
     projectId,
+    handleShare,
+    isSingleSelection: selectedIds.length === 1,
     selectedTestimonialIds: selectedIds,
   };
 }
