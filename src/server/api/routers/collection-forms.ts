@@ -3,17 +3,16 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { desc, eq, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createUpdateSchema, createSelectSchema } from "drizzle-zod";
+import { collectionForms, projects } from "@/server/db/schema";
 import {
-  collectionForms,
-  projects,
-  designConfigSchema,
-  welcomePageConfigSchema,
-  responsePageConfigSchema,
-  customerDetailsConfigSchema,
-  thankYouPageConfigSchema,
-  customLabelsSchema,
   additionalFieldsSchema,
-} from "@/server/db/schema";
+  customerDetailsConfigSchema,
+  customLabelsSchema,
+  designConfigSchema,
+  responsePageConfigSchema,
+  thankYouPageConfigSchema,
+  welcomePageConfigSchema,
+} from "@/server/db/zod-schemas";
 
 const updateCollectionFormSchema = createUpdateSchema(collectionForms);
 const baseSelectSchema = createSelectSchema(collectionForms);

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertTestimonialSchema } from "@/server/db/schema";
+import { insertTestimonialSchema } from "@/server/db/zod-schemas";
 import { z } from "zod";
 
 const insertTestimonial = insertTestimonialSchema

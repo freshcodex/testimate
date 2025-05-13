@@ -5,8 +5,9 @@ import {
   customerDetailsConfigSchema,
   thankYouPageConfigSchema,
   customLabelsSchema,
+  additionalFieldsSchema,
   additionalFieldSchema,
-} from "@/server/db/schema";
+} from "@/server/db/zod-schemas";
 import * as z from "zod";
 
 // Main form schema

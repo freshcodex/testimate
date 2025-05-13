@@ -3,19 +3,15 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { desc, eq, and, inArray, or, like } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createUpdateSchema } from "drizzle-zod";
-import {
-  testimonials,
-  projects,
-  collectionForms,
-  insertTestimonialSchema,
-  selectTestimonialSchema,
-  testimonialTags,
-  tags,
-} from "@/server/db/schema";
+import { testimonials, projects, collectionForms } from "@/server/db/schema";
 import { createObjectCsvWriter } from "csv-writer";
 import { join } from "path";
 import { readFile, unlink } from "fs/promises";
 import { tmpdir } from "os";
+import {
+  insertTestimonialSchema,
+  selectTestimonialSchema,
+} from "@/server/db/zod-schemas";
 
 const updateTestimonialSchema = createUpdateSchema(testimonials);
 
