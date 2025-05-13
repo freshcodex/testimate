@@ -43,6 +43,9 @@ import {
   generateUrlParams,
   useSingleWidgetConfig,
 } from "@/hooks/use-single-widget-config";
+import { useSaveWidget } from "@/hooks/use-save-widget";
+import { SaveWidgetModal } from "../wall-of-love/save-widget-modal";
+import { useParams } from "next/navigation";
 
 interface ConfiguratorProps {
   design: string;
@@ -58,6 +61,10 @@ export function SingleWidgetConfigurator({
   const [isResizing, setIsResizing] = useState(false);
   const [settingsWidth, setSettingsWidth] = useState(300); // Default width in pixels
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const { saveWidget, isSaving } = useSaveWidget();
+
+  const { projectSlug } = useParams();
 
   const { config, handleConfigChange } = useSingleWidgetConfig(design);
 
@@ -104,11 +111,6 @@ export function SingleWidgetConfigurator({
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleSaveWidget = () => {
-    // In a real app, this would save to a database
-    alert("Widget saved successfully!");
   };
 
   const settingsTabs = [
@@ -225,8 +227,12 @@ export function SingleWidgetConfigurator({
             Cancel
           </Button>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={handleSaveWidget}>
-              Save widget
+            <Button
+              variant="outline"
+              disabled={isSaveModalOpen || isSaving}
+              onClick={() => setIsSaveModalOpen(true)}
+            >
+              {isSaving ? "Saving..." : "Save widget"}
             </Button>
             <Button
               className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white"
@@ -242,6 +248,13 @@ export function SingleWidgetConfigurator({
           </div>
         </div>
       </div>
+      <SaveWidgetModal
+        isOpen={isSaveModalOpen}
+        onClose={() => setIsSaveModalOpen(false)}
+        config={config}
+        projectSlug={projectSlug as string}
+        type="single_widget"
+      />
     </div>
   );
 }

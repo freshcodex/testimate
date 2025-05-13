@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { WallOfLoveLayoutSelector } from "@/components/studio/wall-of-love/layout-selector";
 import { WallOfLoveConfigurator } from "@/components/studio/wall-of-love/configurator";
+import { useParams } from "next/navigation";
 
 // TODO: Show an actual example of testimonials there; moving maybe gif components there
 export function WallOfLoveTab() {
@@ -11,6 +12,7 @@ export function WallOfLoveTab() {
     "select-layout"
   );
   const [selectedLayout, setSelectedLayout] = useState<string | null>(null);
+  const { projectSlug } = useParams();
 
   const handleLayoutSelect = (layout: string) => {
     setSelectedLayout(layout);
@@ -25,6 +27,7 @@ export function WallOfLoveTab() {
 
       {step === "configure" && selectedLayout && (
         <WallOfLoveConfigurator
+          projectSlug={projectSlug as string}
           layout={selectedLayout}
           onBack={() => setStep("select-layout")}
         />

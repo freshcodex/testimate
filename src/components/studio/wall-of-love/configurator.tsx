@@ -42,20 +42,31 @@ import {
   generateUrlParams,
   useWallOfLoveConfig,
 } from "@/hooks/use-wall-of-love-config";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
+import { SaveWidgetModal } from "@/components/studio/wall-of-love/save-widget-modal";
+import { useSaveWidget } from "@/hooks/use-save-widget";
 
 interface ConfiguratorProps {
   layout: string;
   onBack: () => void;
+  projectSlug: string;
 }
 
-export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
+export function WallOfLoveConfigurator({
+  layout,
+  onBack,
+  projectSlug,
+}: ConfiguratorProps) {
   const [activeTab, setActiveTab] = useState("basic");
   const [copied, setCopied] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [settingsWidth, setSettingsWidth] = useState(300); // Default width in pixels
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { config, handleConfigChange } = useWallOfLoveConfig(layout);
+  const { isSaving: isSavingWidget } = useSaveWidget();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -103,8 +114,7 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
   };
 
   const handleSaveWidget = () => {
-    // In a real app, this would save to a database
-    alert("Widget saved successfully!");
+    setIsSaveModalOpen(true);
   };
 
   const settingsTabs = [
@@ -236,7 +246,7 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
         </ResizablePanel>
       </ResizablePanelGroup>
 
-      <div className="container mx-auto px-4 py-4 bg-gray-100 rounded-lg mx-4 my-4">
+      <div className="container px-4 py-4 bg-gray-100 rounded-lg mx-4 my-4">
         <pre className="text-sm break-all whitespace-pre-wrap">
           <code>{embedCode}</code>
         </pre>
@@ -251,8 +261,12 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
           Cancel
         </Button>
         <div className="flex gap-3">
-          <Button variant="outline" onClick={handleSaveWidget}>
-            Save widget
+          <Button
+            variant="outline"
+            disabled={isSaveModalOpen || isSavingWidget}
+            onClick={handleSaveWidget}
+          >
+            {isSavingWidget ? "Saving..." : "Save widget"}
           </Button>
           <Button
             className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white"
@@ -267,6 +281,14 @@ export function WallOfLoveConfigurator({ layout, onBack }: ConfiguratorProps) {
           </Button>
         </div>
       </div>
+
+      <SaveWidgetModal
+        isOpen={isSaveModalOpen}
+        onClose={() => setIsSaveModalOpen(false)}
+        config={config}
+        projectSlug={projectSlug}
+        type="wall_of_love"
+      />
     </div>
   );
 }
