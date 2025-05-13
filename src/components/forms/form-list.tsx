@@ -10,6 +10,8 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
+import autoAnimate from "@formkit/auto-animate";
+import { useEffect, useRef } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,8 +35,14 @@ interface FormListProps {
 }
 
 export function CollectionFormsList({ forms, projectSlug }: FormListProps) {
+  const parent = useRef(null);
+
+  useEffect(() => {
+    parent.current && autoAnimate(parent.current);
+  }, []);
+
   return (
-    <div className="space-y-4 mt-4">
+    <div ref={parent} className="space-y-4 mt-4">
       {forms.map((form) => (
         <CollectionFormCard
           key={form.id}

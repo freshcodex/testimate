@@ -18,6 +18,7 @@ import type {
   ThankYouPageConfig,
 } from "@/server/db/schema";
 import type { DesignConfig } from "@/server/db/schema";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 function FormSkeleton() {
   return (
@@ -46,13 +47,15 @@ function FormSkeleton() {
 
 export default function SharedFormPage() {
   const params = useParams();
-  const { currentStep, setCurrentStep } = useFormStep();
+  const { currentStep } = useFormStep();
   const [collectionFormConfig, setCollectionFormData] =
     useState<CollectionFormConfig | null>(null);
 
   const { data: form, isLoading } = api.collectionForms.getById.useQuery({
     id: Number(params.formId),
   });
+
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (form) {
@@ -74,37 +77,39 @@ export default function SharedFormPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className=" bg-gray-50">
+    <div className="min-h-screen w-full bg-gray-50">
+      <div className="mx-auto w-full max-w-3xl px-4 py-4 sm:py-8">
         {currentStep === "welcome" && (
           <div className="h-full">
             <WelcomePage
-              viewMode="desktop"
+              viewMode={isMobile ? "mobile" : "desktop"}
               collectionFormConfig={collectionFormConfig}
             />
           </div>
         )}
         {currentStep === "response" && (
-          <div>
+          <div className="h-full">
             <ResponsePage
-              viewMode="desktop"
+              viewMode={isMobile ? "mobile" : "desktop"}
               collectionFormConfig={collectionFormConfig}
             />
           </div>
         )}
         {currentStep === "customer-details" && (
-          <div>
+          <div className="h-full">
             <CustomerDetailsPage
-              viewMode="desktop"
+              viewMode={isMobile ? "mobile" : "desktop"}
               collectionFormConfig={collectionFormConfig}
             />
           </div>
         )}
         {currentStep === "thank-you" && (
-          <ThankYouPage
-            viewMode="desktop"
-            collectionFormConfig={collectionFormConfig}
-          />
+          <div className="h-full">
+            <ThankYouPage
+              viewMode={isMobile ? "mobile" : "desktop"}
+              collectionFormConfig={collectionFormConfig}
+            />
+          </div>
         )}
       </div>
     </div>

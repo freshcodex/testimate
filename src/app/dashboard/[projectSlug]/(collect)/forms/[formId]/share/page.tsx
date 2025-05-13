@@ -6,9 +6,6 @@ import { ArrowLeft } from "lucide-react";
 import { Sidebar } from "@/components/share-form/Sidebar";
 import { LinkShare } from "@/components/share-form/LinkShare";
 import { EmbedForm } from "@/components/share-form/EmbedForm";
-import { InviteCustomers } from "@/components/share-form/InviteCustomers";
-import { CourseIntegration } from "@/components/share-form/CourseIntegration";
-import { Automation } from "@/components/share-form/Automation";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 
@@ -31,7 +28,7 @@ export default function ShareFormPage() {
     <div className="container mx-auto max-w-5xl py-8 px-4">
       <div className="mb-8">
         <Link
-          href={`/dashboard/forms`}
+          href={`/dashboard/${params.projectSlug}/forms`}
           className="flex items-center text-sm text-gray-500 hover:text-gray-900 mb-4"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -59,8 +56,8 @@ export default function ShareFormPage() {
               handleCopy={handleCopy}
             />
           )}
-          {activeTab === "course" && <CourseIntegration />}
-          {activeTab === "automate" && <Automation />}
+          {/* {activeTab === "course" && <CourseIntegration />} */}
+          {/* {activeTab === "automate" && <Automation />} */}
         </div>
       </div>
     </div>

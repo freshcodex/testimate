@@ -18,32 +18,23 @@ export function WelcomeContent({
 }: WelcomeContentProps) {
   const { setCurrentStep } = useFormStep();
 
-  const buttonContainerClass = isMobile ? "flex flex-col gap-2" : "flex gap-4";
-  const titleClass = isMobile ? "text-lg" : "text-xl";
-  const messageClass = isMobile ? "text-sm" : "";
-  const containerClass = isMobile ? "p-4" : "p-6";
-
   const handleTextClick = () => {
     setCurrentStep("response");
   };
 
   return (
-    <div className={`rounded-lg bg-white ${containerClass} shadow-sm`}>
-      <h2 className={`mb-2 text-center ${titleClass} font-semibold`}>
+    <div className="rounded-lg bg-white p-4 shadow-sm sm:p-6">
+      <h2 className="mb-2 text-center text-lg font-semibold sm:text-xl">
         {config.title}
       </h2>
-      <div
-        className={`mb-4 text-center text-gray-700 whitespace-pre-line ${messageClass}`}
-      >
+      <div className="mb-4 text-center text-sm text-gray-700 whitespace-pre-line sm:text-base">
         {config.introductoryMessage}
       </div>
 
-      <div className={buttonContainerClass}>
+      <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
         {config.collectVideo && (
           <Button
-            className={
-              isMobile ? "w-full justify-center" : "flex-1 justify-center"
-            }
+            className="w-full justify-center sm:flex-1"
             style={{ backgroundColor: design.primaryColor }}
           >
             <Video className="mr-2 h-4 w-4" />
@@ -54,9 +45,7 @@ export function WelcomeContent({
         {config.collectText && (
           <Button
             variant="outline"
-            className={
-              isMobile ? "w-full justify-center" : "flex-1 justify-center"
-            }
+            className="w-full justify-center sm:flex-1"
             onClick={handleTextClick}
           >
             <PenLine className="mr-2 h-4 w-4" />

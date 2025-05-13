@@ -52,9 +52,9 @@ export function FormsDashboard() {
             forms={forms}
             projectSlug={projectSlug as string}
           />
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <PromotionCard />
-          </div>
+          </div> */}
         </>
       )}
     </div>
