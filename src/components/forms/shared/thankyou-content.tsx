@@ -21,6 +21,7 @@ export function ThankYouContent({
   const containerClass = isMobile ? "p-4" : "p-6";
   const titleClass = isMobile ? "text-lg" : "text-xl";
 
+  // TODO: use zustand store to get the testimonial data here
   // TODO: fetch the testimonial data from either the form hook or the database
   const { thankyouContentFormData: testimonialData } = useThankyouContent();
 

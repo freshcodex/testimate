@@ -5,7 +5,7 @@ import { useFormStep } from "@/hooks/use-form-step";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { StarRating } from "./star-rating";
-import { useTestimonialForm } from "@/hooks/use-testimonial-form";
+import { useTestimonialStore } from "@/store/testimonial-store";
 import {
   Form,
   FormControl,
@@ -38,27 +38,23 @@ export function ResponseContent({
   isMobile = false,
   customLabels,
   design,
-  formId,
-  projectSlug,
 }: ResponseContentProps) {
   const { setCurrentStep } = useFormStep();
-
-  const { form: testimonialForm } = useTestimonialForm({
-    formId,
-    projectSlug,
-  });
+  const { rating, text, setRating, setText } = useTestimonialStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      rating: testimonialForm.getValues("rating") || 0,
-      text: testimonialForm.getValues("text") || "",
+      rating: rating || 0,
+      text: text || "",
     },
   });
 
   const handleContinue = (values: z.infer<typeof formSchema>) => {
-    testimonialForm.setValue("rating", values.rating);
-    testimonialForm.setValue("text", values.text);
+    // Update both the Zustand store and the form
+    setRating(values.rating);
+    setText(values.text);
+
     setCurrentStep("customer-details");
   };
 

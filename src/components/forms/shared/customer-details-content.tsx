@@ -17,6 +17,7 @@ import { useTestimonialForm } from "@/hooks/use-testimonial-form";
 import { useFormStep } from "@/hooks/use-form-step";
 import type { CollectionFormProps } from "./thankyou-page";
 import { useThankyouContent } from "@/hooks/use-thankyou-content";
+import { useTestimonialStore } from "@/store/testimonial-store";
 
 interface CustomerDetailsContentProps {
   config: CollectionFormProps["collectionFormConfig"]["customerDetails"];
@@ -53,9 +54,17 @@ export function CustomerDetailsContent({
     },
   });
 
+  const { rating, text } = useTestimonialStore();
+
+  console.log(rating, text);
+
   const { form, handleSubmit } = useTestimonialForm({
     formId,
     projectSlug,
+    initialData: {
+      rating,
+      text,
+    },
   });
 
   const { setThankyouContentFormData } = useThankyouContent();
