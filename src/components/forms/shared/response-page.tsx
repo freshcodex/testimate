@@ -19,7 +19,7 @@ export function ResponsePage({
           primaryColor={design.primaryColor}
           showGradient={design.showGradient}
         />
-        <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white px-4 pt-6 shadow-lg">
+        <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white px-4 pt-6 shadow-lg overflow-auto">
           <ResponseContent
             config={responsePage}
             customLabels={collectionFormConfig.customLabels}

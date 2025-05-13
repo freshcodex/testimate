@@ -31,10 +31,14 @@ export function WelcomeContent({
         {config.introductoryMessage}
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
+      <div
+        className={`flex min-w-0 gap-2 ${
+          isMobile ? "flex-col" : "flex-row gap-4"
+        }`}
+      >
         {config.collectVideo && (
           <Button
-            className="w-full justify-center sm:flex-1"
+            className={`${isMobile ? "w-full" : "flex-1"} justify-center`}
             style={{ backgroundColor: design.primaryColor }}
           >
             <Video className="mr-2 h-4 w-4" />
@@ -45,7 +49,7 @@ export function WelcomeContent({
         {config.collectText && (
           <Button
             variant="outline"
-            className="w-full justify-center sm:flex-1"
+            className={`${isMobile ? "w-full" : "flex-1"} justify-center`}
             onClick={handleTextClick}
           >
             <PenLine className="mr-2 h-4 w-4" />

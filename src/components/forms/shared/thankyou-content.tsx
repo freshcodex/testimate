@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Heart, Facebook, Twitter, Linkedin, Link2 } from "lucide-react";
 import type { CollectionFormProps } from "./thankyou-page";
@@ -22,7 +24,35 @@ export function ThankYouContent({
   // TODO: fetch the testimonial data from either the form hook or the database
   const { thankyouContentFormData: testimonialData } = useThankyouContent();
 
-  // maybe after success send id of testimonial through url bar and use that to fetch the testimonial data here; also pass some token to make it testimonial accessible just for 1hr
+  const handleSocialShare = (platform: string) => {
+    if (!testimonialData?.text) return;
+
+    const shareText = encodeURIComponent(testimonialData.text);
+    const shareUrl = encodeURIComponent(window.location.href);
+    let shareLink = "";
+
+    switch (platform) {
+      case "twitter":
+        shareLink = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;
+        break;
+      case "facebook":
+        shareLink = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+        break;
+      case "linkedin":
+        shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`;
+        break;
+      case "whatsapp":
+        shareLink = `https://wa.me/?text=${shareText}%20${shareUrl}`;
+        break;
+    }
+
+    window.open(shareLink, "_blank", "width=600,height=400");
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(window.location.href);
+    // You might want to add a toast notification here
+  };
 
   return (
     <div className={`rounded-lg bg-white ${containerClass} shadow-sm`}>
@@ -70,12 +100,11 @@ export function ThankYouContent({
                 </div>
               </div>
               <p className="text-sm mb-2">{testimonialData?.text}</p>
-              <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
-                <img
-                  src="/placeholder.svg?height=16&width=16"
-                  alt=""
-                  className="mr-2 h-4 w-4"
-                />
+              <Button
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white"
+                onClick={() => handleSocialShare("twitter")}
+              >
+                <Twitter className="mr-2 h-4 w-4" />
                 Post in one click
               </Button>
             </div>
@@ -89,6 +118,7 @@ export function ThankYouContent({
                 variant="outline"
                 size="icon"
                 className="rounded-full bg-blue-600 text-white hover:bg-blue-700 border-none"
+                onClick={() => handleSocialShare("facebook")}
               >
                 <Facebook className="h-4 w-4" />
                 <span className="sr-only">Share on Facebook</span>
@@ -97,6 +127,7 @@ export function ThankYouContent({
                 variant="outline"
                 size="icon"
                 className="rounded-full bg-blue-400 text-white hover:bg-blue-500 border-none"
+                onClick={() => handleSocialShare("twitter")}
               >
                 <Twitter className="h-4 w-4" />
                 <span className="sr-only">Share on Twitter</span>
@@ -105,6 +136,7 @@ export function ThankYouContent({
                 variant="outline"
                 size="icon"
                 className="rounded-full bg-blue-700 text-white hover:bg-blue-800 border-none"
+                onClick={() => handleSocialShare("linkedin")}
               >
                 <Linkedin className="h-4 w-4" />
                 <span className="sr-only">Share on LinkedIn</span>
@@ -113,6 +145,7 @@ export function ThankYouContent({
                 variant="outline"
                 size="icon"
                 className="rounded-full bg-green-600 text-white hover:bg-green-700 border-none"
+                onClick={() => handleSocialShare("whatsapp")}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -124,17 +157,22 @@ export function ThankYouContent({
                 <span className="sr-only">Share on WhatsApp</span>
               </Button>
             </div>
-            <div className="flex items-center border border-gray-200 rounded-md px-3 py-2">
+            {/* <div className="flex items-center border border-gray-200 rounded-md px-3 py-2">
               <input
                 type="text"
-                value="https://testimate.io/p/shane-parrish/t/beby7bdb..."
+                value={window.location.href}
                 readOnly
                 className="flex-1 bg-transparent border-none text-sm outline-none"
               />
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+                onClick={handleCopyLink}
+              >
                 <Link2 className="h-4 w-4" />
               </Button>
-            </div>
+            </div> */}
           </div>
         </>
       )}

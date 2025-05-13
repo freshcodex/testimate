@@ -69,8 +69,17 @@ export function ResponseContent({
   const questions = config.prompt.split("\n").filter(Boolean);
 
   return (
-    <div className="w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-      <Button variant="ghost" size="sm" onClick={handleBack} className="mb-4">
+    <div
+      className={`w-full max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 overflow-y-auto ${
+        isMobile ? "h-[calc(100vh-2rem)]  pb-8" : ""
+      }`}
+    >
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleBack}
+        className={`${isMobile ? "sticky top-0 bg-white z-10" : "mb-4"}`}
+      >
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back
       </Button>
@@ -101,7 +110,7 @@ export function ResponseContent({
                     <StarRating
                       value={field.value}
                       onChange={field.onChange}
-                      size={24}
+                      size={isMobile ? 20 : 24}
                     />
                   </FormControl>
                   <FormMessage />
@@ -121,7 +130,9 @@ export function ResponseContent({
                 <FormControl>
                   <Textarea
                     placeholder="Share your experience..."
-                    className="min-h-[150px] resize-y"
+                    className={`min-h-[150px] resize-y ${
+                      isMobile ? "min-h-[120px]" : ""
+                    }`}
                     {...field}
                   />
                 </FormControl>
@@ -132,7 +143,7 @@ export function ResponseContent({
 
           <Button
             type="submit"
-            className="w-full"
+            className={`${isMobile ? "sticky bottom-0" : "w-full"}`}
             style={{ backgroundColor: design.primaryColor }}
           >
             Continue
