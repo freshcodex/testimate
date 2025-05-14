@@ -20,6 +20,7 @@ export function ThankYouPage({
         <WelcomeHeader
           primaryColor={design.primaryColor}
           showGradient={design.showGradient}
+          logoUrl={design.logo}
         />
         <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white px-4 pt-6 shadow-lg overflow-auto">
           <ThankYouContent
@@ -38,6 +39,7 @@ export function ThankYouPage({
       <WelcomeHeader
         primaryColor={design.primaryColor}
         showGradient={design.showGradient}
+        logoUrl={design.logo}
       />
       <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white p-8 shadow-lg overflow-auto">
         <div className="mx-auto max-w-md">

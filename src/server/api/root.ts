@@ -3,6 +3,7 @@ import { collectionFormsRouter } from "@/server/api/routers/collection-forms";
 import { testimonialsRouter } from "@/server/api/routers/testimonials";
 import { tagRouter } from "@/server/api/routers/tags";
 import { widgetRouter } from "@/server/api/routers/widget";
+import { fileUploadRouter } from "@/server/api/routers/file-upload";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   testimonials: testimonialsRouter,
   tags: tagRouter,
   widget: widgetRouter,
+  fileUpload: fileUploadRouter,
 });
 
 // export type definition of API

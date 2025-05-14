@@ -1,13 +1,16 @@
 import { Heart } from "lucide-react";
+import Image from "next/image";
 
 interface WelcomeHeaderProps {
   primaryColor: string;
   showGradient: boolean;
+  logoUrl: string;
 }
 
 export function WelcomeHeader({
   primaryColor,
   showGradient,
+  logoUrl,
 }: WelcomeHeaderProps) {
   const gradientStyle = showGradient
     ? {
@@ -26,7 +29,17 @@ export function WelcomeHeader({
           className="flex h-16 w-16 items-center justify-center rounded-full"
           style={{ backgroundColor: primaryColor }}
         >
-          <Heart className="h-10 w-10 text-white" />
+          {logoUrl ? (
+            <Image
+              className="rounded-full"
+              src={logoUrl}
+              alt="Logo"
+              width={80}
+              height={80}
+            />
+          ) : (
+            <Heart className="h-10 w-10 text-white" />
+          )}
         </div>
       </div>
       <div className="mt-2 text-center w-full">

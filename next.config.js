@@ -6,6 +6,9 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const config = {
+  images: {
+    domains: ["coyixansbxtnortjfiib.supabase.co"],
+  },
   async headers() {
     return [
       {

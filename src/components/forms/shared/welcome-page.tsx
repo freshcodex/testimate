@@ -14,6 +14,7 @@ export function WelcomePage({
       <WelcomeHeader
         primaryColor={design.primaryColor}
         showGradient={design.showGradient}
+        logoUrl={design.logo}
       />
       <div className="relative -mt-4 flex-1 rounded-t-3xl bg-white px-4 py-6 shadow-lg sm:px-6 sm:py-8">
         <div className="mx-auto w-full max-w-md">
