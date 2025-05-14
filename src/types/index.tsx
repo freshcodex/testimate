@@ -14,3 +14,6 @@ export type FilteredTestimonial =
 
 // get the input type for widget create
 export type WidgetCreateInput = RouterInput["widget"]["create"];
+
+// type of testimonial router output
+export type Testimonial = RouterOutput["testimonials"]["getById"];

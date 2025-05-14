@@ -1,22 +1,10 @@
-import { formatDate } from "@/lib/utils";
 import type { TestimonialCardProps } from "../testimonial-card";
-import { Star, ThumbsUp } from "lucide-react";
+import { Star } from "lucide-react";
 import { VideoPlayer } from "./video-player";
 import { SourceIcon } from "./source-icon";
 
 export default function LeftAlignedTestimonial({
-  name,
-  username,
-  title,
-  company,
-  avatar,
-  content,
-  rating = 5,
-  source,
-  date,
-  videoUrl,
-  videoThumbnail,
-  likes,
+  testimonial,
   config,
 }: TestimonialCardProps) {
   const {
@@ -57,32 +45,37 @@ export default function LeftAlignedTestimonial({
   return (
     <div className="w-full p-6" style={cardStyle}>
       <div className="flex flex-col gap-4">
-        {showStarRating && rating > 0 && (
+        {showStarRating && testimonial.rating && (
           <div className="flex">
             {[...Array(5)].map((_, i) => (
               <Star
                 key={i}
                 className="h-5 w-5"
                 style={{
-                  fill: i < rating ? starColor : "transparent",
-                  color: i < rating ? starColor : "#e2e8f0",
+                  fill: i < testimonial.rating! ? starColor : "transparent",
+                  color: i < testimonial.rating! ? starColor : "#e2e8f0",
                 }}
               />
             ))}
           </div>
         )}
 
-        {videoUrl && <VideoPlayer url={videoUrl} thumbnail={videoThumbnail} />}
+        {testimonial.videoUrl && (
+          <VideoPlayer
+            url={testimonial.videoUrl}
+            thumbnail={testimonial.thumbnailUrl || undefined}
+          />
+        )}
 
         <p className="text-lg" style={{ color: textColor }}>
-          "{content}"
+          "{testimonial.text}"
         </p>
 
         <div className="flex items-center gap-4">
-          {avatar ? (
+          {testimonial.customerAvatar ? (
             <img
-              src={avatar || "/placeholder.svg"}
-              alt={`${name}'s avatar`}
+              src={testimonial.customerAvatar || "/placeholder.svg"}
+              alt={`${testimonial.customerName}'s avatar`}
               className="h-12 w-12 rounded-full object-cover"
             />
           ) : (
@@ -90,41 +83,43 @@ export default function LeftAlignedTestimonial({
               className="flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold"
               style={{ backgroundColor: config.primaryColor, color: "#ffffff" }}
             >
-              {getInitials(name)}
+              {getInitials(testimonial.customerName)}
             </div>
           )}
           <div>
             <p className="font-medium" style={{ color: textColor }}>
-              {name}
-              {username && (
+              {testimonial.customerName}
+              {testimonial.customerUsername && (
                 <span
                   className="ml-1 text-sm"
                   style={{ color: config.linkColor }}
                 >
-                  @{username}
+                  @{testimonial.customerUsername}
                 </span>
               )}
             </p>
             <p className="text-sm" style={{ color: `${textColor}99` }}>
-              {title}
-              {company && title ? `, ${company}` : company}
+              {testimonial.customerCompany}
             </p>
           </div>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {showSource && source && (
-              <SourceIcon source={source} color={linkColor} />
+            {showSource && testimonial.integrationSource && (
+              <SourceIcon
+                source={testimonial.integrationSource}
+                color={linkColor}
+              />
             )}
-            {showDate && date && (
+            {showDate && testimonial.createdAt && (
               <span className="text-sm" style={{ color: `${textColor}99` }}>
-                {formatDate(date)}
+                {testimonial.createdAt.toLocaleDateString()}
               </span>
             )}
           </div>
 
-          {likes !== undefined && likes > 0 && (
+          {/* {testimonial.likes !== undefined && testimonial.likes > 0 && (
             <div
               className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium"
               style={{
@@ -133,9 +128,9 @@ export default function LeftAlignedTestimonial({
               }}
             >
               <ThumbsUp size={16} />
-              {likes}
+              {testimonial.likes}
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

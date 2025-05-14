@@ -1,22 +1,7 @@
 import type { Theme } from "@/components/studio/wall-of-love/types";
+import type { Testimonial } from "@/types";
 
-// TODO: Either derive this from WallOfLoveConfig or keep it in central place
-export interface TestimonialProps {
-  id: string;
-  name: string;
-  username?: string;
-  title?: string;
-  company?: string;
-  avatar?: string;
-  content: string;
-  rating?: number;
-  source?: "twitter" | "linkedin" | "facebook" | "instagram" | string;
-  date?: string;
-  videoUrl?: string;
-  videoThumbnail?: string;
-  likes?: number;
-  highlighted?: string[];
-}
+export type TestimonialProps = Testimonial;
 
 export interface TestimonialCardConfig {
   theme: Theme;
@@ -31,6 +16,9 @@ export interface TestimonialCardConfig {
   borderRadius?: string;
 }
 
+// TODO: use this from wall of love config for this; rename it to distinguis from single widget and wall of love
+
+// TODO: create different types for different layouts by extending from common types
 export interface TestimonialLayoutConfig {
   layout: "carousel-slider" | "masonry-fixed" | "masonry-animated";
   height: string | "auto";
@@ -80,9 +68,4 @@ export interface CarouselConfig extends TestimonialLayoutConfig {
   slidesToShow?: number;
   autoPlay?: boolean;
   autoPlayInterval?: number;
-}
-
-export interface InfiniteScrollConfig extends TestimonialLayoutConfig {
-  scrollSpeed: "slow" | "normal" | "fast";
-  scrollDirection: "horizontal" | "vertical";
 }

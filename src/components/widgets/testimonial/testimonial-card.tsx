@@ -2,22 +2,10 @@ import Image from "next/image";
 import { Heart, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Theme } from "@/components/studio/wall-of-love/types";
+import type { Testimonial } from "@/types";
 
 export interface TestimonialProps {
-  id: string;
-  name: string;
-  username?: string;
-  title?: string;
-  company?: string;
-  avatar?: string;
-  content: string;
-  rating?: number;
-  source?: "twitter" | "linkedin" | "facebook" | "instagram" | string;
-  date?: string;
-  videoUrl?: string;
-  videoThumbnail?: string;
-  likes?: number;
-  highlighted?: string[];
+  testimonial: Testimonial;
 }
 
 // TODO: add other config options here; make it same as wholeconfig from wall-of-love there is only small things that are different here
@@ -45,26 +33,14 @@ export interface TestimonialCardProps extends TestimonialProps {
   };
 }
 
-export function TestimonialCard({
-  name,
-  username,
-  title,
-  company,
-  avatar,
-  content,
-  rating,
-  source,
-  date,
-  videoUrl,
-  videoThumbnail,
-  likes,
-  config,
-}: TestimonialCardProps) {
+export function TestimonialCard({ testimonial, config }: TestimonialCardProps) {
   // Determine if this is a Twitter/X style card
-  const isTwitterStyle = source === "twitter" || username?.startsWith("@");
+  const isTwitterStyle =
+    testimonial.integrationSource === "twitter" ||
+    testimonial.customerName?.startsWith("@");
 
   // Determine if this is a video testimonial
-  const hasVideo = !!videoUrl || !!videoThumbnail;
+  const hasVideo = !!testimonial.videoUrl || !!testimonial.thumbnailUrl;
 
   // Determine card style based on config
   const cardStyle = {
@@ -81,11 +57,13 @@ export function TestimonialCard({
   };
 
   // Generate avatar letter if no avatar image
-  const avatarLetter = name ? name.charAt(0).toUpperCase() : "U";
+  const avatarLetter = testimonial.customerName
+    ? testimonial.customerName.charAt(0).toUpperCase()
+    : "U";
 
   // Generate random avatar background color if no avatar image
   const getAvatarColor = () => {
-    if (avatar) return {};
+    if (testimonial.customerAvatar) return {};
     return { backgroundColor: "#6366f1" };
   };
 
@@ -98,10 +76,10 @@ export function TestimonialCard({
         {/* Header with avatar and name */}
         <div className="flex items-center mb-3">
           <div className="mr-3 flex-shrink-0">
-            {avatar ? (
+            {testimonial.customerAvatar ? (
               <Image
-                src={avatar || "/placeholder.svg"}
-                alt={name}
+                src={testimonial.customerAvatar || "/placeholder.svg"}
+                alt={testimonial.customerName}
                 width={48}
                 height={48}
                 className="rounded-full object-cover"
@@ -116,13 +94,19 @@ export function TestimonialCard({
             )}
           </div>
           <div>
-            <h3 className="font-bold text-base">{name}</h3>
-            {username && <p className="text-sm text-gray-500">{username}</p>}
-            {(title || company) && !isTwitterStyle && (
+            <h3 className="font-bold text-base">{testimonial.customerName}</h3>
+            {testimonial.customerUsername && (
               <p className="text-sm text-gray-500">
-                {title}
-                {title && company && ", "}
-                {company}
+                {testimonial.customerUsername}
+              </p>
+            )}
+            {testimonial.customerCompany && !isTwitterStyle && (
+              <p className="text-sm text-gray-500">
+                {testimonial.customerUsername}
+                {testimonial.customerUsername &&
+                  testimonial.customerCompany &&
+                  ", "}
+                {testimonial.customerCompany}
               </p>
             )}
           </div>
@@ -138,7 +122,7 @@ export function TestimonialCard({
         </div>
 
         {/* Rating stars */}
-        {config.showStarRating && rating && (
+        {config.showStarRating && testimonial.rating && (
           <div className="flex mb-2">
             {Array.from({ length: 5 }).map((_, i) => (
               <Star
@@ -146,10 +130,14 @@ export function TestimonialCard({
                 size={20}
                 className={cn(
                   "mr-1",
-                  i < rating ? "fill-current" : "opacity-30"
+                  i < testimonial.rating! ? "fill-current" : "opacity-30"
                 )}
                 style={{ color: config.starColor || "#fbbf24" }}
-                fill={i < rating ? config.starColor || "#fbbf24" : "none"}
+                fill={
+                  i < testimonial.rating!
+                    ? config.starColor || "#fbbf24"
+                    : "none"
+                }
               />
             ))}
           </div>
@@ -157,11 +145,11 @@ export function TestimonialCard({
 
         {/* Content */}
         <div className="flex-grow">
-          <p className="text-base mb-3">{content}</p>
+          <p className="text-base mb-3">{testimonial.text}</p>
         </div>
 
         {/* Video thumbnail */}
-        {hasVideo && videoThumbnail && (
+        {hasVideo && testimonial.thumbnailUrl && (
           <div className="relative w-full mt-2 mb-3 rounded-lg overflow-hidden">
             <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
               <div className="w-16 h-16 rounded-full flex items-center justify-center bg-red-500 bg-opacity-80">
@@ -169,13 +157,13 @@ export function TestimonialCard({
               </div>
             </div>
             <Image
-              src={videoThumbnail || "/placeholder.svg"}
+              src={testimonial.thumbnailUrl || "/placeholder.svg"}
               alt="Video thumbnail"
               width={600}
               height={400}
               className="w-full object-cover rounded-lg"
             />
-            {source === "twitter" && (
+            {testimonial.integrationSource === "twitter" && (
               <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
                 LIVE
               </div>
@@ -185,16 +173,18 @@ export function TestimonialCard({
 
         {/* Footer with date and likes */}
         <div className="mt-auto flex items-center justify-between">
-          {config.showDate && date && (
-            <div className="text-sm text-gray-500">{date}</div>
+          {config.showDate && testimonial.createdAt && (
+            <div className="text-sm text-gray-500">
+              {testimonial.createdAt.toLocaleDateString()}
+            </div>
           )}
 
-          {isTwitterStyle && likes !== undefined && (
+          {/* {isTwitterStyle && testimonial.likes !== undefined && (
             <div className="flex items-center text-gray-500">
               <Heart size={16} className="mr-1" />
               <span className="text-sm">{likes}</span>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>

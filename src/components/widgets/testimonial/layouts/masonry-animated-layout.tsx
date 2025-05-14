@@ -114,7 +114,7 @@ export function MasonryAnimatedLayout({
               key={testimonial.id + Math.random()}
               className="flex-shrink-0 w-[320px] max-w-xs mr-4 break-inside-avoid testimonial-item"
             >
-              <TestimonialCard {...testimonial} config={config} />
+              <TestimonialCard testimonial={testimonial} config={config} />
             </motion.div>
           ))}
         </motion.div>
@@ -132,7 +132,7 @@ export function MasonryAnimatedLayout({
                 key={testimonial.id + Math.random()}
                 className="mb-4 break-inside-avoid testimonial-item"
               >
-                <TestimonialCard {...testimonial} config={config} />
+                <TestimonialCard testimonial={testimonial} config={config} />
               </motion.div>
             ))}
           </div>

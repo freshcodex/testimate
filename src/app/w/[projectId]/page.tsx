@@ -9,80 +9,18 @@ import type { WallOfLoveConfig } from "@/components/studio/wall-of-love/types";
 import { useWallOfLoveConfig } from "@/hooks/use-wall-of-love-config";
 import { useParams, useSearchParams } from "next/navigation";
 import { api } from "@/trpc/react";
-// Sample testimonials data
-const testimonials = [
-  {
-    id: "1",
-    name: "Kevin Carpenter",
-    username: "@kejca",
-    avatar: "/placeholder.svg?height=100&width=100",
-    content:
-      'Warren Buffett: "If it makes a difference to you whether your stocks are down 15% or not, you need to get a somewhat different investment philosophy."\n\n"People have emotions, but you\'ve got to check them at the door when you invest."\n\nx.com/kejca/status/19190907844914833/video/1',
-    source: "twitter",
-    videoThumbnail: "/placeholder.svg?height=400&width=600",
-    date: "May 4, 2025",
-    likes: 899,
-  },
-  {
-    id: "2",
-    name: "bishal",
-    avatar: undefined, // Will use letter avatar
-    content:
-      '"I tried it as a gimmick. Two months later, my screen time is down 38% and I actually enjoy deep work now. What the hell." — Max D., Freelance Writer',
-    rating: 5,
-    date: "May 11, 2025",
-  },
-  {
-    id: "3",
-    name: "bishal",
-    avatar: undefined, // Will use letter avatar
-    content: "was nothing great nobody is a cool guy than that",
-    rating: 5,
-    date: "May 11, 2025",
-  },
-  {
-    id: "4",
-    name: "Sarah Johnson",
-    title: "Marketing Director",
-    company: "TechGrowth",
-    avatar: undefined,
-    content:
-      "This product has completely transformed our workflow. The ROI has been incredible!",
-    rating: 5,
-    date: "May 9, 2025",
-  },
-  {
-    id: "5",
-    name: "Michael Chen",
-    title: "Product Manager",
-    company: "InnovateCorp",
-    avatar: undefined,
-    content:
-      "After trying countless solutions, this is the only one that actually delivered on its promises.",
-    rating: 4,
-    date: "May 7, 2025",
-  },
-  {
-    id: "6",
-    name: "Emily Rodriguez",
-    username: "@emrodz",
-    avatar: "/placeholder.svg?height=100&width=100",
-    content:
-      "Just implemented this in our startup and wow! Customer engagement is up 45% in just two weeks.",
-    source: "twitter",
-    date: "May 2, 2025",
-    likes: 432,
-  },
-];
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function WallOfLovePage() {
   const searchParams = useSearchParams();
   const configParam = searchParams.get("config");
   const { projectId } = useParams();
 
-  const { data: testimonials } = api.testimonials.getAll.useQuery({
+  const { data: testimonials, isLoading } = api.testimonials.getAll.useQuery({
     projectId: Number(projectId),
   });
+
+  console.log(JSON.stringify(testimonials, null, 2));
 
   let initialConfig: Partial<WallOfLoveConfig> = {};
 
@@ -98,6 +36,31 @@ export default function WallOfLovePage() {
   const { config } = useWallOfLoveConfig(
     initialConfig.layout || "masonry-fixed"
   );
+
+  if (isLoading) {
+    return (
+      <div className="columns-1 md:columns-2 lg:columns-4 gap-4 space-y-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="mb-4 break-inside-avoid">
+            <div className="p-6 rounded-lg border border-gray-200">
+              <div className="flex items-center gap-4 mb-4">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-[200px]" />
+                  <Skeleton className="h-3 w-[150px]" />
+                </div>
+              </div>
+              <div className="space-y-3">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-[90%]" />
+                <Skeleton className="h-4 w-[80%]" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <TestimonialList

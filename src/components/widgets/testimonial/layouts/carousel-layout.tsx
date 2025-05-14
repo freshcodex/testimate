@@ -192,7 +192,7 @@ export function CarouselLayout({
                 className="w-full h-fit testimonial-card"
               >
                 <TestimonialCard
-                  {...testimonial}
+                  testimonial={testimonial}
                   config={{
                     theme: config.theme,
                     primaryColor: config.primaryColor,

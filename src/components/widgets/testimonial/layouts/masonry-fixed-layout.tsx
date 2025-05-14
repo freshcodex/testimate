@@ -37,7 +37,7 @@ export function MasonryFixedLayout({
             }}
           >
             <TestimonialCard
-              {...testimonial}
+              testimonial={testimonial}
               config={{
                 theme: config.theme,
                 primaryColor: config.primaryColor,

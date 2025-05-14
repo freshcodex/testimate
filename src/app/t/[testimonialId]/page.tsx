@@ -1,32 +1,19 @@
 "use client";
 
 import TestimonialFactory from "@/components/studio/single-widget/testimonial-factory";
-import type { Design } from "@/components/studio/single-widget/types";
 import type { SingleWidgetConfig } from "@/components/studio/single-widget/types";
 import { useSingleWidgetConfig } from "@/hooks/use-single-widget-config";
-import { useWallOfLoveConfig } from "@/hooks/use-wall-of-love-config";
 import { api } from "@/trpc/react";
 import { useParams, useSearchParams } from "next/navigation";
-
-const testimonial = {
-  id: "1",
-  name: "Lexie",
-  username: "@lexiebarn",
-  avatar: "/placeholder.svg?height=40&width=40",
-  rating: 5,
-  content:
-    "I've used @Superhuman for just 5 hours since my onboarding with their team and I have never gotten through so many emails in a day. I may finally get some sleep tonight and not wake up in a cold sweat about an email I forgot to respond to.",
-  date: "Jan 26, 2022",
-  source: "twitter",
-  highlighted: ["Product", "Email"],
-};
+import { Skeleton } from "@/components/ui/skeleton";
+import type { TestimonialProps } from "@/components/widgets/testimonial/types";
 
 export default function TestimonialPage() {
-  const params = useParams();
+  const { testimonialId } = useParams();
 
-  // const { data: testimonial } = api.testimonials.getById.useQuery({
-  //   id: Number(params.testimonialId),
-  // });
+  const { data: testimonial, isLoading } = api.testimonials.getById.useQuery({
+    id: Number(testimonialId),
+  });
 
   const searchParams = useSearchParams();
   const configParam = searchParams.get("config");
@@ -48,6 +35,30 @@ export default function TestimonialPage() {
     initialConfig.design || "left-aligned"
   );
 
+  if (isLoading) {
+    return (
+      <div className="w-full h-full p-4">
+        <div className="w-full p-6 rounded-lg border border-gray-200">
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-1">
+              {[...Array(5)].map((_, i) => (
+                <Skeleton key={i} className="h-5 w-5 rounded-full" />
+              ))}
+            </div>
+            <Skeleton className="h-24 w-full" />
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-24" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full h-full p-4">
       <TestimonialFactory
@@ -57,9 +68,8 @@ export default function TestimonialPage() {
             ...initialConfig,
           } as SingleWidgetConfig
         }
-        //TODO: fix just for testing
-        style={params.testimonialId as Design}
-        {...testimonial}
+        style={config.design}
+        testimonial={testimonial as TestimonialProps}
       />
     </div>
   );

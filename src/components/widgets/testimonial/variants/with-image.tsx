@@ -1,22 +1,10 @@
-import { formatDate } from "@/lib/utils";
-import { Star, ThumbsUp } from "lucide-react";
+import { Star } from "lucide-react";
 import { VideoPlayer } from "./video-player";
 import type { TestimonialCardProps } from "../testimonial-card";
 import { SourceIcon } from "./source-icon";
 
 export default function WithImageTestimonial({
-  name,
-  username,
-  title,
-  company,
-  avatar,
-  content,
-  rating = 5,
-  source,
-  date,
-  videoUrl,
-  videoThumbnail,
-  likes,
+  testimonial,
   config,
 }: TestimonialCardProps) {
   const {
@@ -55,23 +43,26 @@ export default function WithImageTestimonial({
               "
             </div>
 
-            {videoUrl && (
-              <VideoPlayer url={videoUrl} thumbnail={videoThumbnail} />
+            {testimonial.videoUrl && (
+              <VideoPlayer
+                url={testimonial.videoUrl}
+                thumbnail={testimonial.thumbnailUrl || undefined}
+              />
             )}
 
             <p className="text-lg font-medium" style={{ color: textColor }}>
-              {content}
+              {testimonial.text}
             </p>
 
-            {showStarRating && rating > 0 && (
+            {showStarRating && testimonial.rating && (
               <div className="flex">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className="h-5 w-5"
                     style={{
-                      fill: i < rating ? starColor : "transparent",
-                      color: i < rating ? starColor : "#e2e8f0",
+                      fill: i < testimonial.rating! ? starColor : "transparent",
+                      color: i < testimonial.rating! ? starColor : "#e2e8f0",
                     }}
                   />
                 ))}
@@ -80,17 +71,20 @@ export default function WithImageTestimonial({
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                {showSource && source && (
-                  <SourceIcon source={source} color={linkColor} />
+                {showSource && testimonial.integrationSource && (
+                  <SourceIcon
+                    source={testimonial.integrationSource}
+                    color={linkColor}
+                  />
                 )}
-                {showDate && date && (
+                {showDate && testimonial.createdAt && (
                   <span className="text-sm" style={{ color: `${textColor}99` }}>
-                    {formatDate(date)}
+                    {testimonial.createdAt.toLocaleDateString()}
                   </span>
                 )}
               </div>
-
-              {likes !== undefined && likes > 0 && (
+              {/* 
+              {testimonial.likes !== undefined && testimonial.likes > 0 && (
                 <div
                   className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium"
                   style={{
@@ -99,9 +93,9 @@ export default function WithImageTestimonial({
                   }}
                 >
                   <ThumbsUp size={16} />
-                  {likes}
+                  {testimonial.likes}
                 </div>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -110,20 +104,19 @@ export default function WithImageTestimonial({
           className="relative overflow-hidden rounded-lg"
           style={{ borderRadius }}
         >
-          {avatar ? (
+          {testimonial.customerAvatar ? (
             <img
-              src={avatar || "/placeholder.svg"}
-              alt={`${name}'s testimonial`}
+              src={testimonial.customerAvatar || "/placeholder.svg"}
+              alt={`${testimonial.customerName}'s testimonial`}
               className="h-full w-full object-cover"
             />
           ) : (
             <div className="h-full w-full bg-gradient-to-b from-gray-200 to-gray-800"></div>
           )}
           <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4 text-white">
-            <p className="font-medium">{name}</p>
+            <p className="font-medium">{testimonial.customerName}</p>
             <p className="text-sm text-white/80">
-              {title}
-              {company && title ? `, ${company}` : company}
+              {testimonial.customerCompany}
             </p>
           </div>
         </div>
