@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import type { WallOfLoveConfig } from "./types";
 import { TestimonialList } from "@/components/widgets/testimonial/testimonial-list";
 import type {
@@ -16,32 +14,52 @@ interface LivePreviewProps {
 
 // TODO: when livepreview changes its height it should not affect config left side of panel
 export function LivePreview({ config }: LivePreviewProps) {
-  const testimonials: TestimonialProps[] = [
+  const testimonial: TestimonialProps = {
+    id: 1,
+    customerName: "Lexie",
+    customerUsername: "@lexiebarn",
+    customerAvatar: "/placeholder.svg?height=40&width=40",
+    rating: 5,
+    text: "I've used @Superhuman for just 5 hours since my onboarding with their team and I have never gotten through so many emails in a day. I may finally get some sleep tonight and not wake up in a cold sweat about an email I forgot to respond to.",
+    createdAt: new Date("2022-01-26"),
+    integrationSource: "twitter",
+    projectId: 1,
+    type: "text",
+    title: null,
+    url: null,
+    videoUrl: null,
+    thumbnailUrl: null,
+    customerCompany: "Superhuman",
+    approved: true,
+    customerCompanyLogo: null,
+    customerTagline: null,
+    customerUrl: null,
+    updatedAt: new Date("2022-01-26"),
+    customerEmail: "hello@superhuman.com",
+    formId: 2,
+    featured: false,
+    language: "en",
+    customFields: [],
+    originalDate: new Date("2022-01-26"),
+    sourceId: "twitter",
+  };
+
+  // create multiple testimonials
+  const wallOfLoveTestimonials: TestimonialProps[] = Array.from(
     {
-      id: "1",
-      name: "Lexie",
-      username: "@lexiebarn",
-      avatar: "/placeholder.svg?height=40&width=40",
-      rating: 5,
-      content:
-        "I've used @Superhuman for just 5 hours since my onboarding with their team and I have never gotten through so many emails in a day. I may finally get some sleep tonight and not wake up in a cold sweat about an email I forgot to respond to.",
-      date: "Jan 26, 2022",
-      source: "twitter",
-      highlighted: ["Product", "Email"],
+      length: 5,
     },
-    {
-      id: "2",
-      name: "Jay Clouse",
-      username: "@jayclouse",
-      avatar: "/placeholder.svg?height=40&width=40",
-      rating: 5,
-      content:
-        "HUGE fan of the Senja product and team. Less than a month into implementing Senja and I've already seen a tangible impact on revenue and conversion by sharing more social proof.",
-      date: "Feb 15, 2022",
-      source: "twitter",
-      highlighted: ["Product", "Revenue"],
-    },
-  ];
+    () => ({
+      ...testimonial,
+      id: Math.random(),
+      customerName: `Customer ${Math.random()}`,
+      // get the random testimonial text length and snip it from the original testimonial
+      text: testimonial.text?.slice(
+        0,
+        Math.floor(Math.random() * testimonial.text!.length)
+      ) as string,
+    })
+  );
 
   const testimonialConfig: TestimonialLayoutConfig = {
     layout: config.layout || "masonry-animated",
@@ -89,7 +107,7 @@ export function LivePreview({ config }: LivePreviewProps) {
     <div>
       <div className="bg-gray-100 p-4 rounded-lg">
         <TestimonialList
-          testimonials={testimonials}
+          testimonials={wallOfLoveTestimonials}
           config={testimonialConfig}
         />
       </div>

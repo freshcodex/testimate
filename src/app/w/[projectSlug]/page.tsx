@@ -14,11 +14,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function WallOfLovePage() {
   const searchParams = useSearchParams();
   const configParam = searchParams.get("config");
-  const { projectId } = useParams();
+  const { projectSlug } = useParams();
 
-  const { data: testimonials, isLoading } = api.testimonials.getAll.useQuery({
-    projectId: Number(projectId),
-  });
+  const { data: testimonials, isLoading } =
+    api.testimonials.getAllTestimonialsByProjectSlug.useQuery({
+      projectSlug: projectSlug as string,
+    });
 
   console.log(JSON.stringify(testimonials, null, 2));
 

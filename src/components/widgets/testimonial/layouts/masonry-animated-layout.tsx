@@ -92,7 +92,7 @@ export function MasonryAnimatedLayout({
     <div
       ref={containerRef}
       className={cn(
-        "masonry-testimonials-container w-full",
+        "masonry-testimonials-container",
         "relative overflow-hidden"
       )}
       style={containerStyle}

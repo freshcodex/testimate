@@ -46,6 +46,30 @@ export const testimonialsRouter = createTRPCRouter({
       return allTestimonials;
     }),
 
+  getAllTestimonialsByProjectSlug: protectedProcedure
+    .input(z.object({ projectSlug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(eq(projects.slug, input.projectSlug));
+
+      if (!project) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found or you don't have access to it",
+        });
+      }
+
+      const allTestimonials = await ctx.db
+        .select()
+        .from(testimonials)
+        .where(eq(testimonials.projectId, project.id))
+        .orderBy(desc(testimonials.createdAt));
+
+      return allTestimonials;
+    }),
+
   getFilteredTestimonials: protectedProcedure
     .input(
       z.object({

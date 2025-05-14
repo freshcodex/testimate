@@ -96,15 +96,14 @@ export function WallOfLoveConfigurator({
     };
   }, [isResizing]);
 
-  // TODO: use only stuff from the config, must be better way to do this
   const embedCode = `<iframe height="${
     config.height
-  }" id="testimonialto-${layout}" src="http://localhost:3000/w/${layout}?config=${generateUrlParams(
+  }" id="testimonialto-${projectSlug}" src="http://localhost:3000/w/${projectSlug}?config=${generateUrlParams(
     config
   )}" frameborder="0" scrolling="no" width="100%"></iframe>`;
 
   const handleCopyCode = () => {
-    const url = `http://localhost:3000/w/${layout}?config=${generateUrlParams(
+    const url = `http://localhost:3000/w/${projectSlug}?config=${generateUrlParams(
       config
     )}`;
     navigator.clipboard.writeText(url);
@@ -236,7 +235,7 @@ export function WallOfLoveConfigurator({
         <ResizableHandle />
 
         <ResizablePanel defaultSize={80} minSize={30}>
-          <div className="h-full bg-white rounded-lg p-4 overflow-y-auto">
+          <div className="h-full bg-white rounded-lg p-4 ">
             <h3 className="font-medium mb-4">Live preview</h3>
             <div className="w-full overflow-x-auto">
               <LivePreview config={config} />
