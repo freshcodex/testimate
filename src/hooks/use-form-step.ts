@@ -2,7 +2,8 @@ import { useQueryState } from "nuqs";
 
 export type FormStep =
   | "welcome"
-  | "response"
+  | "response-text"
+  | "response-video"
   | "customer-details"
   | "thank-you";
 
@@ -15,7 +16,8 @@ export function useFormStep(): {
     parse: (value): FormStep => {
       if (
         value === "welcome" ||
-        value === "response" ||
+        value === "response-text" ||
+        value === "response-video" ||
         value === "customer-details" ||
         value === "thank-you"
       ) {

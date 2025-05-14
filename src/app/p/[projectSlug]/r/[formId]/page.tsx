@@ -19,6 +19,7 @@ import type {
 } from "@/server/db/zod-schemas";
 import type { DesignConfig } from "@/server/db/zod-schemas";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ResponseVideoPage } from "@/components/forms/shared/response-video-page";
 
 function FormSkeleton() {
   return (
@@ -87,9 +88,17 @@ export default function SharedFormPage() {
             />
           </div>
         )}
-        {currentStep === "response" && (
+        {currentStep === "response-text" && (
           <div className="h-full">
             <ResponsePage
+              viewMode={isMobile ? "mobile" : "desktop"}
+              collectionFormConfig={collectionFormConfig}
+            />
+          </div>
+        )}
+        {currentStep === "response-video" && (
+          <div className="h-full">
+            <ResponseVideoPage
               viewMode={isMobile ? "mobile" : "desktop"}
               collectionFormConfig={collectionFormConfig}
             />

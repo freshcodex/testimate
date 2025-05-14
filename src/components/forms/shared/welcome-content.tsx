@@ -19,7 +19,11 @@ export function WelcomeContent({
   const { setCurrentStep } = useFormStep();
 
   const handleTextClick = () => {
-    setCurrentStep("response");
+    setCurrentStep("response-text");
+  };
+
+  const handleVideoClick = () => {
+    setCurrentStep("response-video");
   };
 
   return (
@@ -40,6 +44,7 @@ export function WelcomeContent({
           <Button
             className={`${isMobile ? "w-full" : "flex-1"} justify-center`}
             style={{ backgroundColor: design.primaryColor }}
+            onClick={handleVideoClick}
           >
             <Video className="mr-2 h-4 w-4" />
             {customLabels.recordVideoButton}
