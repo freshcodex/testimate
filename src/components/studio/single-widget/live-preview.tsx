@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { Button } from "@/components/ui/button";
 import type { SingleWidgetConfig } from "./types";
-import { TestimonialCard } from "@/components/widgets/testimonial/testimonial-card";
 import TestimonialFactory from "./testimonial-factory";
+import type { TestimonialProps } from "@/components/widgets/testimonial/types";
 
 interface LivePreviewProps {
   config: SingleWidgetConfig;
@@ -12,17 +11,34 @@ interface LivePreviewProps {
 
 // TODO: when livepreview changes its height it should not affect config left side of panel
 export function LivePreview({ config }: LivePreviewProps) {
-  const testimonials = {
-    id: "1",
-    name: "Lexie",
-    username: "@lexiebarn",
-    avatar: "/placeholder.svg?height=40&width=40",
+  const testimonial: TestimonialProps = {
+    id: 1,
+    customerName: "Lexie",
+    customerUsername: "@lexiebarn",
+    customerAvatar: "/placeholder.svg?height=40&width=40",
     rating: 5,
-    content:
-      "I've used @Superhuman for just 5 hours since my onboarding with their team and I have never gotten through so many emails in a day. I may finally get some sleep tonight and not wake up in a cold sweat about an email I forgot to respond to.",
-    date: "Jan 26, 2022",
-    source: "twitter",
-    highlighted: ["Product", "Email"],
+    text: "I've used @Superhuman for just 5 hours since my onboarding with their team and I have never gotten through so many emails in a day. I may finally get some sleep tonight and not wake up in a cold sweat about an email I forgot to respond to.",
+    createdAt: new Date("2022-01-26"),
+    integrationSource: "twitter",
+    projectId: 1,
+    type: "text",
+    title: null,
+    url: null,
+    videoUrl: null,
+    thumbnailUrl: null,
+    customerCompany: "Superhuman",
+    approved: true,
+    customerCompanyLogo: null,
+    customerTagline: null,
+    customerUrl: null,
+    updatedAt: new Date("2022-01-26"),
+    customerEmail: "hello@superhuman.com",
+    formId: 2,
+    featured: false,
+    language: "en",
+    customFields: [],
+    originalDate: new Date("2022-01-26"),
+    sourceId: "twitter",
   };
 
   const testimonialConfig: SingleWidgetConfig = {
@@ -65,11 +81,10 @@ export function LivePreview({ config }: LivePreviewProps) {
   return (
     <div>
       <div className="bg-gray-100 p-4 rounded-lg">
-        {/* <TestimonialCard config={testimonialConfig} {...testimonials} /> */}
         <TestimonialFactory
           config={testimonialConfig}
           style={config.design}
-          {...testimonials}
+          testimonial={testimonial}
         />
       </div>
     </div>

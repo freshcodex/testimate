@@ -10,9 +10,6 @@ import {
   Layers,
   Palette,
   Type,
-  Video,
-  Tag,
-  Sparkles,
 } from "lucide-react";
 import {
   Select,
@@ -22,12 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
-import { useQueryState } from "nuqs";
 import { Badge } from "@/components/ui/badge";
 
 import { BasicSettings } from "@/components/studio/single-widget/settings/basic-settings";
@@ -35,9 +26,6 @@ import { BorderSettings } from "@/components/studio/single-widget/settings/borde
 import { ShadowSettings } from "@/components/studio/single-widget/settings/shadow-settings";
 import { BackgroundSettings } from "@/components/studio/single-widget/settings/background-settings";
 import { TextSettings } from "@/components/studio/single-widget/settings/text-settings";
-import { VideoSettings } from "@/components/studio/single-widget/settings/video-settings";
-import { TagsSettings } from "@/components/studio/single-widget/settings/tags-settings";
-import { AIStyleSettings } from "@/components/studio/single-widget/settings/ai-style-settings";
 import { LivePreview } from "@/components/studio/single-widget/live-preview";
 import {
   generateUrlParams,
@@ -254,6 +242,9 @@ export function SingleWidgetConfigurator({
         config={config}
         projectSlug={projectSlug as string}
         type="single_widget"
+        url={`http://localhost:3000/t/${
+          config.design
+        }?config=${generateUrlParams(config)}`}
       />
     </div>
   );

@@ -157,6 +157,8 @@ export function WallOfLoveConfigurator({
         </div>
       </div>
 
+      {/* TODO: Use the same design from single widget for this but for that testimonial
+      list should not use media query but container height */}
       <ResizablePanelGroup
         direction="horizontal"
         className="flex-1 rounded-lg border mx-4 my-2"
@@ -243,7 +245,6 @@ export function WallOfLoveConfigurator({
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
-
       <div className="container px-4 py-4 bg-gray-100 rounded-lg mx-4 my-4">
         <pre className="text-sm break-all whitespace-pre-wrap">
           <code>{embedCode}</code>
@@ -253,7 +254,6 @@ export function WallOfLoveConfigurator({
           parameter to what you like.
         </p>
       </div>
-
       <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between gap-4 mb-4">
         <Button variant="outline" onClick={onBack}>
           Cancel
@@ -279,7 +279,6 @@ export function WallOfLoveConfigurator({
           </Button>
         </div>
       </div>
-
       <SaveWidgetModal
         isOpen={isSaveModalOpen}
         onClose={() => setIsSaveModalOpen(false)}

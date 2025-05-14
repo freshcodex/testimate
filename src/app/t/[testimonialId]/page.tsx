@@ -6,7 +6,7 @@ import { useSingleWidgetConfig } from "@/hooks/use-single-widget-config";
 import { api } from "@/trpc/react";
 import { useParams, useSearchParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { TestimonialProps } from "@/components/widgets/testimonial/types";
+import { DEFAULT_TESTIMONIAL } from "@/lib/constants";
 
 export default function TestimonialPage() {
   const { testimonialId } = useParams();
@@ -69,7 +69,8 @@ export default function TestimonialPage() {
           } as SingleWidgetConfig
         }
         style={config.design}
-        testimonial={testimonial as TestimonialProps}
+        //TODO: maybe use a prod env for this just in case while in test goes to default testimonial
+        testimonial={testimonial ?? DEFAULT_TESTIMONIAL}
       />
     </div>
   );

@@ -17,3 +17,7 @@ export type WidgetCreateInput = RouterInput["widget"]["create"];
 
 // type of testimonial router output
 export type Testimonial = RouterOutput["testimonials"]["getById"];
+
+// types of user and project
+export type User =
+  RouterOutput["project"]["getProjectAndCurrentUserProfile"]["userProfile"];

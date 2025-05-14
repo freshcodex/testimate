@@ -3,7 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { desc, eq, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
 import { createUpdateSchema, createSelectSchema } from "drizzle-zod";
-import { projects } from "@/server/db/schema";
+import { profiles, projects } from "@/server/db/schema";
 
 const updateProjectSchema = createUpdateSchema(projects);
 const baseSelectSchema = createSelectSchema(projects);
@@ -40,6 +40,36 @@ export const projectRouter = createTRPCRouter({
       }
 
       return project;
+    }),
+
+  getProjectAndCurrentUserProfile: protectedProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const [project] = await ctx.db
+        .select()
+        .from(projects)
+        .where(eq(projects.slug, input.slug));
+
+      if (!project) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Project not found",
+        });
+      }
+
+      const [userProfile] = await ctx.db
+        .select()
+        .from(profiles)
+        .where(eq(profiles.id, project.createdBy));
+
+      if (!userProfile) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User profile not found",
+        });
+      }
+
+      return { project, userProfile };
     }),
 
   getById: protectedProcedure

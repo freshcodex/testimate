@@ -1,15 +1,4 @@
-import {
-  BarChart2,
-  FileText,
-  Import,
-  Layers,
-  CloudLightningIcon as Lightning,
-  Share2,
-  Tag,
-  Zap,
-  Settings,
-  Plus,
-} from "lucide-react";
+import { FileText, Share2, Tag, Settings } from "lucide-react";
 import Link from "next/link";
 import {
   Sidebar,
@@ -20,15 +9,22 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useParams, usePathname } from "next/navigation";
+import { api } from "@/trpc/react";
+import { UserPopoverMenu } from "../user-popover-menu";
+import type { User } from "@/types";
 
 export function AppSidebar() {
   const { projectSlug } = useParams();
   const pathname = usePathname();
+
+  const { data: projectAndUserProfile } =
+    api.project.getProjectAndCurrentUserProfile.useQuery({
+      slug: projectSlug as string,
+    });
 
   const isActive = (path: string) => {
     return pathname === `/dashboard/${projectSlug}/${path}`;
@@ -38,21 +34,27 @@ export function AppSidebar() {
     <Sidebar className="border-r border-gray-200 min-w-64">
       <SidebarHeader className="h-16 border-b border-sidebar-border">
         <div className="flex items-center justify-between px-2">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-md bg-black text-white">
-              <span className="text-lg font-bold">B</span>
+          <div className="flex justify-between w-full">
+            <div className="flex space-x-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-black text-white">
+                <span className="text-lg font-bold">
+                  {projectAndUserProfile?.userProfile.firstName?.charAt(0)}
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-semibold">
+                  {projectAndUserProfile?.userProfile.firstName}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {projectAndUserProfile?.project.name}
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold">Bishal</span>
-              <span className="text-xs text-gray-500">Free plan</span>
-            </div>
+            <UserPopoverMenu
+              user={projectAndUserProfile?.userProfile as User}
+              plan={"Free plan"}
+            />
           </div>
-          <Link
-            href="/dashboard/new"
-            className="p-2 hover:bg-gray-100 rounded-md"
-          >
-            <Plus className="h-5 w-5 text-gray-600" />
-          </Link>
         </div>
       </SidebarHeader>
 
@@ -186,9 +188,13 @@ export function AppSidebar() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-sm font-medium">SP</span>
+                <span className="text-sm font-medium">
+                  {projectAndUserProfile?.project.name?.charAt(0)}
+                </span>
               </div>
-              <span className="text-sm">Shane Parrish</span>
+              <span className="text-sm">
+                {projectAndUserProfile?.project.name}
+              </span>
             </div>
             <Link
               href={`/dashboard/${projectSlug}/settings`}
