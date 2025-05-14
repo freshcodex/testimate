@@ -119,7 +119,15 @@ export const projectRouter = createTRPCRouter({
   update: protectedProcedure
     .input(
       updateProjectSchema
-        .pick({ id: true, name: true, description: true, active: true })
+        .pick({
+          id: true,
+          name: true,
+          description: true,
+          active: true,
+          slug: true,
+          url: true,
+          logoUrl: true,
+        })
         .extend({ id: z.number({ required_error: "Id is required" }) })
     )
     .mutation(async ({ ctx, input }) => {
@@ -144,6 +152,9 @@ export const projectRouter = createTRPCRouter({
           name: input.name,
           description: input.description,
           active: input.active,
+          slug: input.slug,
+          url: input.url,
+          logoUrl: input.logoUrl,
         })
         .where(eq(projects.id, input.id))
         .returning();

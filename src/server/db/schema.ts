@@ -87,9 +87,8 @@ export const projects = pgTable(
     name: varchar("name", { length: 255 }).notNull(),
     slug: varchar("slug", { length: 255 }).notNull().unique(),
     description: text("description"),
-    // TODO: add url, logo, etc.
-    // url: varchar("url"),
-    // logo: varchar("logo"),
+    url: varchar("url"), // this is a business url for which the testimonial is collected
+    logoUrl: varchar("logo_url"),
     defaultLanguage: varchar("default_language", { length: 10 })
       .default("en")
       .notNull(),
