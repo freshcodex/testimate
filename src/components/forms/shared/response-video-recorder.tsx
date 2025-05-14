@@ -19,7 +19,8 @@ type RecorderState =
   | "countdown"
   | "recording"
   | "preview"
-  | "uploading";
+  | "uploading"
+  | "file-preview";
 
 interface HTMLVideoElementWithSrcObject extends HTMLVideoElement {
   srcObject: MediaStream | null;
@@ -33,14 +34,15 @@ export function VideoRecorder({
   const [countdown, setCountdown] = useState(3);
   const [recordingTime, setRecordingTime] = useState(0);
   const [uploadUrl, setUploadUrl] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const filePreviewRef = useRef<HTMLVideoElement>(null);
 
   const { mutate: getMuxUploadUrl } =
     api.fileUpload.getMuxUploadUrl.useMutation({
-      onSuccess: (data) => {
-        setUploadUrl(data.uploadUrl);
-      },
       onError: (error) => {
         toast.error("Failed to get upload URL");
         console.error("Upload URL error:", error);
@@ -127,10 +129,100 @@ export function VideoRecorder({
       return;
     }
 
-    getMuxUploadUrl({
-      fileName: file.name,
-      fileType: file.type,
+    setSelectedFile(file);
+    setState("file-preview");
+  };
+
+  // Helper function to upload with progress
+  const uploadWithProgress = async (
+    url: string,
+    file: File
+  ): Promise<Response> => {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type,
+      },
+      body: file,
     });
+
+    if (!response.ok) {
+      throw new Error("Upload failed");
+    }
+
+    return response;
+  };
+
+  // Handle file preview upload
+  const handleFileUpload = async () => {
+    if (!selectedFile || isUploading) return;
+
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const uploadData = await new Promise<{
+        uploadUrl: string;
+        uploadId: string;
+      }>((resolve, reject) => {
+        getMuxUploadUrl(
+          {
+            fileName: selectedFile.name,
+            fileType: selectedFile.type,
+          },
+          {
+            onSuccess: (data) => resolve(data),
+            onError: reject,
+          }
+        );
+      });
+
+      // Create a new XMLHttpRequest for progress tracking
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round((event.loaded * 100) / event.total);
+          setUploadProgress(progress);
+        }
+      };
+
+      await new Promise<void>((resolve, reject) => {
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve();
+          } else {
+            reject(new Error("Upload failed"));
+          }
+        };
+        xhr.onerror = () => reject(new Error("Upload failed"));
+        xhr.open("PUT", uploadData.uploadUrl);
+        xhr.setRequestHeader("Content-Type", selectedFile.type);
+        xhr.send(selectedFile);
+      });
+
+      toast.success("Video uploaded successfully");
+      setState("idle");
+      setUploadUrl(null);
+      setSelectedFile(null);
+      setUploadProgress(0);
+      onUploadComplete?.(selectedFile.name);
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Failed to upload video");
+      setState("file-preview");
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  // Handle file preview cancel
+  const handleFilePreviewCancel = () => {
+    setSelectedFile(null);
+    setState("idle");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   // Handle upload button click
@@ -140,6 +232,7 @@ export function VideoRecorder({
 
   // Handle upload complete
   const handleUploadComplete = (event: CustomEvent) => {
+    console.log(JSON.stringify(event, null, 2));
     const { playbackId } = event.detail;
     setState("idle");
     setUploadUrl(null);
@@ -149,22 +242,68 @@ export function VideoRecorder({
 
   // Handle submission
   const handleSubmit = async () => {
-    if (!mediaBlobUrl) return;
+    if (!mediaBlobUrl || isUploading) return;
 
     try {
       setState("uploading");
+      setIsUploading(true);
+      setUploadProgress(0);
+
       const response = await fetch(mediaBlobUrl);
       const blob = await response.blob();
       const file = new File([blob], "recording.webm", { type: "video/webm" });
 
-      getMuxUploadUrl({
-        fileName: file.name,
-        fileType: file.type,
+      const uploadData = await new Promise<{
+        uploadUrl: string;
+        uploadId: string;
+      }>((resolve, reject) => {
+        getMuxUploadUrl(
+          {
+            fileName: file.name,
+            fileType: file.type,
+          },
+          {
+            onSuccess: (data) => resolve(data),
+            onError: reject,
+          }
+        );
       });
+
+      // Create a new XMLHttpRequest for progress tracking
+      const xhr = new XMLHttpRequest();
+      xhr.upload.onprogress = (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round((event.loaded * 100) / event.total);
+          setUploadProgress(progress);
+        }
+      };
+
+      await new Promise<void>((resolve, reject) => {
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve();
+          } else {
+            reject(new Error("Upload failed"));
+          }
+        };
+        xhr.onerror = () => reject(new Error("Upload failed"));
+        xhr.open("PUT", uploadData.uploadUrl);
+        xhr.setRequestHeader("Content-Type", file.type);
+        xhr.send(file);
+      });
+
+      toast.success("Video uploaded successfully");
+      setState("idle");
+      setUploadUrl(null);
+      setUploadProgress(0);
+      onUploadComplete?.(file.name);
     } catch (error) {
       console.error("Upload error:", error);
       toast.error("Failed to upload video");
       setState("preview");
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -283,9 +422,60 @@ export function VideoRecorder({
         )}
 
         {state === "uploading" && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <div className="text-white text-lg">Uploading...</div>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/30">
+            <div className="text-white text-lg mb-2">Uploading...</div>
+            <div className="w-48 h-2 bg-gray-700 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-purple-600 transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              />
+            </div>
+            <div className="text-white text-sm mt-2">{uploadProgress}%</div>
           </div>
+        )}
+
+        {state === "file-preview" && selectedFile && (
+          <>
+            <video
+              ref={filePreviewRef}
+              src={URL.createObjectURL(selectedFile)}
+              controls
+              playsInline
+              className="w-full h-full object-cover"
+              autoPlay
+            />
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
+              <div className="flex items-center justify-between text-white">
+                <span className="text-sm truncate max-w-[200px]">
+                  {selectedFile.name}
+                </span>
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={handleFilePreviewCancel}
+                    variant="ghost"
+                    className="text-white hover:bg-white/20"
+                    disabled={isUploading}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handleFileUpload}
+                    className="bg-purple-600 hover:bg-purple-700 text-white"
+                    disabled={isUploading}
+                  >
+                    {isUploading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Uploading...
+                      </div>
+                    ) : (
+                      "Upload"
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </>
         )}
 
         {uploadUrl && (
@@ -304,6 +494,7 @@ export function VideoRecorder({
             onClick={handleRestart}
             variant="outline"
             className="w-full flex items-center justify-center gap-2 py-6"
+            disabled={isUploading}
           >
             <RefreshCcw className="w-5 h-5" />
             Restart
@@ -312,9 +503,19 @@ export function VideoRecorder({
           <Button
             onClick={handleSubmit}
             className="w-full bg-purple-600 hover:bg-purple-700 text-white py-6 flex items-center justify-center gap-2"
+            disabled={isUploading}
           >
-            <Camera className="w-5 h-5" />
-            Submit
+            {isUploading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                Uploading...
+              </div>
+            ) : (
+              <>
+                <Camera className="w-5 h-5" />
+                Submit
+              </>
+            )}
           </Button>
         </div>
       )}
