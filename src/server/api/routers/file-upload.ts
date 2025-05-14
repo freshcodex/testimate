@@ -4,6 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { env } from "@/env";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import Mux from "@mux/mux-node";
 
 const s3Client = new S3Client({
   forcePathStyle: true,
@@ -13,6 +14,11 @@ const s3Client = new S3Client({
     accessKeyId: env.S3_ACCESS_KEY_ID,
     secretAccessKey: env.S3_SECRET_ACCESS_KEY,
   },
+});
+
+const muxClient = new Mux({
+  tokenId: env.MUX_TOKEN_ID,
+  tokenSecret: env.MUX_TOKEN_SECRET,
 });
 
 export const fileUploadRouter = createTRPCRouter({
@@ -51,6 +57,41 @@ export const fileUploadRouter = createTRPCRouter({
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to generate presigned URL",
+          cause: error,
+        });
+      }
+    }),
+
+  getMuxUploadUrl: protectedProcedure
+    .input(
+      z.object({
+        fileName: z.string(),
+        fileType: z
+          .string()
+          .refine(
+            (type) => type.startsWith("video/"),
+            "Only video files are allowed"
+          ),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const upload = await muxClient.video.uploads.create({
+          new_asset_settings: {
+            playback_policy: ["public"],
+          },
+          cors_origin: "*",
+        });
+
+        return {
+          uploadUrl: upload.url,
+          uploadId: upload.id,
+        };
+      } catch (error) {
+        console.error("Mux upload error:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to generate Mux upload URL",
           cause: error,
         });
       }

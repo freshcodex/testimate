@@ -4,53 +4,78 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Camera, Mic, Square, RefreshCcw, Upload } from "lucide-react";
+import { useReactMediaRecorder } from "react-media-recorder";
+import MuxUploader from "@mux/mux-uploader-react";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 type VideoRecorderProps = {
   maxDuration: number;
+  onUploadComplete?: (playbackId: string) => void;
 };
 
-type RecorderState = "idle" | "countdown" | "recording" | "preview";
+type RecorderState =
+  | "idle"
+  | "countdown"
+  | "recording"
+  | "preview"
+  | "uploading";
 
-export function VideoRecorder({ maxDuration }: VideoRecorderProps) {
+interface HTMLVideoElementWithSrcObject extends HTMLVideoElement {
+  srcObject: MediaStream | null;
+}
+
+export function VideoRecorder({
+  maxDuration,
+  onUploadComplete,
+}: VideoRecorderProps) {
   const [state, setState] = useState<RecorderState>("idle");
   const [countdown, setCountdown] = useState(3);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
-  const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
-
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const chunksRef = useRef<BlobPart[]>([]);
+  const [uploadUrl, setUploadUrl] = useState<string | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { mutate: getMuxUploadUrl } =
+    api.fileUpload.getMuxUploadUrl.useMutation({
+      onSuccess: (data) => {
+        setUploadUrl(data.uploadUrl);
+      },
+      onError: (error) => {
+        toast.error("Failed to get upload URL");
+        console.error("Upload URL error:", error);
+      },
+    });
+
+  const {
+    status,
+    startRecording,
+    stopRecording,
+    mediaBlobUrl,
+    previewStream,
+    clearBlobUrl,
+  } = useReactMediaRecorder({
+    video: true,
+    audio: true,
+    onStop: () => {
+      setState("preview");
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    },
+  });
+
+  const videoRef = useRef<HTMLVideoElementWithSrcObject>(null);
   const previewRef = useRef<HTMLVideoElement>(null);
 
-  // Request camera access
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.muted = true;
-      }
-
-      return true;
-    } catch (err) {
-      console.error("Error accessing camera:", err);
-      return false;
-    }
-  };
+  // TODO: fix this currently flickering even in use-effect
+  if (videoRef.current && previewStream) {
+    videoRef.current.srcObject = previewStream;
+  }
 
   // Start countdown before recording
-  const handleStartRecording = async () => {
-    const cameraReady = await startCamera();
-    if (!cameraReady) return;
-
+  const handleStartRecording = () => {
     setState("countdown");
     setCountdown(3);
 
@@ -68,41 +93,9 @@ export function VideoRecorder({ maxDuration }: VideoRecorderProps) {
 
   // Begin actual recording after countdown
   const beginRecording = () => {
-    if (!streamRef.current) return;
-
     setState("recording");
     setRecordingTime(0);
-    chunksRef.current = [];
-
-    const mediaRecorder = new MediaRecorder(streamRef.current);
-    mediaRecorderRef.current = mediaRecorder;
-
-    mediaRecorder.ondataavailable = (e) => {
-      if (e.data.size > 0) {
-        chunksRef.current.push(e.data);
-      }
-    };
-
-    mediaRecorder.onstop = () => {
-      const blob = new Blob(chunksRef.current, { type: "video/webm" });
-      const url = URL.createObjectURL(blob);
-
-      setRecordedBlob(blob);
-      setRecordedUrl(url);
-
-      if (previewRef.current) {
-        previewRef.current.src = url;
-      }
-
-      // Stop all tracks
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop());
-        streamRef.current = null;
-      }
-    };
-
-    // Start recording
-    mediaRecorder.start(100);
+    startRecording();
 
     // Start timer
     timerRef.current = setInterval(() => {
@@ -116,39 +109,63 @@ export function VideoRecorder({ maxDuration }: VideoRecorderProps) {
     }, 1000);
   };
 
-  // Stop recording
-  const stopRecording = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-
-    if (
-      mediaRecorderRef.current &&
-      mediaRecorderRef.current.state !== "inactive"
-    ) {
-      mediaRecorderRef.current.stop();
-      setState("preview");
-    }
-  };
-
   // Restart the recording process
   const handleRestart = () => {
-    if (recordedUrl) {
-      URL.revokeObjectURL(recordedUrl);
-    }
-
-    setRecordedBlob(null);
-    setRecordedUrl(null);
+    clearBlobUrl();
     setRecordingTime(0);
     setState("idle");
+    setUploadUrl(null);
+  };
+
+  // Handle file selection
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("video/")) {
+      toast.error("Please select a video file");
+      return;
+    }
+
+    getMuxUploadUrl({
+      fileName: file.name,
+      fileType: file.type,
+    });
+  };
+
+  // Handle upload button click
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // Handle upload complete
+  const handleUploadComplete = (event: CustomEvent) => {
+    const { playbackId } = event.detail;
+    setState("idle");
+    setUploadUrl(null);
+    onUploadComplete?.(playbackId);
+    toast.success("Video uploaded successfully");
   };
 
   // Handle submission
-  const handleSubmit = () => {
-    if (!recordedBlob) return;
-    console.log("Submitting video:", recordedBlob);
-    handleRestart();
+  const handleSubmit = async () => {
+    if (!mediaBlobUrl) return;
+
+    try {
+      setState("uploading");
+      const response = await fetch(mediaBlobUrl);
+      const blob = await response.blob();
+      const file = new File([blob], "recording.webm", { type: "video/webm" });
+
+      getMuxUploadUrl({
+        fileName: file.name,
+        fileType: file.type,
+      });
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Failed to upload video");
+      setState("preview");
+    }
   };
 
   // Clean up on unmount
@@ -157,16 +174,8 @@ export function VideoRecorder({ maxDuration }: VideoRecorderProps) {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
-
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach((track) => track.stop());
-      }
-
-      if (recordedUrl) {
-        URL.revokeObjectURL(recordedUrl);
-      }
     };
-  }, [recordedUrl]);
+  }, []);
 
   // Format time as MM:SS
   const formatTime = (seconds: number) => {
@@ -262,13 +271,28 @@ export function VideoRecorder({ maxDuration }: VideoRecorderProps) {
           </>
         )}
 
-        {state === "preview" && (
+        {state === "preview" && mediaBlobUrl && (
           <video
             ref={previewRef}
+            src={mediaBlobUrl}
             controls
             playsInline
             className="w-full h-full object-cover"
             autoPlay
+          />
+        )}
+
+        {state === "uploading" && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+            <div className="text-white text-lg">Uploading...</div>
+          </div>
+        )}
+
+        {uploadUrl && (
+          <MuxUploader
+            endpoint={uploadUrl}
+            onSuccess={handleUploadComplete}
+            className="hidden"
           />
         )}
       </div>
@@ -297,7 +321,15 @@ export function VideoRecorder({ maxDuration }: VideoRecorderProps) {
 
       {state === "idle" && (
         <div className="border-t pt-4">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            accept="video/*"
+            className="hidden"
+          />
           <Button
+            onClick={handleUploadClick}
             variant="outline"
             className="w-full flex items-center justify-center gap-2 py-6"
           >

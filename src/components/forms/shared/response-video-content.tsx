@@ -18,6 +18,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import type { CollectionFormProps } from "./thankyou-page";
 import { VideoRecorder } from "./response-video-recorder";
+import MuxPlayer from "@mux/mux-player-react";
+import { useState } from "react";
 
 interface ResponseContentProps {
   config: CollectionFormProps["collectionFormConfig"]["responsePage"];
@@ -31,6 +33,7 @@ interface ResponseContentProps {
 const formSchema = z.object({
   rating: z.number().min(1, "Please provide a rating"),
   text: z.string().min(10, "Testimonial must be at least 10 characters"),
+  videoPlaybackId: z.string().optional(),
 });
 
 export function ResponseVideoContent({
@@ -41,12 +44,14 @@ export function ResponseVideoContent({
 }: ResponseContentProps) {
   const { setCurrentStep } = useFormStep();
   const { rating, text, setRating, setText } = useTestimonialStore();
+  const [videoPlaybackId, setVideoPlaybackId] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       rating: rating || 0,
       text: text || "",
+      videoPlaybackId: undefined,
     },
   });
 
@@ -60,6 +65,11 @@ export function ResponseVideoContent({
 
   const handleBack = () => {
     setCurrentStep("welcome");
+  };
+
+  const handleVideoUpload = (playbackId: string) => {
+    setVideoPlaybackId(playbackId);
+    form.setValue("videoPlaybackId", playbackId);
   };
 
   const questions = config.prompt.split("\n").filter(Boolean);
@@ -115,7 +125,22 @@ export function ResponseVideoContent({
             />
           )}
 
-          <VideoRecorder maxDuration={500} />
+          {videoPlaybackId ? (
+            <div className="aspect-video w-full overflow-hidden rounded-lg">
+              <MuxPlayer
+                streamType="on-demand"
+                playbackId={videoPlaybackId}
+                metadata={{
+                  video_title: "Testimonial Video",
+                }}
+              />
+            </div>
+          ) : (
+            <VideoRecorder
+              maxDuration={500}
+              onUploadComplete={handleVideoUpload}
+            />
+          )}
 
           {/* <FormField
             control={form.control}
