@@ -3,6 +3,7 @@ import { Heart, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Theme } from "@/components/studio/wall-of-love/types";
 import type { Testimonial } from "@/types";
+import MuxPlayer from "@mux/mux-player-react";
 
 export interface TestimonialProps {
   testimonial: Testimonial;
@@ -156,7 +157,13 @@ export function TestimonialCard({ testimonial, config }: TestimonialCardProps) {
                 <div className="ml-1 w-0 h-0 border-t-8 border-b-8 border-l-12 border-transparent border-l-white" />
               </div>
             </div>
-            <Image
+            <MuxPlayer
+              playbackId={testimonial.videoUrl!}
+              poster={testimonial.thumbnailUrl}
+              className="w-full h-full object-cover rounded-lg"
+            />
+
+            {/* <Image
               src={testimonial.thumbnailUrl || "/placeholder.svg"}
               alt="Video thumbnail"
               width={600}
@@ -167,7 +174,7 @@ export function TestimonialCard({ testimonial, config }: TestimonialCardProps) {
               <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
                 LIVE
               </div>
-            )}
+            )} */}
           </div>
         )}
 

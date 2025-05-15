@@ -11,6 +11,7 @@ import { DEFAULT_TESTIMONIAL } from "@/lib/constants";
 export default function TestimonialPage() {
   const { testimonialId } = useParams();
 
+  // TODO: only show approved testimonials
   const { data: testimonial, isLoading } = api.testimonials.getById.useQuery({
     id: Number(testimonialId),
   });

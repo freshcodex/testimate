@@ -19,7 +19,6 @@ export function TestimonialCard({
   checked?: boolean;
   onCheck?: (checked: boolean) => void;
 }) {
-  console.log(testimonial.videoUrl);
   return (
     <div className="flex w-full items-start gap-4 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex-shrink-0">
@@ -85,11 +84,12 @@ export function TestimonialCard({
         {testimonial.videoUrl && (
           <div className="mt-2">
             <MuxPlayer
-              poster={testimonial.videoUrl}
+              // Just having a bad name wasted my 1hr right now cuz of bad name
+              poster={testimonial.thumbnailUrl as string}
+              playbackId={testimonial.videoUrl}
               playerInitTime={0}
               autoPlay={false}
-              thumbnailTime={0}
-              className="w-full h-full object-contain"
+              className="h-48 w-64 rounded-2xl object-contain"
               accentColor="purple"
             />
           </div>

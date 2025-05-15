@@ -7,7 +7,7 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    domains: ["coyixansbxtnortjfiib.supabase.co"],
+    domains: ["coyixansbxtnortjfiib.supabase.co", "image.mux.com"],
   },
   async headers() {
     return [

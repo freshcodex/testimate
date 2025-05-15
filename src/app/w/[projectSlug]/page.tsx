@@ -16,12 +16,11 @@ export default function WallOfLovePage() {
   const configParam = searchParams.get("config");
   const { projectSlug } = useParams();
 
+  // TODO: only show approved testimonials
   const { data: testimonials, isLoading } =
     api.testimonials.getAllTestimonialsByProjectSlug.useQuery({
       projectSlug: projectSlug as string,
     });
-
-  console.log(JSON.stringify(testimonials, null, 2));
 
   let initialConfig: Partial<WallOfLoveConfig> = {};
 
