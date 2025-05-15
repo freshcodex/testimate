@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { Building2, Store, Briefcase, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StepHeader } from "../step-header";
+import { useOnboarding } from "@/contexts/onboarding-context";
 
 interface BusinessTypeStepProps {
   onNext: (data: { businessType: string }) => void;
@@ -11,57 +12,93 @@ interface BusinessTypeStepProps {
     name: string;
     businessType: string;
     website: string;
-    importedTestimonials: any[];
   };
 }
 
 const businessTypes = [
-  { id: "saas", label: "SaaS product" },
-  { id: "ecommerce", label: "E-commerce store" },
-  { id: "agency", label: "Agency or service business" },
-  { id: "coaching", label: "Coaching or consulting" },
-  { id: "course", label: "Online courses" },
-  { id: "other", label: "Other" },
+  {
+    id: "agency",
+    name: "Agency",
+    description: "I run a marketing or development agency",
+    icon: Building2,
+  },
+  {
+    id: "ecommerce",
+    name: "E-commerce",
+    description: "I sell products online",
+    icon: Store,
+  },
+  {
+    id: "saas",
+    name: "SaaS",
+    description: "I provide software as a service",
+    icon: Briefcase,
+  },
+  {
+    id: "other",
+    name: "Other",
+    description: "I have a different type of business",
+    icon: Users,
+  },
 ];
 
 export function BusinessTypeStep({ onNext, userData }: BusinessTypeStepProps) {
-  const [selectedType, setSelectedType] = useState(userData.businessType || "");
+  const [selectedType, setSelectedType] = useState(userData.businessType);
+  const { setUserData } = useOnboarding();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedType) {
+      setUserData({ businessType: selectedType });
+      onNext({ businessType: selectedType });
+    }
+  };
 
   return (
     <div className="p-8">
       <StepHeader
-        title={`Hi ${userData.name}, what do you want to collect testimonials for?`}
-        description="We'll customize your experience based on your business type."
+        title={`Hi ${userData.name}!`}
+        description="What type of business do you run?"
       />
 
-      <div className="mt-8 space-y-3">
-        {businessTypes.map((type) => (
-          <button
-            key={type.id}
-            className={`w-full p-4 flex items-center justify-between rounded-lg border ${
-              selectedType === type.id
-                ? "border-purple-600 bg-purple-50 text-purple-700"
-                : "border-gray-200 hover:border-gray-300"
-            }`}
-            onClick={() => setSelectedType(type.id)}
-          >
-            <span>{type.label}</span>
-            {selectedType === type.id && (
-              <Check className="h-5 w-5 text-purple-600" />
-            )}
-          </button>
-        ))}
-      </div>
+      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {businessTypes.map((type) => (
+            <button
+              key={type.id}
+              type="button"
+              onClick={() => setSelectedType(type.id)}
+              className={`p-4 rounded-lg border-2 transition-all ${
+                selectedType === type.id
+                  ? "border-purple-600 bg-purple-50"
+                  : "border-gray-200 hover:border-purple-200"
+              }`}
+            >
+              <div className="flex items-start space-x-4">
+                <type.icon
+                  className={`h-6 w-6 ${
+                    selectedType === type.id
+                      ? "text-purple-600"
+                      : "text-gray-400"
+                  }`}
+                />
+                <div className="text-left">
+                  <h3 className="font-medium">{type.name}</h3>
+                  <p className="text-sm text-gray-500">{type.description}</p>
+                </div>
+              </div>
+            </button>
+          ))}
+        </div>
 
-      <div className="mt-8">
         <Button
-          onClick={() => onNext({ businessType: selectedType })}
+          type="submit"
           disabled={!selectedType}
           className="w-full h-12 bg-purple-600 hover:bg-purple-700"
         >
           Continue
         </Button>
-      </div>
+      </form>
     </div>
   );
 }

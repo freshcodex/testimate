@@ -22,6 +22,7 @@
 		"@aws-sdk/s3-request-presigner": "^3.808.0",
 		"@formkit/auto-animate": "^0.8.2",
 		"@hookform/resolvers": "^5.0.1",
+		"@mendable/firecrawl-js": "^1.24.0",
 		"@mux/mux-node": "^11.1.0",
 		"@mux/mux-player-react": "^3.4.0",
 		"@mux/mux-uploader-react": "^1.2.0",

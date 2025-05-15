@@ -7,6 +7,7 @@ import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StepHeader } from "../step-header";
+import { useOnboarding } from "@/contexts/onboarding-context";
 
 interface WelcomeStepProps {
   onNext: (data: { name: string }) => void;
@@ -14,17 +15,14 @@ interface WelcomeStepProps {
 
 export function WelcomeStep({ onNext }: WelcomeStepProps) {
   const [name, setName] = useState("");
-  const [error, setError] = useState("");
+  const { setUserData } = useOnboarding();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!name.trim()) {
-      setError("Please enter your name");
-      return;
+    if (name.trim()) {
+      setUserData({ name });
+      onNext({ name });
     }
-
-    onNext({ name });
   };
 
   return (
@@ -47,11 +45,9 @@ export function WelcomeStep({ onNext }: WelcomeStepProps) {
             value={name}
             onChange={(e) => {
               setName(e.target.value);
-              setError("");
             }}
-            className={`h-12 text-lg ${error ? "border-red-500" : ""}`}
+            className="h-12 text-lg"
           />
-          {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
         </div>
 
         <Button

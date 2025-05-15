@@ -5,29 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1746927977593,
-      "tag": "0000_perfect_iron_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1747125675400,
-      "tag": "0001_parallel_ultimatum",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1747125829771,
-      "tag": "0002_pretty_selene",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1747193095218,
-      "tag": "0003_unknown_the_initiative",
+      "when": 1747284168250,
+      "tag": "0000_windy_maggott",
       "breakpoints": true
     }
   ]

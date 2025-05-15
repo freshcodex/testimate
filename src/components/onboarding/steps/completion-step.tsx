@@ -3,6 +3,9 @@
 import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StepHeader } from "../step-header";
+import { useOnboarding } from "@/contexts/onboarding-context";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 interface CompletionStepProps {
   onNext: () => void;
@@ -10,11 +13,44 @@ interface CompletionStepProps {
     name: string;
     businessType: string;
     website: string;
-    importedTestimonials: any[];
+    projectSlug?: string;
   };
 }
 
 export function CompletionStep({ onNext, userData }: CompletionStepProps) {
+  const { setUserData, setIsLoading, scrapedData } = useOnboarding();
+
+  const updateProject = api.project.update.useMutation({
+    onSuccess: () => {
+      onNext();
+    },
+    onError: (error) => {
+      toast.error(error.message);
+      setIsLoading(false);
+    },
+  });
+
+  const handleContinue = () => {
+    if (scrapedData && userData.projectSlug) {
+      const projectId = parseInt(userData.projectSlug);
+      if (!isNaN(projectId)) {
+        setIsLoading(true);
+        updateProject.mutate({
+          id: projectId,
+          name: scrapedData.title || `${userData.name}'s Project`,
+          description: scrapedData.description || "",
+          url: userData.website,
+          logoUrl: scrapedData.faviconUrl,
+          active: true,
+          slug: userData.projectSlug,
+        });
+      }
+    } else {
+      setUserData({ projectSlug: userData.projectSlug });
+      onNext();
+    }
+  };
+
   return (
     <div className="p-8">
       <div className="flex justify-center mb-6">
@@ -24,48 +60,33 @@ export function CompletionStep({ onNext, userData }: CompletionStepProps) {
       </div>
 
       <StepHeader
-        title={`You're all set, ${userData.name}!`}
-        description="Your account has been created and your testimonials are ready to go."
+        title="All set!"
+        description="Your project has been created successfully. Let's start collecting testimonials!"
       />
 
-      <div className="mt-8 space-y-4 bg-gray-50 p-4 rounded-lg">
-        <div>
-          <div className="text-sm font-medium text-gray-500">Business Type</div>
-          <div className="font-medium">
-            {userData.businessType || "Not specified"}
+      <div className="mt-8 space-y-6">
+        <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+          <h3 className="font-medium">Project Details</h3>
+          <div className="space-y-2 text-sm text-gray-600">
+            <p>
+              <span className="font-medium">Name:</span> {userData.name}
+            </p>
+            <p>
+              <span className="font-medium">Business Type:</span>{" "}
+              {userData.businessType}
+            </p>
+            <p>
+              <span className="font-medium">Website:</span> {userData.website}
+            </p>
           </div>
         </div>
 
-        <div>
-          <div className="text-sm font-medium text-gray-500">Website</div>
-          <div className="font-medium">
-            {userData.website || "Not specified"}
-          </div>
-        </div>
-
-        <div>
-          <div className="text-sm font-medium text-gray-500">
-            Imported Testimonials
-          </div>
-          <div className="font-medium">
-            {userData.importedTestimonials.length || 0}
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-8 space-y-4">
         <Button
-          onClick={onNext}
+          onClick={handleContinue}
           className="w-full h-12 bg-purple-600 hover:bg-purple-700"
         >
-          Go to dashboard
+          Go to Dashboard
         </Button>
-
-        <div className="text-center">
-          <Button variant="link" className="text-purple-600">
-            Watch a quick tutorial
-          </Button>
-        </div>
       </div>
     </div>
   );
