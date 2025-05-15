@@ -54,9 +54,16 @@ export function CustomerDetailsContent({
     },
   });
 
-  const { rating, text } = useTestimonialStore();
+  // update testimonial if we have an id in the store
+  const updateTestimonial = api.testimonials.update.useMutation({
+    onSuccess: (data) => {
+      // Intentional: Don't wanna confuse the user
+      toast.success("Testimonial submitted successfully!");
+      setCurrentStep("thank-you");
+    },
+  });
 
-  console.log(rating, text);
+  const { rating, text, testimonialId } = useTestimonialStore();
 
   const { form, handleSubmit } = useTestimonialForm({
     formId,
@@ -77,11 +84,18 @@ export function CustomerDetailsContent({
     // TODO: have a better way to handle this
     setThankyouContentFormData(data);
 
-    createTestimonial.mutate({
-      ...data,
-      formId,
-      projectSlug,
-    });
+    if (testimonialId) {
+      updateTestimonial.mutate({
+        ...data,
+        id: testimonialId,
+      });
+    } else {
+      createTestimonial.mutate({
+        ...data,
+        formId,
+        projectSlug,
+      });
+    }
   });
 
   return (

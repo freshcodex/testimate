@@ -1,3 +1,5 @@
+"use client";
+
 import { Heart } from "lucide-react";
 import Image from "next/image";
 
@@ -6,6 +8,7 @@ import { StarRating } from "@/components/proof/star-rating";
 import { StatusBadge } from "@/components/proof/status-badge";
 import { Badge } from "@/components/ui/badge";
 import type { FilteredTestimonial } from "@/types";
+import MuxPlayer from "@mux/mux-player-react";
 
 export function TestimonialCard({
   testimonial,
@@ -16,6 +19,7 @@ export function TestimonialCard({
   checked?: boolean;
   onCheck?: (checked: boolean) => void;
 }) {
+  console.log(testimonial.videoUrl);
   return (
     <div className="flex w-full items-start gap-4 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex-shrink-0">
@@ -78,14 +82,15 @@ export function TestimonialCard({
           <p className="mt-2 text-sm text-gray-700">{testimonial.text}</p>
         )}
 
-        {testimonial.type === "video" && testimonial.thumbnailUrl && (
+        {testimonial.videoUrl && (
           <div className="mt-2">
-            <Image
-              src={testimonial.thumbnailUrl}
-              alt="Video thumbnail"
-              width={300}
-              height={200}
-              className="rounded-md object-cover"
+            <MuxPlayer
+              poster={testimonial.videoUrl}
+              playerInitTime={0}
+              autoPlay={false}
+              thumbnailTime={0}
+              className="w-full h-full object-contain"
+              accentColor="purple"
             />
           </div>
         )}

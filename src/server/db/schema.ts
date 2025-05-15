@@ -86,7 +86,7 @@ export const projects = pgTable(
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 255 }).notNull(),
     slug: varchar("slug", { length: 255 }).notNull().unique(),
-    businessType: varchar("business_type", { length: 255 }),
+    // businessType: varchar("business_type", { length: 255 }),
     description: text("description"),
     url: varchar("url"), // this is a business url for which the testimonial is collected
     logoUrl: varchar("logo_url"),
