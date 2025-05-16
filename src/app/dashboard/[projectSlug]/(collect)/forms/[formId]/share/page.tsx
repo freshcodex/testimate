@@ -15,7 +15,7 @@ export default function ShareFormPage() {
   const [copied, setCopied] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("link");
 
-  const formLink = `${env.NEXT_PUBLIC_URL}/p/test-project/r/${params.formId}`;
+  const formLink = `${env.NEXT_PUBLIC_URL}/p/${params.projectSlug}/r/${params.formId}`;
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
