@@ -1,23 +1,20 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import ReactConfetti from "react-confetti";
 import { OnboardingLayout } from "@/components/onboarding/layout";
 import { WelcomeStep } from "@/components/onboarding/steps/welcome-step";
 import { BusinessTypeStep } from "@/components/onboarding/steps/business-type-step";
 import { WebsiteStep } from "@/components/onboarding/steps/website-step";
 import { CompletionStep } from "@/components/onboarding/steps/completion-step";
-import { ProgressIndicator } from "@/components/onboarding/progress-indicator";
 import {
   OnboardingProvider,
   useOnboarding,
-  type UserData,
 } from "@/contexts/onboarding-context";
 
 // TODO: check if user is already onboarded; make it rsc maybe?
 function OnboardingContent() {
-  const { step, isLoading, showConfetti, setShowConfetti } = useOnboarding();
+  const { step, showConfetti, setShowConfetti } = useOnboarding();
 
   // Trigger confetti on first visit
   useEffect(() => {

@@ -1,21 +1,19 @@
 import type { ReactNode } from "react";
 import { Heart } from "lucide-react";
 import { ProgressBar } from "./progress-bar";
+import { useOnboarding } from "@/contexts/onboarding-context";
 
 interface OnboardingLayoutProps {
   children: ReactNode;
 }
 
 export function OnboardingLayout({ children }: OnboardingLayoutProps) {
-  // Get current step from URL to calculate progress
+  const { step } = useOnboarding();
+
+  // Get current step number for progress calculation
   const getCurrentStep = () => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const step = params.get("step") || "welcome";
-      const steps = ["welcome", "business-type", "website", "completion"];
-      return steps.indexOf(step) + 1 || 1;
-    }
-    return 1;
+    const steps = ["welcome", "business-type", "website", "completion"];
+    return steps.indexOf(step) + 1 || 1;
   };
 
   return (
