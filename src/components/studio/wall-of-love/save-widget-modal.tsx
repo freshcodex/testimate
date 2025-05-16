@@ -21,7 +21,7 @@ interface SaveWidgetModalProps {
   config: WallOfLoveConfig | SingleWidgetConfig;
   projectSlug: string;
   type: WidgetCreateInput["type"];
-  url: string;
+  getUrl: () => string;
 }
 
 export function SaveWidgetModal({
@@ -30,7 +30,7 @@ export function SaveWidgetModal({
   config,
   projectSlug,
   type,
-  url,
+  getUrl,
 }: SaveWidgetModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -47,7 +47,7 @@ export function SaveWidgetModal({
       type,
       config,
       projectSlug,
-      url,
+      url: getUrl(),
     });
 
     onClose();

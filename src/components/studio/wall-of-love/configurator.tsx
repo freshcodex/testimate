@@ -36,6 +36,7 @@ import {
 import { SaveWidgetModal } from "@/components/studio/wall-of-love/save-widget-modal";
 import { useSaveWidget } from "@/hooks/use-save-widget";
 import { Layout } from "./types";
+import { env } from "@/env";
 
 interface ConfiguratorProps {
   layout: string;
@@ -58,14 +59,16 @@ export function WallOfLoveConfigurator({
 
   const embedCode = `<iframe height="${
     config.height
-  }" id="testimonialto-${projectSlug}" src="http://localhost:3000/w/${projectSlug}?config=${generateUrlParams(
+  }" id="testimonialto-${projectSlug}" src="${
+    env.NEXT_PUBLIC_URL
+  }/w/${projectSlug}?config=${generateUrlParams(
     config
   )}" frameborder="0" scrolling="no" width="100%"></iframe>`;
 
   const handleCopyCode = () => {
-    const url = `http://localhost:3000/w/${projectSlug}?config=${generateUrlParams(
-      config
-    )}`;
+    const url = `${
+      env.NEXT_PUBLIC_URL
+    }/w/${projectSlug}?config=${generateUrlParams(config)}`;
     navigator.clipboard.writeText(url);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -236,9 +239,11 @@ export function WallOfLoveConfigurator({
         config={config}
         projectSlug={projectSlug}
         type="wall_of_love"
-        url={`http://localhost:3000/w/${layout}?config=${generateUrlParams(
-          config
-        )}`}
+        getUrl={() =>
+          `${env.NEXT_PUBLIC_URL}/w/${layout}?config=${generateUrlParams(
+            config
+          )}`
+        }
       />
     </div>
   );

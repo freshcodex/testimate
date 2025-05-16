@@ -35,6 +35,7 @@ import { useSaveWidget } from "@/hooks/use-save-widget";
 import { SaveWidgetModal } from "../wall-of-love/save-widget-modal";
 import { useParams } from "next/navigation";
 import type { Design } from "./types";
+import { env } from "@/env";
 
 interface ConfiguratorProps {
   design: string;
@@ -90,12 +91,12 @@ export function SingleWidgetConfigurator({
   // TODO: use only stuff from the config, must be better way to do this
   const embedCode = `<iframe height="${config.height}" id="testimonialto-${
     config.design
-  }" src="http://localhost:3000/t/${config.design}?config=${generateUrlParams(
+  }" src="${env.NEXT_PUBLIC_URL}/t/${config.design}?config=${generateUrlParams(
     config
   )}" frameborder="0" scrolling="no" width="100%"></iframe>`;
 
   const handleCopyCode = () => {
-    const url = `http://localhost:3000/t/${
+    const url = `${env.NEXT_PUBLIC_URL}/t/${
       config.design
     }?config=${generateUrlParams(config)}`;
     console.log(url);
@@ -245,9 +246,11 @@ export function SingleWidgetConfigurator({
         config={config}
         projectSlug={projectSlug as string}
         type="single_widget"
-        url={`http://localhost:3000/t/${
-          config.design
-        }?config=${generateUrlParams(config)}`}
+        getUrl={() =>
+          `${env.NEXT_PUBLIC_URL}/t/${config.design}?config=${generateUrlParams(
+            config
+          )}`
+        }
       />
     </div>
   );
