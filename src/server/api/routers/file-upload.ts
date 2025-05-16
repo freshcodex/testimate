@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { env } from "@/env";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
@@ -65,7 +65,7 @@ export const fileUploadRouter = createTRPCRouter({
       }
     }),
 
-  getMuxUploadUrl: protectedProcedure
+  getMuxUploadUrl: publicProcedure
     .input(
       z.object({
         fileName: z.string(),

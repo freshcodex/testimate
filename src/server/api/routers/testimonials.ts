@@ -217,7 +217,7 @@ export const testimonialsRouter = createTRPCRouter({
       return newTestimonial[0];
     }),
 
-  update: protectedProcedure
+  update: publicProcedure
     .input(
       updateTestimonialSchema
         .omit({
@@ -271,13 +271,22 @@ export const testimonialsRouter = createTRPCRouter({
         }
       } else {
         // If no token, then verify project ownership
+        // get user from supabase client
+        const user = await ctx.supabase.auth.getUser();
+        if (!user.data.user) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "You don't have access to this testimonial",
+          });
+        }
+
         const [project] = await ctx.db
           .select()
           .from(projects)
           .where(
             and(
               eq(projects.id, testimonial.projectId),
-              eq(projects.createdBy, ctx.user.id)
+              eq(projects.createdBy, user.data.user.id)
             )
           );
 
