@@ -10,6 +10,8 @@ import { TestimonialList } from "@/components/proof/testimonial-list";
 import { useTestimonialFilters } from "@/hooks/use-testimonial-filters";
 import { useParams } from "next/navigation";
 import { api } from "@/trpc/react";
+
+// TODO: make this page responsive on mobile
 export function ProofDashboard() {
   const { projectSlug } = useParams<{ projectSlug: string }>();
 
