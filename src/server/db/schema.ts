@@ -73,6 +73,7 @@ export const profiles = pgTable("profiles", {
   lastName: varchar("last_name", { length: 100 }),
   email: varchar("email", { length: 255 }).notNull().unique(),
   avatarUrl: varchar("avatar_url", { length: 1024 }),
+  // TODO: remove this field
   onboardingCompleted: boolean("onboarding_completed").default(false).notNull(),
   role: varchar("role", { length: 50 }).default("member").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),

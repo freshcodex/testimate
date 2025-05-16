@@ -98,7 +98,7 @@ export const projectRouter = createTRPCRouter({
         name: z.string().min(1),
         description: z.string().optional(),
         active: z.boolean().default(true),
-        slug: z.string().min(1),
+        slug: z.string().min(3),
       })
     )
     .mutation(async ({ ctx, input }) => {

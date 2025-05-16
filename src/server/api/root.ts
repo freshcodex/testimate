@@ -4,7 +4,6 @@ import { testimonialsRouter } from "@/server/api/routers/testimonials";
 import { tagRouter } from "@/server/api/routers/tags";
 import { widgetRouter } from "@/server/api/routers/widget";
 import { fileUploadRouter } from "@/server/api/routers/file-upload";
-import { onboardingRouter } from "@/server/api/routers/onboarding";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 
 /**
@@ -19,7 +18,6 @@ export const appRouter = createTRPCRouter({
   tags: tagRouter,
   widget: widgetRouter,
   fileUpload: fileUploadRouter,
-  onboarding: onboardingRouter,
 });
 
 // export type definition of API
