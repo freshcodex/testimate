@@ -16,7 +16,8 @@
     "preview": "next build && next start",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "dev:webhook": "ngrok http --url=free-skink-neat.ngrok-free.app 3000"
+    "dev:webhook": "ngrok http --url=free-skink-neat.ngrok-free.app 3000",
+    "build:waerr": "__NEXT_TEST_MODE=true pnpm build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.808.0",

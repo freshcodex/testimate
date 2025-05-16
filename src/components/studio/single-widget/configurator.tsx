@@ -34,6 +34,7 @@ import {
 import { useSaveWidget } from "@/hooks/use-save-widget";
 import { SaveWidgetModal } from "../wall-of-love/save-widget-modal";
 import { useParams } from "next/navigation";
+import type { Design } from "./types";
 
 interface ConfiguratorProps {
   design: string;
@@ -54,7 +55,9 @@ export function SingleWidgetConfigurator({
 
   const { projectSlug } = useParams();
 
-  const { config, handleConfigChange } = useSingleWidgetConfig(design);
+  const { config, handleConfigChange } = useSingleWidgetConfig(
+    design as Design
+  );
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {

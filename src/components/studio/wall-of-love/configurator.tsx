@@ -35,6 +35,7 @@ import {
 } from "@/hooks/use-wall-of-love-config";
 import { SaveWidgetModal } from "@/components/studio/wall-of-love/save-widget-modal";
 import { useSaveWidget } from "@/hooks/use-save-widget";
+import { Layout } from "./types";
 
 interface ConfiguratorProps {
   layout: string;
@@ -52,7 +53,7 @@ export function WallOfLoveConfigurator({
   const [copied, setCopied] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
 
-  const { config, handleConfigChange } = useWallOfLoveConfig(layout);
+  const { config, handleConfigChange } = useWallOfLoveConfig(layout as Layout);
   const { isSaving: isSavingWidget } = useSaveWidget();
 
   const embedCode = `<iframe height="${

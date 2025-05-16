@@ -18,7 +18,7 @@ export function SingleWidgetTab() {
   };
 
   const { handleConfigChange } = useSingleWidgetConfig(
-    selectedDesign as string
+    selectedDesign as Design
   );
 
   return (

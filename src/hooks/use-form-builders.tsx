@@ -19,6 +19,7 @@ export function useFormBuilder() {
 
   // Initialize form with default values
   const form = useForm<CollectionFormConfig>({
+    // @ts-expect-error: TODO: zodResolver is not typed correctly
     resolver: zodResolver(collectionFormSchema),
     defaultValues: {
       name: "My testimonial form",

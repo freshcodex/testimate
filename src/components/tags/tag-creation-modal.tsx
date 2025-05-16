@@ -5,7 +5,7 @@ import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
-import type { Tag, TagCategory } from "@/types/tags";
+import type { Tag, TagCategory } from "@/types";
 
 interface TagCreationModalProps {
   onClose: () => void;
