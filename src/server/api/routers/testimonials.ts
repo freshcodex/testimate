@@ -48,7 +48,8 @@ export const testimonialsRouter = createTRPCRouter({
       return allTestimonials;
     }),
 
-  getAllTestimonialsByProjectSlug: protectedProcedure
+  // TODO: Using it in wall of love so public; maybe keep private; create another one for public need to think
+  getAllTestimonialsByProjectSlug: publicProcedure
     .input(z.object({ projectSlug: z.string() }))
     .query(async ({ ctx, input }) => {
       const [project] = await ctx.db

@@ -29,6 +29,8 @@ interface HTMLVideoElementWithSrcObject extends HTMLVideoElement {
   srcObject: MediaStream | null;
 }
 
+// TODO: before starting the recording, ask for permission than start, currently timer starts before permission is given
+// TODO: don't keep the camera on when not recording or stopped recording currently is turned on entire time until i close the tab
 export function VideoRecorder({
   maxDuration,
   onUploadComplete,

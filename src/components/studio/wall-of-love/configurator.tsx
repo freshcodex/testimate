@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowLeft,
   Copy,
@@ -37,6 +37,7 @@ import { SaveWidgetModal } from "@/components/studio/wall-of-love/save-widget-mo
 import { useSaveWidget } from "@/hooks/use-save-widget";
 import { Layout } from "./types";
 import { env } from "@/env";
+import { useSidebar } from "@/components/ui/sidebar";
 
 interface ConfiguratorProps {
   layout: string;
@@ -44,12 +45,17 @@ interface ConfiguratorProps {
   projectSlug: string;
 }
 
-// TODO: hide the sidebar when this is opened in any device mode
 export function WallOfLoveConfigurator({
   layout,
   onBack,
   projectSlug,
 }: ConfiguratorProps) {
+  // Hide the sidebar when this is opened in any device mode
+  const { setOpen } = useSidebar();
+  useEffect(() => {
+    setOpen(false);
+  }, []);
+
   const [activeTab, setActiveTab] = useState("basic");
   const [copied, setCopied] = useState(false);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
