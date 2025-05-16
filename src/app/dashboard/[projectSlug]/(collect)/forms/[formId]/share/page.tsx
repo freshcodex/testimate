@@ -8,6 +8,7 @@ import { LinkShare } from "@/components/share-form/LinkShare";
 import { EmbedForm } from "@/components/share-form/EmbedForm";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
+import { env } from "@/env";
 
 export default function ShareFormPage() {
   const params = useParams();
@@ -15,7 +16,7 @@ export default function ShareFormPage() {
   const [activeTab, setActiveTab] = useState("link");
 
   // TODO: Change to the actual form link
-  const formLink = `http://localhost:3000/p/test-project/r/${params.formId}`;
+  const formLink = `${env.NEXT_PUBLIC_URL}/p/test-project/r/${params.formId}`;
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
