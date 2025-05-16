@@ -18,7 +18,7 @@ export async function DashOrAuthButton() {
       .from(projects)
       .where(eq(projects.createdBy, data.session?.user.id!));
 
-    projectSlug = project!.slug;
+    projectSlug = project?.slug ?? "";
   }
 
   return (
