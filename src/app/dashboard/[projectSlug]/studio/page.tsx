@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WallOfLoveTab } from "@/components/studio/wall-of-love-tab";
 import { SingleWidgetTab } from "@/components/studio/single-widget-tab";
-import { VideoWidgetTab } from "@/components/studio/video-widget-tab";
 import { SavedWidgetsTab } from "@/components/studio/saved-widget-tab";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 
@@ -98,31 +97,6 @@ export default function StudioPage() {
                   </span>
                 </TabsTrigger>
                 <TabsTrigger
-                  value="video-widget"
-                  className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
-                >
-                  <span className="flex items-center gap-2">
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <rect
-                        x="2"
-                        y="4"
-                        width="20"
-                        height="16"
-                        rx="2"
-                        fill="currentColor"
-                      />
-                      <path d="M15 12L10 15V9L15 12Z" fill="white" />
-                    </svg>
-                    Video Widget
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger
                   value="saved"
                   className="data-[state=active]:bg-white data-[state=active]:shadow-sm"
                 >
@@ -148,7 +122,6 @@ export default function StudioPage() {
         </div>
         {activeTab === "wall-of-love" && <WallOfLoveTab />}
         {activeTab === "single-widget" && <SingleWidgetTab />}
-        {activeTab === "video-widget" && <VideoWidgetTab />}
         {activeTab === "saved" && <SavedWidgetsTab />}
       </div>
     </DashboardLayout>

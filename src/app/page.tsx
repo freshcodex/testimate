@@ -6,6 +6,7 @@ import { FeatureSection } from "@/components/feature-section";
 import { RoadmapSection } from "@/components/roadmap-section";
 import { HeroGradient } from "@/components/hero-gradient";
 import { DashOrAuthButton } from "@/components/dash-or-auth-button";
+import { Logo } from "@/components/logo";
 
 export default function Home() {
   return (
@@ -14,13 +15,7 @@ export default function Home() {
       <header className="border-b border-gray-100">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center">
-              <span className="text-white font-bold">T</span>
-            </div>
-            <span className="font-bold text-xl">Testimate</span>
-            <span className="text-xs px-2 py-1 bg-gray-100 rounded-full text-gray-600">
-              OSS
-            </span>
+            <Logo />
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
@@ -219,12 +214,7 @@ export default function Home() {
             </div>
           </div>
           <div className="mt-12 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-4 md:mb-0">
-              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center mr-2">
-                <span className="text-white font-bold">T</span>
-              </div>
-              <span className="font-bold">Testimate</span>
-            </div>
+            <Logo />
             <div className="text-gray-600 text-sm">
               © {new Date().getFullYear()} Testimate. All rights reserved.
             </div>

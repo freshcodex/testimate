@@ -72,10 +72,7 @@ export function WallOfLoveConfigurator({
   )}" frameborder="0" scrolling="no" width="100%"></iframe>`;
 
   const handleCopyCode = () => {
-    const url = `${
-      env.NEXT_PUBLIC_URL
-    }/w/${projectSlug}?config=${generateUrlParams(config)}`;
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(embedCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -246,7 +243,7 @@ export function WallOfLoveConfigurator({
         projectSlug={projectSlug}
         type="wall_of_love"
         getUrl={() =>
-          `${env.NEXT_PUBLIC_URL}/w/${layout}?config=${generateUrlParams(
+          `${env.NEXT_PUBLIC_URL}/w/${projectSlug}?config=${generateUrlParams(
             config
           )}`
         }

@@ -71,8 +71,6 @@ export function LivePreview({ config }: LivePreviewProps) {
     primaryColor: config.primaryColor || "#0066cc",
   };
 
-  console.log(JSON.stringify(testimonialConfig, null, 2));
-
   return (
     <div>
       <div className="bg-gray-100 p-4 rounded-lg">

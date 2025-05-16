@@ -116,6 +116,8 @@ export const widgetRouter = createTRPCRouter({
           type: input.type,
           config: input.config,
           projectSlug: input.projectSlug,
+          url: input.url,
+          description: input.description,
         })
         .returning();
 

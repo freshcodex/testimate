@@ -4,28 +4,23 @@ import { toast } from "sonner";
 import type { WidgetCreateInput } from "@/types";
 
 export function useSaveWidget() {
-  const [isSaving, setIsSaving] = useState(false);
-
-  const { mutate: createWidget } = api.widget.create.useMutation({
-    onSuccess: () => {
-      toast.success("Widget saved successfully!");
-      setIsSaving(false);
-
-      // TODO: redirect to the saved widget page maybe right now its just state but it would be better to make it a page
-    },
-    onError: (error) => {
-      toast.error(`Error saving widget: ${error.message}`);
-      setIsSaving(false);
-    },
-  });
+  const { mutateAsync: createWidget, isPending } =
+    api.widget.create.useMutation({
+      onSuccess: () => {
+        toast.success("Widget saved successfully!");
+        // TODO: redirect to the saved widget page maybe right now its just state but it would be better to make it a page
+      },
+      onError: (error) => {
+        toast.error(`Error saving widget: ${error.message}`);
+      },
+    });
 
   const saveWidget = async (input: WidgetCreateInput) => {
-    setIsSaving(true);
-    createWidget(input);
+    await createWidget(input);
   };
 
   return {
     saveWidget,
-    isSaving,
+    isSaving: isPending,
   };
 }

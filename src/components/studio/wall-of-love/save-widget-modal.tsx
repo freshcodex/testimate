@@ -41,6 +41,8 @@ export function SaveWidgetModal({
       return;
     }
 
+    console.log(getUrl());
+
     await saveWidget({
       name,
       description,

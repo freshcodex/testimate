@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import type { TestimonialLayoutProps } from "../types";
 import type { CarouselConfig } from "../types";
 import { motion, AnimatePresence } from "framer-motion";
+import { Logo } from "@/components/logo";
 
 export function CarouselLayout({
   testimonials,
@@ -204,6 +205,7 @@ export function CarouselLayout({
                     showDate: config.showDate,
                     showSource: config.showSource,
                     borderRadius: config.borderRadius,
+                    showBranding: config.showBranding,
                   }}
                 />
               </motion.div>
@@ -260,26 +262,7 @@ export function CarouselLayout({
           transition={{ delay: 0.5 }}
           className="flex justify-center items-center mt-8"
         >
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            className="bg-indigo-100 text-indigo-600 rounded-full p-2 mr-2"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"
-              />
-            </svg>
-          </motion.div>
-          <span className="text-gray-700 font-medium">Testimonial</span>
+          <Logo />
         </motion.div>
       )}
     </div>

@@ -48,7 +48,7 @@ export const testimonialsRouter = createTRPCRouter({
       return allTestimonials;
     }),
 
-  // TODO: Using it in wall of love so public; maybe keep private; create another one for public need to think
+  // TODO: create getAllApprovedTestimonialsByProjectSlug instead of making this public cuz it will leak unapproved testimonials here
   getAllTestimonialsByProjectSlug: publicProcedure
     .input(z.object({ projectSlug: z.string() }))
     .query(async ({ ctx, input }) => {

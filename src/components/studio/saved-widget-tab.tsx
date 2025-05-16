@@ -144,7 +144,7 @@ export function SavedWidgetsTab() {
               <div>
                 <p className="text-sm text-gray-500 mb-2">Widget URL</p>
                 <div className="flex gap-2">
-                  <code className="flex-1 bg-gray-100 p-2 rounded text-sm break-all">
+                  <code className="flex-1 bg-gray-200 p-2 max-h-[200px] overflow-y-auto rounded text-sm break-all">
                     {selectedWidget.url}
                   </code>
                   <Button

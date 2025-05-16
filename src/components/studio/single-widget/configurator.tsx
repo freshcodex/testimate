@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import {
   ArrowLeft,
   Copy,
@@ -48,45 +48,14 @@ export function SingleWidgetConfigurator({
 }: ConfiguratorProps) {
   const [activeTab, setActiveTab] = useState("basic");
   const [copied, setCopied] = useState(false);
-  const [isResizing, setIsResizing] = useState(false);
-  const [settingsWidth, setSettingsWidth] = useState(300); // Default width in pixels
-  const containerRef = useRef<HTMLDivElement>(null);
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
-  const { saveWidget, isSaving } = useSaveWidget();
+  const { isSaving } = useSaveWidget();
 
   const { projectSlug } = useParams();
 
   const { config, handleConfigChange } = useSingleWidgetConfig(
     design as Design
   );
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isResizing || !containerRef.current) return;
-
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const newWidth = e.clientX - containerRect.left;
-
-      // Set minimum and maximum widths
-      if (newWidth >= 200 && newWidth <= containerRect.width - 200) {
-        setSettingsWidth(newWidth);
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsResizing(false);
-    };
-
-    if (isResizing) {
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", handleMouseUp);
-    }
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isResizing]);
 
   // TODO: use only stuff from the config, must be better way to do this
   const embedCode = `<iframe height="${config.height}" id="testimonialto-${
@@ -96,11 +65,7 @@ export function SingleWidgetConfigurator({
   )}" frameborder="0" scrolling="no" width="100%"></iframe>`;
 
   const handleCopyCode = () => {
-    const url = `${env.NEXT_PUBLIC_URL}/t/${
-      config.design
-    }?config=${generateUrlParams(config)}`;
-    console.log(url);
-    navigator.clipboard.writeText(url);
+    navigator.clipboard.writeText(embedCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

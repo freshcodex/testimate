@@ -2,6 +2,7 @@ import { Star } from "lucide-react";
 import { VideoPlayer } from "./video-player";
 import type { TestimonialCardProps } from "../testimonial-card";
 import { SourceIcon } from "./source-icon";
+import { Logo } from "@/components/logo";
 
 export default function WithImageTestimonial({
   testimonial,
@@ -121,6 +122,13 @@ export default function WithImageTestimonial({
           </div>
         </div>
       </div>
+
+      {config.showBranding && (
+        <div className="flex justify-center items-center font-bold mt-8 w-full space-x-2">
+          <span>Powered By</span>
+          <Logo />
+        </div>
+      )}
     </div>
   );
 }
