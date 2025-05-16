@@ -50,6 +50,7 @@ export function MasonryFixedLayout({
                 showDate: config.showDate,
                 showSource: config.showSource,
                 borderRadius: config.borderRadius,
+                showBranding: config.showBranding,
               }}
             />
           </div>

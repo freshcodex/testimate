@@ -1,4 +1,4 @@
-import { Github, ArrowRight } from "lucide-react";
+import { Github, ArrowRight, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TestimonialShowcase } from "@/components/testimonial-showcase";
 import { StepProcess } from "@/components/step-process";
@@ -7,23 +7,21 @@ import { RoadmapSection } from "@/components/roadmap-section";
 import { HeroGradient } from "@/components/hero-gradient";
 import { DashOrAuthButton } from "@/components/dash-or-auth-button";
 import { Logo } from "@/components/logo";
-
+import NextLink from "next/link";
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white scroll-smooth">
       {/* Header */}
-      <header className="border-b border-gray-100">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+      <header className="border-b border-gray-100 sticky top-0 bg-white z-50">
+        <div className="w-full container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Logo />
           </div>
 
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#features" className="text-gray-600 hover:text-gray-900">
               Features
-            </a>
-            <a href="#examples" className="text-gray-600 hover:text-gray-900">
-              Examples
             </a>
             <a href="#roadmap" className="text-gray-600 hover:text-gray-900">
               Roadmap
@@ -35,22 +33,17 @@ export default function Home() {
               <Github className="h-4 w-4 mr-1" />
               GitHub
             </a>
-            <a
-              href="/docs"
-              className="hidden md:block text-gray-600 hover:text-gray-900"
-            >
-              Docs
-            </a>
           </nav>
 
-          <div className="flex items-center space-x-4">
-            <DashOrAuthButton />
-          </div>
+          <DashOrAuthButton />
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative py-16 md:py-24 text-center overflow-hidden">
+      <section
+        id="hero"
+        className="relative py-16 md:py-24 text-center overflow-hidden"
+      >
         <HeroGradient />
         <div className="container mx-auto px-4 relative z-10">
           <div className="inline-flex items-center bg-white border border-gray-200 rounded-full px-3 py-1 text-sm text-gray-600 mb-6 shadow-sm">
@@ -108,12 +101,6 @@ export default function Home() {
               Get started for free
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <Button
-              variant="outline"
-              className="border-white text-white hover:bg-white/10 h-12 px-8 text-lg"
-            >
-              View documentation
-            </Button>
           </div>
         </div>
       </section>
@@ -126,44 +113,20 @@ export default function Home() {
               <h3 className="font-bold mb-4">Product</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
+                  <NextLink
+                    href="#features"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
                     Features
-                  </a>
+                  </NextLink>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
+                  <NextLink
+                    href="#roadmap"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
                     Roadmap
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
-                    Changelog
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4">Resources</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
-                    Guides
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
-                    API Reference
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
-                    Support
-                  </a>
+                  </NextLink>
                 </li>
               </ul>
             </div>
@@ -171,24 +134,36 @@ export default function Home() {
               <h3 className="font-bold mb-4">Community</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
+                  <NextLink
+                    href="https://github.com/testimate/testimate"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
                     GitHub
-                  </a>
+                  </NextLink>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
+                  <NextLink
+                    href="#"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
                     Discord
-                  </a>
+                  </NextLink>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
+                  <NextLink
+                    href="https://x.com/testimatehq"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
                     Twitter
-                  </a>
+                  </NextLink>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
+                  <NextLink
+                    href="#"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
                     Contributors
-                  </a>
+                  </NextLink>
                 </li>
               </ul>
             </div>
@@ -196,19 +171,28 @@ export default function Home() {
               <h3 className="font-bold mb-4">Legal</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
+                  <NextLink
+                    href="#"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
                     Privacy Policy
-                  </a>
+                  </NextLink>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
+                  <NextLink
+                    href="#"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
                     Terms of Service
-                  </a>
+                  </NextLink>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-600 hover:text-gray-900">
+                  <NextLink
+                    href="#"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
                     License
-                  </a>
+                  </NextLink>
                 </li>
               </ul>
             </div>
