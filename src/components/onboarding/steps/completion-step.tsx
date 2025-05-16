@@ -6,49 +6,28 @@ import { StepHeader } from "../step-header";
 import { useOnboarding } from "@/contexts/onboarding-context";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
-interface CompletionStepProps {
-  onNext: () => void;
-  userData: {
-    name: string;
-    businessType: string;
-    website: string;
-    projectSlug?: string;
-  };
-}
+export function CompletionStep() {
+  const { setIsLoading, userData } = useOnboarding();
+  const router = useRouter();
 
-export function CompletionStep({ onNext, userData }: CompletionStepProps) {
-  const { setUserData, setIsLoading, scrapedData } = useOnboarding();
-
-  const updateProject = api.project.update.useMutation({
-    onSuccess: () => {
-      onNext();
-    },
+  const onboarding = api.onboarding.completeOnboarding.useMutation({
     onError: (error) => {
       toast.error(error.message);
       setIsLoading(false);
     },
   });
 
-  const handleContinue = () => {
-    if (scrapedData && userData.projectSlug) {
-      const projectId = parseInt(userData.projectSlug);
-      if (!isNaN(projectId)) {
-        setIsLoading(true);
-        updateProject.mutate({
-          id: projectId,
-          name: scrapedData.title || `${userData.name}'s Project`,
-          description: scrapedData.description || "",
-          url: userData.website,
-          logoUrl: scrapedData.faviconUrl,
-          active: true,
-          slug: userData.projectSlug,
-        });
-      }
-    } else {
-      setUserData({ projectSlug: userData.projectSlug });
-      onNext();
-    }
+  const handleContinue = async () => {
+    setIsLoading(true);
+    const result = await onboarding.mutateAsync({
+      fullName: userData.name,
+      businessType: userData.businessType,
+      websiteUrl: userData.website,
+    });
+    setIsLoading(false);
+    router.push(`/dashboard/${result.project.slug}`);
   };
 
   return (
@@ -82,10 +61,11 @@ export function CompletionStep({ onNext, userData }: CompletionStepProps) {
         </div>
 
         <Button
+          disabled={onboarding.isPending}
           onClick={handleContinue}
           className="w-full h-12 bg-purple-600 hover:bg-purple-700"
         >
-          Go to Dashboard
+          {onboarding.isPending ? "Redirecting..." : "Go to Dashboard"}
         </Button>
       </div>
     </div>

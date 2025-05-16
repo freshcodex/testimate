@@ -6,15 +6,6 @@ import { Button } from "@/components/ui/button";
 import { StepHeader } from "../step-header";
 import { useOnboarding } from "@/contexts/onboarding-context";
 
-interface BusinessTypeStepProps {
-  onNext: (data: { businessType: string }) => void;
-  userData: {
-    name: string;
-    businessType: string;
-    website: string;
-  };
-}
-
 const businessTypes = [
   {
     id: "agency",
@@ -42,15 +33,15 @@ const businessTypes = [
   },
 ];
 
-export function BusinessTypeStep({ onNext, userData }: BusinessTypeStepProps) {
+export function BusinessTypeStep() {
+  const { setUserData, userData, setStep } = useOnboarding();
   const [selectedType, setSelectedType] = useState(userData.businessType);
-  const { setUserData } = useOnboarding();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedType) {
       setUserData({ businessType: selectedType });
-      onNext({ businessType: selectedType });
+      setStep("website");
     }
   };
 

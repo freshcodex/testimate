@@ -14,8 +14,7 @@ export const onboardingRouter = createTRPCRouter({
   completeOnboarding: protectedProcedure
     .input(
       z.object({
-        firstName: z.string().min(1, "First name is required"),
-        lastName: z.string().min(1, "Last name is required"),
+        fullName: z.string().min(1, "Full name is required"),
         businessType: z.string().min(1, "Business type is required"),
         websiteUrl: z.string().url("Please enter a valid website URL"),
       })
@@ -25,8 +24,6 @@ export const onboardingRouter = createTRPCRouter({
       const [updatedProfile] = await ctx.db
         .update(profiles)
         .set({
-          firstName: input.firstName,
-          lastName: input.lastName,
           onboardingCompleted: true,
         })
         .where(eq(profiles.id, ctx.user.id))
@@ -43,9 +40,10 @@ export const onboardingRouter = createTRPCRouter({
       const [newProject] = await ctx.db
         .insert(projects)
         .values({
-          name: `${input.firstName}'s Project`,
-          slug: `${input.firstName.toLowerCase()}-project`,
-          businessType: input.businessType,
+          name: `${input.fullName}'s Project`,
+          slug: `${input.fullName
+            .toLowerCase()
+            .replace(/ /g, "-")}-${Date.now()}--project`,
           url: input.websiteUrl,
           createdBy: ctx.user.id,
         })

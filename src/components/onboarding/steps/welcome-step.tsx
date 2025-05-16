@@ -9,19 +9,15 @@ import { Input } from "@/components/ui/input";
 import { StepHeader } from "../step-header";
 import { useOnboarding } from "@/contexts/onboarding-context";
 
-interface WelcomeStepProps {
-  onNext: (data: { name: string }) => void;
-}
-
-export function WelcomeStep({ onNext }: WelcomeStepProps) {
+export function WelcomeStep() {
   const [name, setName] = useState("");
-  const { setUserData } = useOnboarding();
+  const { setUserData, setStep } = useOnboarding();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
       setUserData({ name });
-      onNext({ name });
+      setStep("business-type");
     }
   };
 

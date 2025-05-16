@@ -14,32 +14,10 @@ import {
   useOnboarding,
   type UserData,
 } from "@/contexts/onboarding-context";
-import { api } from "@/trpc/react";
-import { toast } from "sonner";
 
+// TODO: check if user is already onboarded; make it rsc maybe?
 function OnboardingContent() {
-  const router = useRouter();
-  const {
-    step,
-    setStep,
-    userData,
-    setUserData,
-    isLoading,
-    setIsLoading,
-    showConfetti,
-    setShowConfetti,
-  } = useOnboarding();
-
-  const completeOnboarding = api.onboarding.completeOnboarding.useMutation({
-    onSuccess: (data) => {
-      setUserData({ projectSlug: data.project.slug });
-      handleNext();
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      setIsLoading(false);
-    },
-  });
+  const { step, isLoading, showConfetti, setShowConfetti } = useOnboarding();
 
   // Trigger confetti on first visit
   useEffect(() => {
@@ -52,69 +30,18 @@ function OnboardingContent() {
     }
   }, [step, setShowConfetti]);
 
-  const handleNext = (data: Partial<UserData> = {}) => {
-    // Update user data
-    setUserData(data);
-
-    // Move to next step
-    const steps = [
-      "welcome",
-      "business-type",
-      "website",
-      "completion",
-    ] as const;
-    const currentIndex = steps.indexOf(step as (typeof steps)[number]);
-
-    if (currentIndex < steps.length - 1) {
-      const nextStep = steps[currentIndex + 1];
-      setStep(nextStep as string);
-
-      // Handle API calls based on the current step
-      if (step === "website") {
-        setIsLoading(true);
-        completeOnboarding.mutate({
-          firstName: userData.name?.split(" ")[0] || "User",
-          lastName: userData.name?.split(" ").slice(1).join(" ") || "User",
-          businessType: userData.businessType || "",
-          websiteUrl: userData.website || "",
-        });
-      }
-    } else {
-      // Onboarding complete, redirect to dashboard
-      if (userData.projectSlug) {
-        router.push(`/dashboard/${userData.projectSlug}`);
-      }
-    }
-  };
-
   const renderStep = () => {
-    if (isLoading) {
-      return (
-        <div className="flex flex-col items-center justify-center min-h-[400px]">
-          <ProgressIndicator
-            steps={["welcome", "business-type", "website", "completion"]}
-            currentStep={step}
-          />
-          <p className="mt-4 text-gray-600">
-            {step === "website" && "Creating your project..."}
-            {step === "business-type" && "Scraping your website..."}
-            {step === "completion" && "Updating project details..."}
-          </p>
-        </div>
-      );
-    }
-
     switch (step) {
       case "welcome":
-        return <WelcomeStep onNext={handleNext} />;
+        return <WelcomeStep />;
       case "business-type":
-        return <BusinessTypeStep onNext={handleNext} userData={userData} />;
+        return <BusinessTypeStep />;
       case "website":
-        return <WebsiteStep onNext={handleNext} userData={userData} />;
+        return <WebsiteStep />;
       case "completion":
-        return <CompletionStep onNext={handleNext} userData={userData} />;
+        return <CompletionStep />;
       default:
-        return <WelcomeStep onNext={handleNext} />;
+        return <WelcomeStep />;
     }
   };
 

@@ -12,13 +12,7 @@ export function OnboardingLayout({ children }: OnboardingLayoutProps) {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const step = params.get("step") || "welcome";
-      const steps = [
-        "welcome",
-        "business-type",
-        "website",
-        "import",
-        "completion",
-      ];
+      const steps = ["welcome", "business-type", "website", "completion"];
       return steps.indexOf(step) + 1 || 1;
     }
     return 1;

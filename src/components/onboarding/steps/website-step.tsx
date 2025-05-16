@@ -6,41 +6,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StepHeader } from "../step-header";
 import { useOnboarding } from "@/contexts/onboarding-context";
-import { api } from "@/trpc/react";
-import { toast } from "sonner";
 
-interface WebsiteStepProps {
-  onNext: (data: { website: string }) => void;
-  userData: {
-    name: string;
-    businessType: string;
-    website: string;
-  };
-}
-
-export function WebsiteStep({ onNext, userData }: WebsiteStepProps) {
-  const [website, setWebsite] = useState(userData.website);
-  const { setUserData, setIsLoading, setScrapedData } = useOnboarding();
-
-  const scrapeWebsite = api.onboarding.scrapeWebsiteInfo.useMutation({
-    onSuccess: (data) => {
-      setScrapedData(data);
-      onNext({ website });
-    },
-    onError: (error) => {
-      toast.error(error.message);
-      setIsLoading(false);
-    },
-  });
+export function WebsiteStep() {
+  const [website, setWebsite] = useState("");
+  const { setUserData, setStep } = useOnboarding();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (website.trim()) {
       setUserData({ website });
-      setIsLoading(true);
-      scrapeWebsite.mutate({
-        websiteUrl: website,
-      });
+      setStep("completion");
     }
   };
 
