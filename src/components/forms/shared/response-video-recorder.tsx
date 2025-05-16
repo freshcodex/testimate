@@ -170,7 +170,7 @@ export function VideoRecorder({
     toast.success("Video uploaded successfully");
   };
 
-  const { setTestimonialId } = useTestimonialStore();
+  const { setTestimonialId, setToken } = useTestimonialStore();
 
   const handleSelectedFileUpload = async () => {
     setState("uploading");
@@ -203,6 +203,7 @@ export function VideoRecorder({
               throw new Error(`Upload failed with status: ${response.status}`);
             }
             setTestimonialId(data.testimonialId!);
+            setToken(data.token!);
             onUploadComplete?.(data.uploadId);
             toast.success("Video uploaded successfully");
             setState("completed");
@@ -259,6 +260,7 @@ export function VideoRecorder({
                 );
               }
               setTestimonialId(data.testimonialId!);
+              setToken(data.token!);
               onUploadComplete?.(data.uploadId);
               toast.success("Video uploaded successfully");
               setState("completed");

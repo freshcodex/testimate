@@ -12,6 +12,8 @@ import {
   insertTestimonialSchema,
   selectTestimonialSchema,
 } from "@/server/db/zod-schemas";
+import { env } from "@/env";
+import jwt from "jsonwebtoken";
 
 const updateTestimonialSchema = createUpdateSchema(testimonials);
 
@@ -228,7 +230,11 @@ export const testimonialsRouter = createTRPCRouter({
           createdAt: true,
           updatedAt: true,
         })
-        .extend({ id: z.number({ required_error: "Id is required" }) })
+        .extend({
+          id: z.number({ required_error: "Id is required" }),
+          // for user who created the testimonial to update it only
+          token: z.string().optional(),
+        })
     )
     .mutation(async ({ ctx, input }) => {
       const [testimonial] = await ctx.db
@@ -243,22 +249,44 @@ export const testimonialsRouter = createTRPCRouter({
         });
       }
 
-      // Verify the user has access to the project
-      const [project] = await ctx.db
-        .select()
-        .from(projects)
-        .where(
-          and(
-            eq(projects.id, testimonial.projectId),
-            eq(projects.createdBy, ctx.user.id)
-          )
-        );
+      // First check if there's a valid token
+      if (input.token) {
+        try {
+          const decoded = jwt.verify(input.token, env.JWT_SECRET) as {
+            testimonialId: number;
+            projectId: number;
+          };
 
-      if (!project) {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "You don't have access to this testimonial",
-        });
+          if (decoded.testimonialId !== testimonial.id) {
+            throw new TRPCError({
+              code: "FORBIDDEN",
+              message: "Invalid token for this testimonial",
+            });
+          }
+        } catch (error) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Invalid token",
+          });
+        }
+      } else {
+        // If no token, then verify project ownership
+        const [project] = await ctx.db
+          .select()
+          .from(projects)
+          .where(
+            and(
+              eq(projects.id, testimonial.projectId),
+              eq(projects.createdBy, ctx.user.id)
+            )
+          );
+
+        if (!project) {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "You don't have access to this testimonial",
+          });
+        }
       }
 
       const updatedTestimonial = await ctx.db

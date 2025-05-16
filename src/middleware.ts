@@ -1,11 +1,20 @@
 import { updateSession } from "@/supabase/clients/middleware";
 import { type NextRequest, NextResponse } from "next/server";
-import { createClient } from "./supabase/clients/server";
 
-const protectedRoutes = ["/dashboard/:path*"];
+const publicRoutes = [
+  "/p/:path*",
+  "/t/:path*",
+  "/w/:path*",
+  "/login",
+  "/signup",
+  "/email-confirm",
+];
 
 export async function middleware(request: NextRequest) {
-  const supabase = await createClient();
+  if (publicRoutes.includes(request.nextUrl.pathname)) {
+    return NextResponse.next();
+  }
+
   const { response, user } = await updateSession(request, NextResponse.next());
 
   // Check authentication for protected routes

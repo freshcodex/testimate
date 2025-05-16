@@ -32,6 +32,7 @@ export function ThankYouContent({
     const shareUrl = encodeURIComponent(window.location.href);
     let shareLink = "";
 
+    // TODO: resuse this logic in the share page as well
     switch (platform) {
       case "twitter":
         shareLink = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`;

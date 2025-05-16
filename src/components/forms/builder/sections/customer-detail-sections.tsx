@@ -9,17 +9,14 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import type { CollectionFormConfig } from "@/lib/schema/form-schema";
-import { Switch } from "@/components/ui/switch";
 import {
   AtSign,
   Briefcase,
   User,
   Globe,
   Building2,
-  Users,
   Hexagon,
   Plus,
 } from "lucide-react";

@@ -58,7 +58,6 @@ export function LoginForm({
     }
   };
 
-  // TODO: click to login with google should not trigger submit event; also redirect to dashboard after login; same issue on signup form as well
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

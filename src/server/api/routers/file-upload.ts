@@ -7,6 +7,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import Mux from "@mux/mux-node";
 import { projects, testimonials } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
+import jwt from "jsonwebtoken";
 
 const s3Client = new S3Client({
   forcePathStyle: true,
@@ -103,6 +104,16 @@ export const fileUploadRouter = createTRPCRouter({
           })
           .returning();
 
+        // Generate JWT token with testimonial and project IDs
+        const token = jwt.sign(
+          {
+            testimonialId: tempTestimonial?.id!,
+            projectId: project.id,
+          },
+          env.JWT_SECRET,
+          { expiresIn: "1h" }
+        );
+
         // Create Mux upload with metadata containing testimonial ID
         const upload = await muxClient.video.uploads.create({
           new_asset_settings: {
@@ -119,8 +130,8 @@ export const fileUploadRouter = createTRPCRouter({
         return {
           uploadUrl: upload.url,
           uploadId: upload.id,
-          // use this testimonial to later update during the customer details page
           testimonialId: tempTestimonial?.id,
+          token, // Add the JWT token to the response
         };
       } catch (error) {
         console.error("Mux upload error:", error);

@@ -16,7 +16,7 @@ export default function WallOfLovePage() {
   const configParam = searchParams.get("config");
   const { projectSlug } = useParams();
 
-  // TODO: only show approved testimonials
+  // TODO: only show approved testimonials; do it server side not client side
   const { data: testimonials, isLoading } =
     api.testimonials.getAllTestimonialsByProjectSlug.useQuery({
       projectSlug: projectSlug as string,

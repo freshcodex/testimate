@@ -17,7 +17,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "dev:webhook": "ngrok http --url=free-skink-neat.ngrok-free.app 3000",
-    "build:waerr": "__NEXT_TEST_MODE=true pnpm build"
+    "build:err": "__NEXT_TEST_MODE=true pnpm build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.808.0",
@@ -62,6 +62,7 @@
     "drizzle-orm": "^0.41.0",
     "drizzle-zod": "^0.7.1",
     "framer-motion": "^12.10.5",
+    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.508.0",
     "next": "^15.2.3",
     "next-themes": "^0.4.6",
@@ -85,6 +86,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@tailwindcss/postcss": "^4.0.15",
+    "@types/jsonwebtoken": "^9.0.9",
     "@types/node": "^20.14.10",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",

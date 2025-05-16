@@ -16,6 +16,7 @@ export const env = createEnv({
     S3_SECRET_ACCESS_KEY: z.string(),
     // FIRECRAWL_API_KEY: z.string(),
     MUX_WEBHOOK_SECRET: z.string(),
+    JWT_SECRET: z.string(),
     // GOOGLE_PLACES_API_KEY: z.string(),
     // YELP_API_KEY: z.string(),
     // TRUSTPILOT_API_KEY: z.string(),
@@ -62,7 +63,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
-
+    JWT_SECRET: process.env.JWT_SECRET,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

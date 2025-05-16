@@ -63,7 +63,7 @@ export function CustomerDetailsContent({
     },
   });
 
-  const { rating, text, testimonialId } = useTestimonialStore();
+  const { rating, text, testimonialId, token } = useTestimonialStore();
 
   const { form, handleSubmit } = useTestimonialForm({
     formId,
@@ -88,8 +88,10 @@ export function CustomerDetailsContent({
       updateTestimonial.mutate({
         ...data,
         id: testimonialId,
+        token,
       });
     } else {
+      console.log(formId, "formId");
       createTestimonial.mutate({
         ...data,
         formId,

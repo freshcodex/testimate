@@ -12,6 +12,9 @@ export function CustomerDetailsPage({
 
   const { formId, projectSlug } = useParams();
 
+  //  TODO: handle this error gracefully
+  // Collection form not found or doesn't belong to the project at o.from (https://testimate.vercel.app/_next/static/chunks/9696-7870ff7ebda7dc02.js:1:1770) at https://testimate.vercel.app/_next/static/chunks/9696-7870ff7ebda7dc02.js:1:8935
+
   if (isMobile) {
     return (
       <div className="flex h-full flex-col">
