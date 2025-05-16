@@ -69,7 +69,7 @@ export function generateUrlParams(config: SingleWidgetConfig): string {
   return btoa(JSON.stringify(cleanConfig));
 }
 
-export function useSingleWidgetConfig(initialDesign: string) {
+export function useSingleWidgetConfig(initialDesign: Design) {
   const [config, setConfig] = useState<SingleWidgetConfig>(() => ({
     ...defaultConfig,
     design: initialDesign as Design,

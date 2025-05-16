@@ -72,7 +72,7 @@ export function generateUrlParams(config: WallOfLoveConfig): string {
   return btoa(JSON.stringify(cleanConfig));
 }
 
-export function useWallOfLoveConfig(initialLayout: string) {
+export function useWallOfLoveConfig(initialLayout: Layout) {
   const [config, setConfig] = useState<WallOfLoveConfig>({
     ...defaultConfig,
     layout: initialLayout as Layout,

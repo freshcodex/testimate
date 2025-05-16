@@ -1,3 +1,4 @@
+import type { WallOfLoveConfig } from "@/components/studio/wall-of-love/types";
 import type { TestimonialProps } from "@/components/widgets/testimonial/types";
 
 export const DEFAULT_TESTIMONIAL: TestimonialProps = {
@@ -28,4 +29,11 @@ export const DEFAULT_TESTIMONIAL: TestimonialProps = {
   customFields: [],
   originalDate: new Date("2022-01-26"),
   sourceId: "twitter",
+};
+
+export const DEFAULT_WALL_OF_LOVE_CONFIG: WallOfLoveConfig = {
+  layout: "grid",
+  columns: 2,
+  showRating: true,
+  showDate: true,
 };
