@@ -8,7 +8,8 @@ interface GoogleAuthButtonProps {
 }
 
 export function GoogleAuthButton({ action }: GoogleAuthButtonProps) {
-  const handleGoogleAuth = async () => {
+  const handleGoogleAuth = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent form submission
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -18,7 +19,12 @@ export function GoogleAuthButton({ action }: GoogleAuthButtonProps) {
     });
   };
   return (
-    <Button variant="outline" className="w-full" onClick={handleGoogleAuth}>
+    <Button
+      type="button"
+      variant="outline"
+      className="w-full"
+      onClick={handleGoogleAuth}
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

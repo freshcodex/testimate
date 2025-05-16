@@ -5,6 +5,7 @@ import { StepProcess } from "@/components/step-process";
 import { FeatureSection } from "@/components/feature-section";
 import { RoadmapSection } from "@/components/roadmap-section";
 import { HeroGradient } from "@/components/hero-gradient";
+import { DashOrAuthButton } from "@/components/dash-or-auth-button";
 
 export default function Home() {
   return (
@@ -39,18 +40,16 @@ export default function Home() {
               <Github className="h-4 w-4 mr-1" />
               GitHub
             </a>
-          </nav>
-
-          <div className="flex items-center space-x-4">
             <a
               href="/docs"
               className="hidden md:block text-gray-600 hover:text-gray-900"
             >
               Docs
             </a>
-            <Button className="bg-purple-600 hover:bg-purple-700">
-              Get Started
-            </Button>
+          </nav>
+
+          <div className="flex items-center space-x-4">
+            <DashOrAuthButton />
           </div>
         </div>
       </header>
