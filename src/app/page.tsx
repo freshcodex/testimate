@@ -1,4 +1,4 @@
-import { Github, ArrowRight, Menu } from "lucide-react";
+import { Github, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TestimonialShowcase } from "@/components/testimonial-showcase";
 import { StepProcess } from "@/components/step-process";
@@ -8,6 +8,7 @@ import { HeroGradient } from "@/components/hero-gradient";
 import { DashOrAuthButton } from "@/components/dash-or-auth-button";
 import { Logo } from "@/components/logo";
 import NextLink from "next/link";
+import { Badge } from "@/components/ui/badge";
 export default function Home() {
   return (
     <div className="min-h-screen bg-white scroll-smooth">
@@ -27,7 +28,7 @@ export default function Home() {
               Roadmap
             </a>
             <a
-              href="https://github.com/testimate/testimate"
+              href="https://github.com/bishaln/testimate"
               className="flex items-center text-gray-600 hover:text-gray-900"
             >
               <Github className="h-4 w-4 mr-1" />
@@ -52,6 +53,18 @@ export default function Home() {
             </span>
             Introducing Testimate — Open Source Testimonial Platform
           </div>
+          <div>
+            <Badge className="cursor-pointer">
+              <NextLink
+                className="flex"
+                target="_blank"
+                href="https://github.com/bishaln"
+              >
+                Made by Bishal
+                <Github className="h-4 w-4 ml-2" />
+              </NextLink>
+            </Badge>
+          </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             Beautiful testimonials,
             <br />
@@ -63,14 +76,21 @@ export default function Home() {
             over your data.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16">
-            <Button className="bg-purple-600 hover:bg-purple-700 h-12 px-8 text-lg">
-              Start collecting testimonials
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button variant="outline" className="h-12 px-8 text-lg">
-              <Github className="mr-2 h-5 w-5" />
-              Star on GitHub
-            </Button>
+            <NextLink target="_blank" href="/dashboard">
+              <Button className="bg-purple-600 hover:bg-purple-700 h-12 px-8 text-lg">
+                Start collecting testimonials
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </NextLink>
+            <NextLink
+              target="_blank"
+              href="https://github.com/bishaln/testimate"
+            >
+              <Button variant="outline" className="h-12 px-8 text-lg">
+                <Github className="mr-2 h-5 w-5" />
+                Star on GitHub
+              </Button>
+            </NextLink>
           </div>
 
           <TestimonialShowcase />
@@ -131,11 +151,12 @@ export default function Home() {
               </ul>
             </div>
             <div>
-              <h3 className="font-bold mb-4">Community</h3>
+              <h3 className="font-bold mb-4">Socials</h3>
               <ul className="space-y-2">
                 <li>
                   <NextLink
-                    href="https://github.com/testimate/testimate"
+                    target="_blank"
+                    href="https://github.com/bishaln/testimate"
                     className="text-gray-600 hover:text-gray-900"
                   >
                     GitHub
@@ -143,55 +164,11 @@ export default function Home() {
                 </li>
                 <li>
                   <NextLink
-                    href="#"
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    Discord
-                  </NextLink>
-                </li>
-                <li>
-                  <NextLink
-                    href="https://x.com/testimatehq"
+                    target="_blank"
+                    href="https://x.com/bishaltwt"
                     className="text-gray-600 hover:text-gray-900"
                   >
                     Twitter
-                  </NextLink>
-                </li>
-                <li>
-                  <NextLink
-                    href="#"
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    Contributors
-                  </NextLink>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-bold mb-4">Legal</h3>
-              <ul className="space-y-2">
-                <li>
-                  <NextLink
-                    href="#"
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    Privacy Policy
-                  </NextLink>
-                </li>
-                <li>
-                  <NextLink
-                    href="#"
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    Terms of Service
-                  </NextLink>
-                </li>
-                <li>
-                  <NextLink
-                    href="#"
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    License
                   </NextLink>
                 </li>
               </ul>
@@ -199,8 +176,14 @@ export default function Home() {
           </div>
           <div className="mt-12 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center">
             <Logo />
-            <div className="text-gray-600 text-sm">
-              © {new Date().getFullYear()} Testimate. All rights reserved.
+            <div>
+              <NextLink
+                target="_blank"
+                href="https://github.com/bishaln"
+                className="text-gray-600 hover:text-gray-900"
+              >
+                Made with ❤️ by Bishal
+              </NextLink>
             </div>
           </div>
         </div>
