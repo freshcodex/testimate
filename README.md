@@ -2,6 +2,10 @@
 
 Testimate is a modern, open-source alternative to testimonial collection platforms like testimonials.to, Senja, and Trustmary. Built with a focus on privacy, customization, and ease of use, Testimate allows businesses to collect, manage, and display customer testimonials with full control over their data.
 
+## Deploy on Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftestimate%2Ftestimate&env=MUX_TOKEN_ID,MUX_TOKEN_SECRET,MUX_WEBHOOK_SECRET,SUPABASE_URL,SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY&envDescription=Environment%20variables%20for%20the%20Testimate%20application&envLink=https%3A%2F%2Fgithub.com%2Ftestimate%2Ftestimate%23environment-variables)
+
 ## 🚀 Features
 
 - ⚡️ **Next.js 15** with App Router for blazing fast performance
@@ -27,44 +31,7 @@ Testimate is a modern, open-source alternative to testimonial collection platfor
 - Supabase account
 - PostgreSQL (if running locally)
 
-## 🛠️ Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/yourusername/testimate.git
-cd testimate
-```
-
-2. Install dependencies:
-
-```bash
-pnpm install
-```
-
-3. Set up environment variables:
-
-```bash
-cp .env.example .env
-```
-
-4. Update the `.env` file with your Supabase credentials:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-DATABASE_URL=your_database_url
-```
-
-## 🚀 Getting Started
-
-1. Start the development server:
-
-```bash
-pnpm dev
-```
-
-2. Open [http://localhost:3000](http://localhost:3000) in your browser.
+## Refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file for more details on how to get started.
 
 ## 📁 Project Structure
 
