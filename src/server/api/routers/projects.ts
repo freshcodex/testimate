@@ -102,6 +102,8 @@ export const projectRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // create slug
+      const slug = input.slug + "-" + Date.now();
       const newProject = await ctx.db
         .insert(projects)
         .values({
@@ -109,7 +111,7 @@ export const projectRouter = createTRPCRouter({
           description: input.description || null,
           createdBy: ctx.user.id,
           active: input.active,
-          slug: input.slug,
+          slug: slug,
         })
         .returning();
 

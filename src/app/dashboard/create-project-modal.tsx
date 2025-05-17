@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PlusIcon } from "lucide-react";
 import { slugify } from "@/lib/utils";
+import { toast } from "sonner";
 
 export function CreateProjectModal() {
   const [open, setOpen] = useState(false);
@@ -25,8 +26,13 @@ export function CreateProjectModal() {
   const createProject = api.project.create.useMutation({
     onSuccess: () => {
       setOpen(false);
+      toast.success("Project created successfully");
       setName("");
+      setSlug("");
       router.refresh();
+    },
+    onError: (e) => {
+      toast.error(e.message);
     },
   });
 
