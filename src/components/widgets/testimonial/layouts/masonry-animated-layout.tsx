@@ -127,7 +127,7 @@ export function MasonryAnimatedLayout({
           animate="animate"
           whileHover={config.pauseOnHover ? "hover" : undefined}
         >
-          <div className="columns-1 md:columns-2 lg:columns-4 gap-4 space-y-4">
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
             {duplicatedTestimonials.map((testimonial) => (
               <motion.div
                 key={testimonial.id + Math.random()}

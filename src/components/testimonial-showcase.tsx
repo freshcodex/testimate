@@ -1,23 +1,21 @@
 "use client";
-import Image from "next/image";
-import { Star, Heart } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsContent, TabsTrigger } from "@/components/ui/tabs";
 import { TestimonialList } from "./widgets/testimonial/testimonial-list";
 import { useWallOfLoveConfig } from "@/hooks/use-wall-of-love-config";
-import type {
-  TestimonialLayoutConfig,
-  TestimonialProps,
-} from "./widgets/testimonial/types";
-import { DEFAULT_TESTIMONIAL } from "@/lib/constants";
+import type { TestimonialLayoutConfig } from "./widgets/testimonial/types";
+import {
+  DEFAULT_TESTIMONIAL,
+  DEFAULT_TESTIMONIAL_WITH_VIDEO,
+} from "@/lib/constants";
 import TestimonialFactory from "./studio/single-widget/testimonial-factory";
-import type { SingleWidgetConfig } from "./studio/single-widget/types";
 import { useSingleWidgetConfig } from "@/hooks/use-single-widget-config";
 export function TestimonialShowcase() {
   // TODO: make masonry-fixed work properly here
   // TODO: Fix the branding difference in each widget make it consistent across all widgets
-  const { config } = useWallOfLoveConfig("carousel-slider");
+  const { config } = useWallOfLoveConfig("masonry-animated");
   const { config: singleConfig } = useSingleWidgetConfig("with-large-image");
+  const { config: videoConfig } = useSingleWidgetConfig("with-video");
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -76,15 +74,9 @@ export function TestimonialShowcase() {
 
             <TabsContent value="video" className="mt-0">
               <TestimonialFactory
-                // TODO: new design for single widget with video comp
-                config={singleConfig}
-                style={singleConfig.design}
-                testimonial={{
-                  ...DEFAULT_TESTIMONIAL,
-                  // type: "video",
-                  // TODO: add some default playback id for mux player here
-                  // videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                }}
+                config={videoConfig}
+                style={videoConfig.design}
+                testimonial={DEFAULT_TESTIMONIAL_WITH_VIDEO}
               />
             </TabsContent>
           </div>

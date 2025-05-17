@@ -98,11 +98,7 @@ We welcome contributions from the community! Please read our [Contributing Guide
 
 ## 📄 License
 
-This project is licensed under the [AGPL-3.0 License](LICENSE) - see the LICENSE file for details. This license structure follows the same approach as [Cal.com](https://cal.com), ensuring that any modifications to the codebase remain open source.
-
-## 🔐 Commercial License
-
-For commercial use cases where you need to modify the codebase without open-sourcing your changes, we offer a commercial license. Please contact us for more information.
+This project is licensed under the MIT License
 
 ## 🙏 Acknowledgments
 
@@ -110,4 +106,3 @@ For commercial use cases where you need to modify the codebase without open-sour
 - [Supabase](https://supabase.com/) for authentication and database
 - [Next.js](https://nextjs.org/) for the framework
 - [Drizzle ORM](https://orm.drizzle.team/) for database management
-- [Cal.com](https://cal.com) for inspiration on open-source licensing model

@@ -3,6 +3,8 @@ import { VideoPlayer } from "./video-player";
 import type { TestimonialCardProps } from "../testimonial-card";
 import { SourceIcon } from "./source-icon";
 import { Logo } from "@/components/logo";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 
 export default function WithImageTestimonial({
   testimonial,
@@ -84,32 +86,21 @@ export default function WithImageTestimonial({
                   </span>
                 )}
               </div>
-              {/* 
-              {testimonial.likes !== undefined && testimonial.likes > 0 && (
-                <div
-                  className="flex items-center gap-1 rounded-full px-3 py-1 text-sm font-medium"
-                  style={{
-                    backgroundColor: `${config.primaryColor}20`,
-                    color: config.primaryColor,
-                  }}
-                >
-                  <ThumbsUp size={16} />
-                  {testimonial.likes}
-                </div>
-              )} */}
             </div>
           </div>
         </div>
 
         <div
-          className="relative overflow-hidden rounded-lg"
+          className="relative overflow-hidden rounded-lg flex items-center justify-center"
           style={{ borderRadius }}
         >
           {testimonial.customerAvatar ? (
-            <img
-              src={testimonial.customerAvatar || "/placeholder.svg"}
+            <Image
+              src={testimonial.customerAvatar}
               alt={`${testimonial.customerName}'s testimonial`}
-              className="h-full w-full object-cover"
+              width={200}
+              height={200}
+              className="rounded-full items-center"
             />
           ) : (
             <div className="h-full w-full bg-gradient-to-b from-gray-200 to-gray-800"></div>

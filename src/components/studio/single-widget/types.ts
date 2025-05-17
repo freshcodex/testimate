@@ -12,7 +12,8 @@ export type Design =
   | "left-aligned"
   | "left-aligned-bold"
   | "with-large-image"
-  | "simple-centered";
+  | "simple-centered"
+  | "with-video";
 
 export interface SingleWidgetConfig {
   design: Design;

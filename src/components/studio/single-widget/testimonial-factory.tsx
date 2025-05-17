@@ -4,6 +4,7 @@ import LeftAlignedBoldTestimonial from "@/components/widgets/testimonial/variant
 import WithImageTestimonial from "@/components/widgets/testimonial/variants/with-image";
 import SimpleCenteredTestimonial from "@/components/widgets/testimonial/variants/simple-centered";
 import type { Design } from "./types";
+import TestimonialWithVideo from "@/components/widgets/testimonial/variants/with-video";
 
 interface TestimonialProps extends TestimonialCardProps {
   style: Design;
@@ -22,6 +23,8 @@ export default function TestimonialFactory({
       return <WithImageTestimonial {...props} />;
     case "simple-centered":
       return <SimpleCenteredTestimonial {...props} />;
+    case "with-video":
+      return <TestimonialWithVideo {...props} />;
     default:
       return <LeftAlignedTestimonial {...props} />;
   }

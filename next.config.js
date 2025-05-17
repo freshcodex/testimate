@@ -7,7 +7,12 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
   images: {
-    domains: ["coyixansbxtnortjfiib.supabase.co", "image.mux.com"],
+    domains: [
+      "coyixansbxtnortjfiib.supabase.co",
+      "image.mux.com",
+      "avatar.iran.liara.run",
+      "api.dicebear.com",
+    ],
   },
   async headers() {
     return [

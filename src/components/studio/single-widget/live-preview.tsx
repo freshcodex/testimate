@@ -3,7 +3,7 @@
 import React from "react";
 import type { SingleWidgetConfig } from "./types";
 import TestimonialFactory from "./testimonial-factory";
-import type { TestimonialProps } from "@/components/widgets/testimonial/types";
+import { DEFAULT_TESTIMONIAL } from "@/lib/constants";
 
 interface LivePreviewProps {
   config: SingleWidgetConfig;
@@ -11,36 +11,6 @@ interface LivePreviewProps {
 
 // TODO: when livepreview changes its height it should not affect config left side of panel
 export function LivePreview({ config }: LivePreviewProps) {
-  const testimonial: TestimonialProps = {
-    id: 1,
-    customerName: "Lexie",
-    customerUsername: "@lexiebarn",
-    customerAvatar: "/placeholder.svg?height=40&width=40",
-    rating: 5,
-    text: "I've used @Superhuman for just 5 hours since my onboarding with their team and I have never gotten through so many emails in a day. I may finally get some sleep tonight and not wake up in a cold sweat about an email I forgot to respond to.",
-    createdAt: new Date("2022-01-26"),
-    integrationSource: "twitter",
-    projectId: 1,
-    type: "text",
-    title: null,
-    url: null,
-    videoUrl: null,
-    thumbnailUrl: null,
-    customerCompany: "Superhuman",
-    approved: true,
-    customerCompanyLogo: null,
-    customerTagline: null,
-    customerUrl: null,
-    updatedAt: new Date("2022-01-26"),
-    customerEmail: "hello@superhuman.com",
-    formId: 2,
-    featured: false,
-    language: "en",
-    customFields: [],
-    originalDate: new Date("2022-01-26"),
-    sourceId: "twitter",
-  };
-
   const testimonialConfig: SingleWidgetConfig = {
     design: config.design,
     height: config.height || "auto",
@@ -84,7 +54,7 @@ export function LivePreview({ config }: LivePreviewProps) {
         <TestimonialFactory
           config={testimonialConfig}
           style={config.design}
-          testimonial={testimonial}
+          testimonial={DEFAULT_TESTIMONIAL}
         />
       </div>
     </div>

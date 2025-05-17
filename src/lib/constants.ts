@@ -1,11 +1,10 @@
-import type { WallOfLoveConfig } from "@/components/studio/wall-of-love/types";
 import type { TestimonialProps } from "@/components/widgets/testimonial/types";
 
 export const DEFAULT_TESTIMONIAL: TestimonialProps = {
   id: 1,
   customerName: "Lexie",
   customerUsername: "@lexiebarn",
-  customerAvatar: "/placeholder.svg?height=40&width=40",
+  customerAvatar: "https://avatar.iran.liara.run/public/boy",
   rating: 5,
   text: "I've used @Superhuman for just 5 hours since my onboarding with their team and I have never gotten through so many emails in a day. I may finally get some sleep tonight and not wake up in a cold sweat about an email I forgot to respond to.",
   createdAt: new Date("2022-01-26"),
@@ -16,6 +15,37 @@ export const DEFAULT_TESTIMONIAL: TestimonialProps = {
   url: null,
   videoUrl: null,
   thumbnailUrl: null,
+  customerCompany: "Superhuman",
+  approved: true,
+  customerCompanyLogo: null,
+  customerTagline: null,
+  customerUrl: null,
+  updatedAt: new Date("2022-01-26"),
+  customerEmail: "hello@superhuman.com",
+  formId: 2,
+  featured: false,
+  language: "en",
+  customFields: [],
+  originalDate: new Date("2022-01-26"),
+  sourceId: "twitter",
+};
+
+export const DEFAULT_TESTIMONIAL_WITH_VIDEO: TestimonialProps = {
+  id: 1,
+  customerName: "Lexie",
+  customerUsername: "@lexiebarn",
+  videoUrl: "xcHZTyr3XEuGBigq7z2pbuqhxXOnIR3jRoQay902l0044",
+  customerAvatar: "https://avatar.iran.liara.run/public/boy",
+  rating: 5,
+  text: "I've used @Superhuman for just 5 hours since my onboarding with their team and I have never gotten through so many emails in a day. I may finally get some sleep tonight and not wake up in a cold sweat about an email I forgot to respond to.",
+  createdAt: new Date("2022-01-26"),
+  integrationSource: "twitter",
+  projectId: 1,
+  type: "video",
+  title: null,
+  url: null,
+  thumbnailUrl:
+    "https://image.mux.com/xcHZTyr3XEuGBigq7z2pbuqhxXOnIR3jRoQay902l0044/thumbnail.png",
   customerCompany: "Superhuman",
   approved: true,
   customerCompanyLogo: null,

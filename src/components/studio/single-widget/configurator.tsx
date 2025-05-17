@@ -212,6 +212,7 @@ export function SingleWidgetConfigurator({
         projectSlug={projectSlug as string}
         type="single_widget"
         getUrl={() =>
+          // TODO: instead of design should pass a testimonial id here,
           `${env.NEXT_PUBLIC_URL}/t/${config.design}?config=${generateUrlParams(
             config
           )}`

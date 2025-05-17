@@ -25,7 +25,7 @@ export function MasonryFixedLayout({
 
   return (
     <div className={cn(" w-full")} style={containerStyle}>
-      <div className="columns-1 md:columns-2 lg:columns-4 gap-4 space-y-4">
+      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
         {testimonials.map((testimonial) => (
           <div
             key={testimonial.id}
