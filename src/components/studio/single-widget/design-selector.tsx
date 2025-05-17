@@ -5,14 +5,20 @@ interface SingleWidgetDesignSelectorProps {
 }
 
 const DESIGN_OPTIONS = [
-  { value: "left-aligned", label: "Left aligned" },
-  { value: "left-aligned-bold", label: "Left aligned - Bold" },
-  { value: "with-large-image", label: "With large image" },
-  { value: "simple-centered", label: "Simple centered" },
+  // TODO: Add gif image here for all designs
+  { value: "left-aligned", label: "Left aligned", image: "/logo.png" },
+  {
+    value: "left-aligned-bold",
+    label: "Left aligned - Bold",
+    image: "/logo.png",
+  },
+  { value: "with-large-image", label: "With large image", image: "/logo.png" },
+  { value: "simple-centered", label: "Simple centered", image: "/logo.png" },
 ];
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import NextImage from "next/image";
 
 export function SingleWidgetDesignSelector({
   onDesignSelect,
@@ -36,9 +42,11 @@ export function SingleWidgetDesignSelector({
             onClick={() => onDesignSelect(design.value)}
           >
             <div className="h-48 bg-gray-100 relative">
-              <img
-                src={design.label || "/placeholder.svg"}
+              <NextImage
+                src={design.image || "/logo.png"}
                 alt={design.label}
+                width={300}
+                height={200}
                 className="w-full h-full object-cover"
               />
             </div>

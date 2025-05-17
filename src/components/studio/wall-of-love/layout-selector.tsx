@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import NextImage from "next/image";
 
 interface LayoutSelectorProps {
   onLayoutSelect: (layout: string) => void;
@@ -15,20 +16,20 @@ export function WallOfLoveLayoutSelector({
       id: "masonry-animated",
       name: "Masonry - animated",
       description: "A dynamic grid layout with animation effects",
-      image:
-        "https://firebasestorage.googleapis.com/v0/b/testimonialto.appspot.com/o/assets%2Fanimated-demo.gif?alt=media&token=08b0e0d6-5290-4441-a309-942e074c7b77",
+      // TODO: Add gif image here for all layouts
+      image: "/logo.png",
     },
     {
       id: "masonry-fixed",
       name: "Masonry - fixed",
       description: "A static grid layout with fixed positioning",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/logo.png",
     },
     {
       id: "carousel-slider",
       name: "Carousel slider",
       description: "A horizontal sliding carousel of testimonials",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "/logo.png",
     },
   ];
 
@@ -50,9 +51,11 @@ export function WallOfLoveLayoutSelector({
             onClick={() => onLayoutSelect(layout.id)}
           >
             <div className="h-48 bg-gray-100 relative">
-              <img
+              <NextImage
                 src={layout.image || "/placeholder.svg"}
                 alt={layout.name}
+                width={300}
+                height={200}
                 className="w-full h-full object-cover"
               />
             </div>
