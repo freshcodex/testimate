@@ -45,7 +45,7 @@ export function FormBuilder() {
     onSuccess: async (data) => {
       await utils.collectionForms.getAll.invalidate();
       toast.success("Form saved successfully!");
-      router.push(`/dashboard/${projectSlug}/forms/${data?.id}`);
+      router.push(`/dashboard/${projectSlug}/forms/${data?.id}/share`);
     },
     onError: (error) => {
       toast.error(error.message);
