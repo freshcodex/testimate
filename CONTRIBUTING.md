@@ -32,7 +32,7 @@ This document provides guidelines for contributing to the project. Please read i
 1.  **Fork the repository:** Click the "Fork" button on the GitHub repository page.
 2.  **Clone your fork:**
     ```bash
-    git clone https://github.com/YOUR_USERNAME/testimate.git
+    git clone https://github.com/bishaln/testimate.git
     cd testimate
     ```
 3.  **Install dependencies:**
