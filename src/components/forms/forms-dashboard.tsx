@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CollectionFormsList } from "@/components/forms/form-list";
 import { EmptyState } from "@/components/forms/form-empty-state";
-import { PromotionCard } from "@/components/forms/promotion-card";
 import { api } from "@/trpc/react";
 import { useParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
