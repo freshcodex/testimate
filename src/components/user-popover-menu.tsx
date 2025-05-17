@@ -23,7 +23,6 @@ export function UserPopoverMenu({ user, plan }: UserPopoverMenuProps) {
   const handleSignOut = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.refresh();
     router.push("/");
   };
 
@@ -54,15 +53,6 @@ export function UserPopoverMenu({ user, plan }: UserPopoverMenuProps) {
             <br />
             <span className="font-medium text-gray-700">{user?.email}</span>
           </div>
-        </div>
-        <div className="border-t">
-          <ul className="py-2 px-2 flex flex-col gap-1">
-            <MenuItem label="Account" />
-            <MenuItem label="Billing" />
-            <MenuItem label="Contact us" />
-            <MenuItem label="Affiliate scheme" />
-            <MenuItem label="What's new" />
-          </ul>
         </div>
         <div className="border-t px-2 py-2">
           <Button
