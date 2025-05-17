@@ -16,8 +16,6 @@ export default async function TagsPage({
     where: eq(projects.slug, projectSlug),
   });
 
-  console.log(project);
-
   if (!project) {
     return <div>Project not found</div>;
   }
