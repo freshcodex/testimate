@@ -4,7 +4,7 @@ Testimate is a modern, open-source alternative to testimonial collection platfor
 
 ## Deploy on Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftestimate%2Ftestimate&env=MUX_TOKEN_ID,MUX_TOKEN_SECRET,MUX_WEBHOOK_SECRET,SUPABASE_URL,SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY&envDescription=Environment%20variables%20for%20the%20Testimate%20application&envLink=https%3A%2F%2Fgithub.com%2Ftestimate%2Ftestimate%23environment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ftestimate%2Ftestimate&env=DATABASE_URL,NODE_ENV,SUPABASE_SERVICE_ROLE_KEY,S3_ACCESS_KEY_ID,S3_SECRET_ACCESS_KEY,MUX_WEBHOOK_SECRET,JWT_SECRET,S3_REGION,MUX_TOKEN_ID,MUX_TOKEN_SECRET,NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,NEXT_PUBLIC_S3_BUCKET_NAME,NEXT_PUBLIC_S3_ENDPOINT,NEXT_PUBLIC_URL&envDescription=Environment%20variables%20for%20the%20Testimate%20application&envLink=https%3A%2F%2Fgithub.com%2Ftestimate%2Ftestimate%23environment-variables)
 
 ## 🚀 Features
 
@@ -14,22 +14,13 @@ Testimate is a modern, open-source alternative to testimonial collection platfor
 - 🔄 **tRPC** for type-safe API calls
 - 📦 **Drizzle ORM** for efficient database management
 - 🎯 **TypeScript** for robust type safety
-- 📱 **Responsive** design for all devices
 - 🔍 **Biome** for code quality
-- 🧪 **React Query** for efficient data fetching
-- 🔒 **Middleware** for route protection
-- 📝 **Rich Text Editor** for testimonial content
-- 🎨 **Customizable Templates** for testimonial display
-- 🔄 **Import/Export** functionality
-- 📊 **Analytics Dashboard**
-- 🔗 **Embed Widgets** for easy integration
 
 ## 📋 Prerequisites
 
 - Node.js 18+
 - pnpm 9+
 - Supabase account
-- PostgreSQL (if running locally)
 
 ## Refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file for more details on how to get started.
 
